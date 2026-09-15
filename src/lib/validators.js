@@ -58,10 +58,7 @@ export const registerUserSchema = z
     profilePicture: z
       .any()
       .optional()
-      .refine(
-        (file) => !file || file instanceof File,
-        "Profile picture must be a valid file"
-      ),
+      .refine((file) => !file || file instanceof File, "Profile picture must be a valid file"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -94,9 +91,7 @@ export const registerProviderSchema = z
     hourlyRate: z.coerce
       .number({ invalid_type_error: "Rate must be a number" })
       .positive("Hourly rate must be greater than 0"),
-    selectedCategoryIds: z
-      .array(z.string())
-      .min(1, "Please select at least one service category"),
+    selectedCategoryIds: z.array(z.string()).min(1, "Please select at least one service category"),
     idDocument: z
       .any()
       .refine((file) => file instanceof File, "National ID document photo/PDF is required"),

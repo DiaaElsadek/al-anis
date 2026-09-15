@@ -10,8 +10,7 @@ export const createOrGetChat = (serviceRequestId) =>
 /**
  * GET /api/Chat/my-chats
  */
-export const getMyChats = () =>
-  axiosClient.get("/Chat/my-chats");
+export const getMyChats = () => axiosClient.get("/Chat/my-chats");
 
 /**
  * GET /api/Chat/{chatId}/messages
@@ -32,5 +31,4 @@ export const sendChatMessage = ({ chatId, message }) =>
  * PUT /api/Chat/{chatId}/mark-read
  * @param {string} chatId
  */
-export const markChatAsRead = (chatId) =>
-  axiosClient.put(`/Chat/${chatId}/mark-read`);
+export const markChatAsRead = (chatId) => axiosClient.put(`/Chat/${chatId}/mark-read`);

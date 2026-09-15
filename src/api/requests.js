@@ -4,14 +4,12 @@ import axiosClient from "./axiosClient";
  * POST /api/Requests
  * @param {Object} data - { providerId, categoryId, shiftType, preferredDate, address, governorate, description }
  */
-export const createRequest = (data) =>
-  axiosClient.post("/Requests", data);
+export const createRequest = (data) => axiosClient.post("/Requests", data);
 
 /**
  * GET /api/Requests/user — current client's requests
  */
-export const getUserRequests = () =>
-  axiosClient.get("/Requests/user");
+export const getUserRequests = () => axiosClient.get("/Requests/user");
 
 /**
  * GET /api/Requests/provider/{providerId} — incoming requests for a provider
@@ -32,12 +30,10 @@ export const respondToRequest = (requestId, { status, reason = "" }) =>
  * POST /api/Requests/{requestId}/start — mark shift as started
  * @param {string} requestId
  */
-export const startRequest = (requestId) =>
-  axiosClient.post(`/Requests/${requestId}/start`);
+export const startRequest = (requestId) => axiosClient.post(`/Requests/${requestId}/start`);
 
 /**
  * POST /api/Requests/{requestId}/complete — mark shift as completed
  * @param {string} requestId
  */
-export const completeRequest = (requestId) =>
-  axiosClient.post(`/Requests/${requestId}/complete`);
+export const completeRequest = (requestId) => axiosClient.post(`/Requests/${requestId}/complete`);

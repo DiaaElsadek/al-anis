@@ -1,20 +1,3 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { getInitials, getMediaUrl } from "@/lib/utils";
-import { UserRole } from "@/lib/constants";
-import ThemeToggle from "@/components/shared/ThemeToggle";
-import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import {
   LogOut,
   User,
@@ -24,6 +7,24 @@ import {
   ShieldCheck,
   MessageSquare,
 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
+
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import ThemeToggle from "@/components/shared/ThemeToggle";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/hooks/useAuth";
+import { UserRole } from "@/lib/constants";
+import { getInitials, getMediaUrl } from "@/lib/utils";
 
 export default function Navbar({ onMobileMenuToggle }) {
   const { t } = useTranslation("common");
@@ -125,9 +126,7 @@ export default function Navbar({ onMobileMenuToggle }) {
                       />
                     ) : null}
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                      {getInitials(
-                        `${user?.firstName || ""} ${user?.lastName || ""}`
-                      )}
+                      {getInitials(`${user?.firstName || ""} ${user?.lastName || ""}`)}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -140,9 +139,7 @@ export default function Navbar({ onMobileMenuToggle }) {
                     </p>
                     {getRoleBadge()}
                   </div>
-                  <p className="text-xs text-muted-foreground truncate">
-                    {user?.email}
-                  </p>
+                  <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
                 </div>
 
                 <div className="p-1">

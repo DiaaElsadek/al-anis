@@ -97,15 +97,27 @@
     color-scheme: light dark;
   }
   :root {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family:
+      "Inter",
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
   [dir="rtl"] {
-    font-family: 'Cairo', system-ui, -apple-system, sans-serif;
+    font-family:
+      "Cairo",
+      system-ui,
+      -apple-system,
+      sans-serif;
   }
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+    transition:
+      background-color 0.2s ease,
+      color 0.2s ease;
   }
 }
 

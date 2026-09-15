@@ -1,4 +1,5 @@
 import { Star } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 /**
@@ -43,9 +44,7 @@ export default function RatingStars({
         />
       ))}
       {showValue && (
-        <span className="text-sm text-muted-foreground ms-1.5">
-          {rating.toFixed(1)}
-        </span>
+        <span className="text-sm text-muted-foreground ms-1.5">{rating.toFixed(1)}</span>
       )}
     </div>
   );

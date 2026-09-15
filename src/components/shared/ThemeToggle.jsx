@@ -1,5 +1,5 @@
 import { Sun, Moon, Laptop, Check } from "lucide-react";
-import { useTheme } from "@/context/ThemeContext";
+
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTheme } from "@/context/ThemeContext";
 import { cn } from "@/lib/utils";
 
 export default function ThemeToggle({ className, align = "end", compact = false }) {
@@ -18,10 +19,7 @@ export default function ThemeToggle({ className, align = "end", compact = false 
         variant="ghost"
         size="icon"
         onClick={toggleTheme}
-        className={cn(
-          "h-9 w-9 rounded-lg relative hover:bg-muted/80 transition-colors",
-          className
-        )}
+        className={cn("h-9 w-9 rounded-lg relative hover:bg-muted/80 transition-colors", className)}
         title={`Current: ${theme}. Click to switch to ${resolvedTheme === "dark" ? "light" : "dark"} mode`}
       >
         <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all duration-300 dark:-rotate-90 dark:scale-0 text-amber-500" />

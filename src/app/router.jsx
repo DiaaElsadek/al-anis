@@ -1,51 +1,37 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import ProtectedRoute from "@/routes/ProtectedRoute";
-import { UserRole } from "@/lib/constants";
 
 // Layouts
+import AdminLayout from "@/components/layout/AdminLayout";
 import AuthLayout from "@/components/layout/AuthLayout";
 import ClientLayout from "@/components/layout/ClientLayout";
 import ProviderLayout from "@/components/layout/ProviderLayout";
-import AdminLayout from "@/components/layout/AdminLayout";
-
-// Public pages
-import LandingPage from "@/features/landing/LandingPage";
-
-// Error pages
-import NotFoundPage from "@/features/errors/NotFoundPage";
-import ForbiddenPage from "@/features/errors/ForbiddenPage";
-
-// Auth pages
+import AdminApplicationsPage from "@/features/admin/AdminApplicationsPage";
+import AdminCategoriesPage from "@/features/admin/AdminCategoriesPage";
+import AdminDashboardPage from "@/features/admin/AdminDashboardPage";
+import AdminPaymentsPage from "@/features/admin/AdminPaymentsPage";
+import AdminPricingPage from "@/features/admin/AdminPricingPage";
+import AdminUsersPage from "@/features/admin/AdminUsersPage";
+import ForgotPasswordPage from "@/features/auth/ForgotPasswordPage";
 import LoginPage from "@/features/auth/LoginPage";
 import RegisterPage from "@/features/auth/RegisterPage";
-import VerifyOtpPage from "@/features/auth/VerifyOtpPage";
-import ForgotPasswordPage from "@/features/auth/ForgotPasswordPage";
 import ResetPasswordPage from "@/features/auth/ResetPasswordPage";
-
-// Client Pages
-import ProviderDirectoryPage from "@/features/client/ProviderDirectoryPage";
-import ProviderProfilePage from "@/features/client/ProviderProfilePage";
+import VerifyOtpPage from "@/features/auth/VerifyOtpPage";
+import ChatInboxPage from "@/features/chat/ChatInboxPage";
 import ClientRequestsPage from "@/features/client/ClientRequestsPage";
 import ClientSettingsPage from "@/features/client/ClientSettingsPage";
-
-// Unified Chat
-import ChatInboxPage from "@/features/chat/ChatInboxPage";
-
-// Provider Pages
-import ProviderPendingPage from "@/features/provider/ProviderPendingPage";
+import ProviderDirectoryPage from "@/features/client/ProviderDirectoryPage";
+import ProviderProfilePage from "@/features/client/ProviderProfilePage";
+import ForbiddenPage from "@/features/errors/ForbiddenPage";
+import NotFoundPage from "@/features/errors/NotFoundPage";
+import LandingPage from "@/features/landing/LandingPage";
+import ProviderAvailabilityPage from "@/features/provider/ProviderAvailabilityPage";
 import ProviderDashboardPage from "@/features/provider/ProviderDashboardPage";
 import ProviderEditProfilePage from "@/features/provider/ProviderEditProfilePage";
-import ProviderAvailabilityPage from "@/features/provider/ProviderAvailabilityPage";
-import ProviderWorkingAreasPage from "@/features/provider/ProviderWorkingAreasPage";
+import ProviderPendingPage from "@/features/provider/ProviderPendingPage";
 import ProviderRequestsPage from "@/features/provider/ProviderRequestsPage";
-
-// Admin Pages
-import AdminDashboardPage from "@/features/admin/AdminDashboardPage";
-import AdminApplicationsPage from "@/features/admin/AdminApplicationsPage";
-import AdminUsersPage from "@/features/admin/AdminUsersPage";
-import AdminCategoriesPage from "@/features/admin/AdminCategoriesPage";
-import AdminPricingPage from "@/features/admin/AdminPricingPage";
-import AdminPaymentsPage from "@/features/admin/AdminPaymentsPage";
+import ProviderWorkingAreasPage from "@/features/provider/ProviderWorkingAreasPage";
+import { UserRole } from "@/lib/constants";
+import ProtectedRoute from "@/routes/ProtectedRoute";
 
 // ============================================================
 // AppRouter Component

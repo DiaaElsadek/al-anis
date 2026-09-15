@@ -1,25 +1,24 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { Clock, CheckCircle2, XCircle, RefreshCw, LogOut, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import {
-  Clock,
-  CheckCircle2,
-  XCircle,
-  RefreshCw,
-  FileCheck,
-  ShieldAlert,
-  LogOut,
-} from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-import { getApplicationStatus } from "@/api/provider";
 import { refreshToken as apiRefreshToken } from "@/api/account";
+import { getApplicationStatus } from "@/api/provider";
+import EmptyState from "@/components/shared/EmptyState";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
 import { formatLocalizedDate } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProviderPendingPage() {
   const { t, i18n } = useTranslation(["provider", "common"]);
@@ -29,6 +28,7 @@ export default function ProviderPendingPage() {
   const {
     data: appStatus,
     isLoading,
+    isError,
     refetch,
     isFetching,
   } = useQuery({
@@ -51,7 +51,7 @@ export default function ProviderPendingPage() {
         navigate("/provider/dashboard", { replace: true });
       }
     },
-    onError: (error) => {
+    onError: () => {
       toast.error(t("common:error"), {
         description: "Please log out and sign back in to activate your provider access.",
       });
@@ -70,6 +70,20 @@ export default function ProviderPendingPage() {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="min-h-[70vh] flex items-center justify-center p-4">
+        <EmptyState
+          icon={AlertCircle}
+          title={t("common:error")}
+          description={t("common:empty.tryAdjusting")}
+          actionLabel={t("common:actions.retry")}
+          onAction={() => refetch()}
+        />
+      </div>
+    );
+  }
+
   // Status mapping: 0 = Pending, 1 = Approved, 2 = Rejected
   const status = appStatus?.status ?? 0;
   const isPending = status === 0;
@@ -82,11 +96,7 @@ export default function ProviderPendingPage() {
         {/* Top decorative gradient banner */}
         <div
           className={`h-2.5 w-full ${
-            isApproved
-              ? "bg-emerald-500"
-              : isRejected
-              ? "bg-destructive"
-              : "bg-amber-500"
+            isApproved ? "bg-emerald-500" : isRejected ? "bg-destructive" : "bg-amber-500"
           }`}
         />
 
@@ -96,8 +106,8 @@ export default function ProviderPendingPage() {
               isApproved
                 ? "bg-emerald-500/10 text-emerald-600"
                 : isRejected
-                ? "bg-destructive/10 text-destructive"
-                : "bg-amber-500/10 text-amber-600"
+                  ? "bg-destructive/10 text-destructive"
+                  : "bg-amber-500/10 text-amber-600"
             }`}
           >
             {isApproved ? (
@@ -113,16 +123,16 @@ export default function ProviderPendingPage() {
             {isApproved
               ? t("common:status.approved")
               : isRejected
-              ? t("provider:pending.rejectedNotice")
-              : t("provider:pending.title")}
+                ? t("provider:pending.rejectedNotice")
+                : t("provider:pending.title")}
           </CardTitle>
 
           <CardDescription className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
             {isApproved
               ? t("provider:pending.step3Desc")
               : isRejected
-              ? t("provider:pending.rejectedNotice")
-              : t("provider:pending.subtitle")}
+                ? t("provider:pending.rejectedNotice")
+                : t("provider:pending.subtitle")}
           </CardDescription>
         </CardHeader>
 
@@ -144,11 +154,16 @@ export default function ProviderPendingPage() {
                   isApproved
                     ? "text-emerald-600"
                     : isRejected
-                    ? "text-destructive"
-                    : "text-amber-600"
+                      ? "text-destructive"
+                      : "text-amber-600"
                 }`}
               >
-                {appStatus?.statusText || (isApproved ? t("common:status.approved") : isRejected ? t("common:status.rejected") : t("common:status.pending"))}
+                {appStatus?.statusText ||
+                  (isApproved
+                    ? t("common:status.approved")
+                    : isRejected
+                      ? t("common:status.rejected")
+                      : t("common:status.pending"))}
               </span>
             </div>
 
@@ -181,9 +196,7 @@ export default function ProviderPendingPage() {
           )}
 
           {isPending && (
-            <p className="text-[11px] text-muted-foreground">
-              {t("provider:pending.step2Desc")}
-            </p>
+            <p className="text-[11px] text-muted-foreground">{t("provider:pending.step2Desc")}</p>
           )}
         </CardContent>
 
@@ -195,7 +208,9 @@ export default function ProviderPendingPage() {
               disabled={refreshMutation.isPending}
             >
               <CheckCircle2 className="h-4 w-4 me-2" />
-              {refreshMutation.isPending ? t("common:loading") : t("provider:pending.upgradeAccess")}
+              {refreshMutation.isPending
+                ? t("common:loading")
+                : t("provider:pending.upgradeAccess")}
             </Button>
           ) : (
             <Button
@@ -205,9 +220,7 @@ export default function ProviderPendingPage() {
               onClick={() => refetch()}
               disabled={isFetching}
             >
-              <RefreshCw
-                className={`h-3.5 w-3.5 me-1.5 ${isFetching ? "animate-spin" : ""}`}
-              />
+              <RefreshCw className={`h-3.5 w-3.5 me-1.5 ${isFetching ? "animate-spin" : ""}`} />
               {t("provider:pending.refreshButton")}
             </Button>
           )}

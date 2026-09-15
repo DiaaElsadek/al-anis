@@ -1,9 +1,3 @@
-import { useState } from "react";
-import { Outlet, NavLink } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import Navbar from "./Navbar";
-import { Sheet, SheetContent } from "@/components/ui/sheet";
-import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
   ClipboardCheck,
@@ -12,6 +6,14 @@ import {
   DollarSign,
   CreditCard,
 } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Outlet, NavLink } from "react-router-dom";
+
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { cn } from "@/lib/utils";
+
+import Navbar from "./Navbar";
 
 export default function AdminLayout() {
   const { t } = useTranslation("common");

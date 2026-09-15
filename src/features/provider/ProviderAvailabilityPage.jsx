@@ -1,16 +1,8 @@
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { Calendar as CalendarIcon, Trash2, Clock } from "lucide-react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Calendar as CalendarIcon,
-  Plus,
-  Trash2,
-  Clock,
-  CheckCircle2,
-  CalendarRange,
-  Sparkles,
-} from "lucide-react";
+import { toast } from "sonner";
 
 import {
   getAvailability,
@@ -18,15 +10,13 @@ import {
   deleteAvailability,
   setBulkAvailability,
 } from "@/api/provider";
-import { ShiftType, ShiftTypeLabels } from "@/lib/constants";
-import { formatLocalizedDate } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
+import AddShiftModal from "@/features/provider/components/AddShiftModal";
+import BulkShiftModal from "@/features/provider/components/BulkShiftModal";
+import { ShiftType } from "@/lib/constants";
+import { formatLocalizedDate, getShiftLabel, handleMutationError } from "@/lib/utils";
 
 export default function ProviderAvailabilityPage() {
   const { t, i18n } = useTranslation(["provider", "common"]);
@@ -35,16 +25,12 @@ export default function ProviderAvailabilityPage() {
   const [bulkModalOpen, setBulkModalOpen] = useState(false);
 
   // Single date form states
-  const [singleDate, setSingleDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [singleDate, setSingleDate] = useState(new Date().toISOString().split("T")[0]);
   const [singleShift, setSingleShift] = useState(ShiftType.MORNING);
   const [singleNotes, setSingleNotes] = useState("");
 
   // Bulk form states
-  const [bulkStartDate, setBulkStartDate] = useState(
-    new Date().toISOString().split("T")[0]
-  );
+  const [bulkStartDate, setBulkStartDate] = useState(new Date().toISOString().split("T")[0]);
   const [bulkEndDate, setBulkEndDate] = useState(
     new Date(Date.now() + 14 * 86400000).toISOString().split("T")[0]
   );
@@ -72,11 +58,7 @@ export default function ProviderAvailabilityPage() {
       setSingleModalOpen(false);
       setSingleNotes("");
     },
-    onError: (error) => {
-      toast.error("Failed to add shift", {
-        description: error?.response?.data?.message || "Please check your dates.",
-      });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   // Bulk availability mutation
@@ -94,11 +76,7 @@ export default function ProviderAvailabilityPage() {
       queryClient.invalidateQueries(["provider-availability"]);
       setBulkModalOpen(false);
     },
-    onError: (error) => {
-      toast.error("Bulk setup failed", {
-        description: error?.response?.data?.message || "Please check your date range.",
-      });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   // Delete availability mutation
@@ -108,9 +86,7 @@ export default function ProviderAvailabilityPage() {
       toast.success("Shift removed from calendar.");
       queryClient.invalidateQueries(["provider-availability"]);
     },
-    onError: () => {
-      toast.error("Could not remove shift.");
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   const DAYS_OF_WEEK = [
@@ -122,6 +98,12 @@ export default function ProviderAvailabilityPage() {
     { day: 5, label: t("common:days.friday") },
     { day: 6, label: t("common:days.saturday") },
   ];
+
+  const toggleExcludeDay = (day) => {
+    setExcludedDays((prev) =>
+      prev.includes(day) ? prev.filter((d) => d !== day) : [...prev, day]
+    );
+  };
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -136,176 +118,44 @@ export default function ProviderAvailabilityPage() {
 
         <div className="flex items-center gap-2">
           {/* Bulk Setup Trigger */}
-          <Dialog open={bulkModalOpen} onOpenChange={setBulkModalOpen}>
-            <DialogTrigger asChild>
-              <Button variant="outline" size="sm" className="text-xs font-semibold">
-                <CalendarRange className="h-4 w-4 me-1.5 text-primary" />
-                {t("provider:availability.bulkGenerate")}
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-xl bg-primary/10 text-primary">
-                    <Sparkles className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <DialogTitle>{t("provider:availability.bulkGenerate")}</DialogTitle>
-                    <DialogDescription className="text-xs mt-0.5">
-                      {t("provider:availability.subtitle")}
-                    </DialogDescription>
-                  </div>
-                </div>
-              </DialogHeader>
-
-              <div className="space-y-4 pt-2">
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">{t("common:dates.from")}</Label>
-                    <Input
-                      type="date"
-                      value={bulkStartDate}
-                      min={new Date().toISOString().split("T")[0]}
-                      onChange={(e) => setBulkStartDate(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">{t("common:dates.to")}</Label>
-                    <Input
-                      type="date"
-                      value={bulkEndDate}
-                      min={bulkStartDate}
-                      onChange={(e) => setBulkEndDate(e.target.value)}
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">{t("provider:availability.shiftsOffered")}</Label>
-                  <select
-                    value={bulkShift}
-                    onChange={(e) => setBulkShift(e.target.value)}
-                    className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
-                  >
-                    <option value={ShiftType.MORNING}>{t("common:shifts.morning")}</option>
-                    <option value={ShiftType.EVENING}>{t("common:shifts.evening")}</option>
-                    <option value={ShiftType.NIGHT}>{t("common:shifts.night")}</option>
-                  </select>
-                </div>
-
-                {/* Exclude days */}
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">{t("provider:availability.excludeDays")}</Label>
-                  <div className="grid grid-cols-2 gap-2 p-3 bg-muted/20 rounded-lg border border-border/50">
-                    {DAYS_OF_WEEK.map((d) => (
-                      <label
-                        key={d.day}
-                        className="flex items-center gap-2 text-xs text-foreground cursor-pointer"
-                      >
-                        <Checkbox
-                          checked={excludedDays.includes(d.day)}
-                          onCheckedChange={() => toggleExcludeDay(d.day)}
-                        />
-                        <span>{d.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-2 pt-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => setBulkModalOpen(false)}
-                  >
-                    {t("common:cancel")}
-                  </Button>
-                  <Button
-                    onClick={() => bulkMutation.mutate()}
-                    disabled={bulkMutation.isPending}
-                  >
-                    {bulkMutation.isPending ? t("common:loading") : t("common:save")}
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <BulkShiftModal
+            open={bulkModalOpen}
+            onOpenChange={setBulkModalOpen}
+            bulkStartDate={bulkStartDate}
+            setBulkStartDate={setBulkStartDate}
+            bulkEndDate={bulkEndDate}
+            setBulkEndDate={setBulkEndDate}
+            bulkShift={bulkShift}
+            setBulkShift={setBulkShift}
+            excludedDays={excludedDays}
+            toggleExcludeDay={toggleExcludeDay}
+            daysOfWeek={DAYS_OF_WEEK}
+            onSubmit={() => bulkMutation.mutate()}
+            isPending={bulkMutation.isPending}
+          />
 
           {/* Add Single Date Shift Trigger */}
-          <Dialog open={singleModalOpen} onOpenChange={setSingleModalOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="text-xs font-semibold shadow-sm">
-                <Plus className="h-4 w-4 me-1.5" />
-                {t("provider:availability.addShift")}
-              </Button>
-            </DialogTrigger>
-
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>{t("provider:availability.modalTitle")}</DialogTitle>
-                <DialogDescription className="text-xs mt-0.5">
-                  {t("provider:availability.subtitle")}
-                </DialogDescription>
-              </DialogHeader>
-
-              <div className="space-y-4 pt-2">
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">{t("provider:availability.selectDate")}</Label>
-                  <Input
-                    type="date"
-                    value={singleDate}
-                    min={new Date().toISOString().split("T")[0]}
-                    onChange={(e) => setSingleDate(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">{t("provider:availability.selectShift")}</Label>
-                  <select
-                    value={singleShift}
-                    onChange={(e) => setSingleShift(e.target.value)}
-                    className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
-                  >
-                    <option value={ShiftType.MORNING}>{t("common:shifts.morning")}</option>
-                    <option value={ShiftType.EVENING}>{t("common:shifts.evening")}</option>
-                    <option value={ShiftType.NIGHT}>{t("common:shifts.night")}</option>
-                  </select>
-                </div>
-
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">{t("common:edit")}</Label>
-                  <Input
-                    placeholder="Notes..."
-                    value={singleNotes}
-                    onChange={(e) => setSingleNotes(e.target.value)}
-                  />
-                </div>
-
-                <div className="flex justify-end gap-2 pt-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => setSingleModalOpen(false)}
-                  >
-                    {t("common:cancel")}
-                  </Button>
-                  <Button
-                    onClick={() => singleMutation.mutate()}
-                    disabled={singleMutation.isPending}
-                  >
-                    {singleMutation.isPending ? t("common:loading") : t("provider:availability.saveShift")}
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+          <AddShiftModal
+            open={singleModalOpen}
+            onOpenChange={setSingleModalOpen}
+            singleDate={singleDate}
+            setSingleDate={setSingleDate}
+            singleShift={singleShift}
+            setSingleShift={setSingleShift}
+            singleNotes={singleNotes}
+            setSingleNotes={setSingleNotes}
+            onSubmit={() => singleMutation.mutate()}
+            isPending={singleMutation.isPending}
+          />
         </div>
       </div>
 
       {/* Availability List Table / Grid */}
       <Card className="border-border/70 shadow-sm bg-card">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold">{t("provider:availability.openSlots")} ({availabilityList.length})</CardTitle>
+          <CardTitle className="text-base font-bold">
+            {t("provider:availability.openSlots")} ({availabilityList.length})
+          </CardTitle>
           <CardDescription className="text-xs">
             {t("provider:availability.subtitle")}
           </CardDescription>
@@ -334,8 +184,7 @@ export default function ProviderAvailabilityPage() {
           ) : (
             <div className="divide-y divide-border/50">
               {availabilityList.map((entry) => {
-                const shiftName =
-                  entry.shiftName || ShiftTypeLabels[entry.availableShift] || "Morning";
+                const shiftName = getShiftLabel(entry.availableShift, t, entry.shiftName);
 
                 return (
                   <div
@@ -365,7 +214,10 @@ export default function ProviderAvailabilityPage() {
                     </div>
 
                     <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-700 border-emerald-500/20">
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
+                      >
                         {t("provider:dashboard.available")}
                       </Badge>
                       <Button

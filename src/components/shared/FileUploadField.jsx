@@ -1,7 +1,8 @@
+import { Upload, X, FileText } from "lucide-react";
 import { useRef } from "react";
+
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Upload, X, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 /**
@@ -80,14 +81,8 @@ export default function FileUploadField({
           onClick={() => inputRef.current?.click()}
         >
           <Upload className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">
-            Click to upload or drag & drop
-          </p>
-          {accept && (
-            <p className="text-xs text-muted-foreground/70 mt-1">
-              Accepted: {accept}
-            </p>
-          )}
+          <p className="text-sm text-muted-foreground">Click to upload or drag & drop</p>
+          {accept && <p className="text-xs text-muted-foreground/70 mt-1">Accepted: {accept}</p>}
         </div>
       )}
 

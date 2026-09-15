@@ -1,13 +1,13 @@
-import { useState } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Star } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Star, MessageSquare } from "lucide-react";
+import { toast } from "sonner";
 
 import { createReview } from "@/api/reviews";
-import { createReviewSchema } from "@/lib/validators";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,9 +15,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { handleMutationError } from "@/lib/utils";
+import { createReviewSchema } from "@/lib/validators";
 
 export default function ReviewModal({ open, onOpenChange, serviceRequestId, providerName }) {
   const { t } = useTranslation(["client", "common"]);
@@ -54,13 +55,7 @@ export default function ReviewModal({ open, onOpenChange, serviceRequestId, prov
       reset();
       onOpenChange(false);
     },
-    onError: (error) => {
-      const msg =
-        error?.response?.data?.message ||
-        error?.message ||
-        t("common:error");
-      toast.error(t("common:error"), { description: msg });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   const onSubmit = (data) => {
@@ -78,7 +73,9 @@ export default function ReviewModal({ open, onOpenChange, serviceRequestId, prov
             <div>
               <DialogTitle>{t("client:reviewModal.title")}</DialogTitle>
               <DialogDescription className="text-xs mt-0.5">
-                {t("client:reviewModal.subtitle")}
+                {providerName
+                  ? `${t("client:reviewModal.subtitle")} (${providerName})`
+                  : t("client:reviewModal.subtitle")}
               </DialogDescription>
             </div>
           </div>
@@ -87,7 +84,9 @@ export default function ReviewModal({ open, onOpenChange, serviceRequestId, prov
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
           {/* Star selector */}
           <div className="space-y-1.5 text-center">
-            <Label className="text-xs font-semibold block">{t("client:reviewModal.ratingLabel")}</Label>
+            <Label className="text-xs font-semibold block">
+              {t("client:reviewModal.ratingLabel")}
+            </Label>
             <div className="flex justify-center gap-1.5 py-2">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -108,9 +107,7 @@ export default function ReviewModal({ open, onOpenChange, serviceRequestId, prov
                 </button>
               ))}
             </div>
-            {errors.rating && (
-              <p className="text-xs text-destructive">{errors.rating.message}</p>
-            )}
+            {errors.rating && <p className="text-xs text-destructive">{errors.rating.message}</p>}
           </div>
 
           {/* Comment */}
@@ -125,21 +122,17 @@ export default function ReviewModal({ open, onOpenChange, serviceRequestId, prov
               className="text-xs resize-none"
               {...register("comment")}
             />
-            {errors.comment && (
-              <p className="text-xs text-destructive">{errors.comment.message}</p>
-            )}
+            {errors.comment && <p className="text-xs text-destructive">{errors.comment.message}</p>}
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               {t("common:cancel")}
             </Button>
             <Button type="submit" disabled={mutation.isPending}>
-              {mutation.isPending ? t("client:reviewModal.submitting") : t("client:reviewModal.submitButton")}
+              {mutation.isPending
+                ? t("client:reviewModal.submitting")
+                : t("client:reviewModal.submitButton")}
             </Button>
           </div>
         </form>

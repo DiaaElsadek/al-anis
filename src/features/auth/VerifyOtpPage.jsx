@@ -1,16 +1,23 @@
-import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { ShieldCheck, ArrowRight, RefreshCw, AlertCircle, ArrowLeft } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "sonner";
 
 import { verifyOtp, resendOtp } from "@/api/account";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 
 export default function VerifyOtpPage() {
   const { t } = useTranslation(["auth", "common"]);
@@ -216,7 +223,9 @@ export default function VerifyOtpPage() {
               onClick={() => resendMutation.mutate()}
               disabled={resendMutation.isPending}
             >
-              <RefreshCw className={`h-3.5 w-3.5 ${resendMutation.isPending ? "animate-spin" : ""}`} />
+              <RefreshCw
+                className={`h-3.5 w-3.5 ${resendMutation.isPending ? "animate-spin" : ""}`}
+              />
               <span>{t("auth:otp.resendCode")}</span>
             </Button>
           )}
@@ -229,7 +238,9 @@ export default function VerifyOtpPage() {
           className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <DirectionalIcon icon={ArrowLeft} className="h-3.5 w-3.5" />
-          <span>{t("common:actions.cancel")} & {t("common:nav.signIn")}</span>
+          <span>
+            {t("common:actions.cancel")} & {t("common:nav.signIn")}
+          </span>
         </Link>
       </CardFooter>
     </Card>

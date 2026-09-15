@@ -11,5 +11,4 @@ export const createCheckout = ({ serviceRequestId }) =>
  * GET /api/payments/request/{requestId}
  * @param {string} requestId
  */
-export const getPaymentByRequest = (requestId) =>
-  axiosClient.get(`/payments/request/${requestId}`);
+export const getPaymentByRequest = (requestId) => axiosClient.get(`/payments/request/${requestId}`);

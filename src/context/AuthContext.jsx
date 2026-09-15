@@ -1,6 +1,7 @@
 import { createContext, useState, useCallback, useMemo, useEffect } from "react";
-import { UserRole } from "@/lib/constants";
+
 import * as accountApi from "@/api/account";
+import { UserRole } from "@/lib/constants";
 
 export const AuthContext = createContext(null);
 
@@ -65,7 +66,7 @@ export function AuthProvider({ children }) {
     if (!data) return null;
 
     const { accessToken: newAccess, refreshToken: newRefresh, ...userData } = data;
-    
+
     // Normalize role if needed
     const normalizedUser = {
       id: userData.id || userData.userId,
@@ -176,24 +177,22 @@ export function AuthProvider({ children }) {
   /**
    * Get default redirect URL based on role and status
    */
-  const getHomeRoute = useCallback((userObj = user) => {
-    if (!userObj) return "/login";
-    const userRole = userObj.role;
+  const getHomeRoute = useCallback(
+    (userObj = user) => {
+      if (!userObj) return "/login";
+      const userRole = userObj.role;
 
-    if (userRole === UserRole.ADMIN || userRole?.toLowerCase() === "admin") {
-      return "/admin/dashboard";
-    }
-    if (
-      userRole === UserRole.SERVICE_PROVIDER ||
-      userRole?.toLowerCase() === "serviceprovider"
-    ) {
-      // providerStatus: 1 = approved/active, 0 = pending, 2 = rejected
-      return userObj.providerStatus === 1
-        ? "/provider/dashboard"
-        : "/provider/pending";
-    }
-    return "/app/providers";
-  }, [user]);
+      if (userRole === UserRole.ADMIN || userRole?.toLowerCase() === "admin") {
+        return "/admin/dashboard";
+      }
+      if (userRole === UserRole.SERVICE_PROVIDER || userRole?.toLowerCase() === "serviceprovider") {
+        // providerStatus: 1 = approved/active, 0 = pending, 2 = rejected
+        return userObj.providerStatus === 1 ? "/provider/dashboard" : "/provider/pending";
+      }
+      return "/app/providers";
+    },
+    [user]
+  );
 
   // Role check helpers
   const isUser = role === UserRole.USER;

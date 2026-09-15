@@ -1,19 +1,26 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { KeyRound, Mail, Phone, ArrowRight, ArrowLeft, AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-import { forgotPasswordSchema } from "@/lib/validators";
 import { forgetPassword } from "@/api/account";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import { forgotPasswordSchema } from "@/lib/validators";
 
 export default function ForgotPasswordPage() {
   const { t } = useTranslation(["auth", "common"]);
@@ -36,7 +43,9 @@ export default function ForgotPasswordPage() {
     mutationFn: (data) => forgetPassword(data),
     onSuccess: (result, variables) => {
       const returnedUserId = result?.userId || result?.data?.userId;
-      toast.success(t("auth:otp.codeResent", { defaultValue: "A password reset code has been dispatched." }));
+      toast.success(
+        t("auth:otp.codeResent", { defaultValue: "A password reset code has been dispatched." })
+      );
       if (returnedUserId) {
         localStorage.setItem("pendingUserId", returnedUserId);
       }
@@ -157,7 +166,9 @@ export default function ForgotPasswordPage() {
           className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <DirectionalIcon icon={ArrowLeft} className="h-3.5 w-3.5" />
-          <span>{t("common:actions.cancel")} & {t("common:nav.signIn")}</span>
+          <span>
+            {t("common:actions.cancel")} & {t("common:nav.signIn")}
+          </span>
         </Link>
       </CardFooter>
     </Card>

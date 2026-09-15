@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { AuthProvider } from "@/context/AuthContext";
-import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { useTranslation } from "react-i18next";
 import { Toaster } from "sonner";
+
+import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {

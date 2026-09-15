@@ -1,26 +1,18 @@
-import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
+import { Mail, Phone, Camera, Shield, CheckCircle2, AlertCircle } from "lucide-react";
+import { useRef } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  User,
-  Mail,
-  Phone,
-  Camera,
-  Shield,
-  Lock,
-  Calendar,
-  CheckCircle2,
-} from "lucide-react";
+import { toast } from "sonner";
 
 import { getUserProfile, updateProfilePicture } from "@/api/user";
-import { useAuth } from "@/hooks/useAuth";
-import { getMediaUrl, getInitials } from "@/lib/utils";
+import EmptyState from "@/components/shared/EmptyState";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
 import ChangePasswordDialog from "@/features/auth/ChangePasswordDialog";
+import { useAuth } from "@/hooks/useAuth";
+import { getMediaUrl, getInitials, handleMutationError } from "@/lib/utils";
 
 export default function ClientSettingsPage() {
   const { t } = useTranslation(["client", "common"]);
@@ -28,7 +20,12 @@ export default function ClientSettingsPage() {
   const { user, updateUser } = useAuth();
   const fileInputRef = useRef(null);
 
-  const { data: profile, isLoading } = useQuery({
+  const {
+    data: profile,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["user-profile"],
     queryFn: getUserProfile,
   });
@@ -49,11 +46,7 @@ export default function ClientSettingsPage() {
         updateUser({ profilePicture: newUrl });
       }
     },
-    onError: (error) => {
-      toast.error(t("common:error"), {
-        description: error?.response?.data?.message || "Please select a valid image.",
-      });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   const handleAvatarSelect = (e) => {
@@ -72,6 +65,18 @@ export default function ClientSettingsPage() {
     );
   }
 
+  if (isError && !user) {
+    return (
+      <EmptyState
+        icon={AlertCircle}
+        title={t("common:error")}
+        description={t("common:empty.tryAdjusting")}
+        actionLabel={t("common:actions.retry")}
+        onAction={() => refetch()}
+      />
+    );
+  }
+
   const displayName =
     activeUser?.name ||
     `${activeUser?.firstName || ""} ${activeUser?.lastName || ""}`.trim() ||
@@ -82,18 +87,16 @@ export default function ClientSettingsPage() {
     <div className="space-y-6 max-w-2xl mx-auto">
       <div>
         <h1 className="text-2xl font-bold text-foreground">{t("client:settings.title")}</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {t("client:settings.subtitle")}
-        </p>
+        <p className="text-xs text-muted-foreground mt-0.5">{t("client:settings.subtitle")}</p>
       </div>
 
       {/* Profile Card */}
       <Card className="border-border/70 shadow-sm bg-card">
         <CardHeader className="pb-4">
-          <CardTitle className="text-base font-bold">{t("client:settings.personalDetails")}</CardTitle>
-          <CardDescription className="text-xs">
-            {t("client:settings.subtitle")}
-          </CardDescription>
+          <CardTitle className="text-base font-bold">
+            {t("client:settings.personalDetails")}
+          </CardTitle>
+          <CardDescription className="text-xs">{t("client:settings.subtitle")}</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-6">
@@ -177,7 +180,9 @@ export default function ClientSettingsPage() {
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                 {t("client:profile.nationalIdVerified")}
               </span>
-              <span className="font-semibold text-emerald-600 block">{t("client:directory.verified")}</span>
+              <span className="font-semibold text-emerald-600 block">
+                {t("client:directory.verified")}
+              </span>
             </div>
           </div>
         </CardContent>
@@ -193,7 +198,9 @@ export default function ClientSettingsPage() {
         </CardHeader>
         <CardContent className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold text-foreground">{t("client:settings.changePassword")}</p>
+            <p className="text-xs font-semibold text-foreground">
+              {t("client:settings.changePassword")}
+            </p>
             <p className="text-xs text-muted-foreground mt-0.5">
               {t("client:settings.changePasswordDesc")}
             </p>

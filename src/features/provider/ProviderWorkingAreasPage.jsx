@@ -1,26 +1,25 @@
-import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { useTranslation } from "react-i18next";
 import { MapPin, Plus, Trash2, Building, AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 import { getWorkingAreas, addWorkingArea, deleteWorkingArea } from "@/api/provider";
+import EmptyState from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
-const COMMON_GOVERNORATES = [
-  "Cairo",
-  "Giza",
-  "Alexandria",
-  "Qalyubia",
-  "Dakahlia",
-  "Sharqia",
-  "Gharbia",
-  "Menofia",
-];
+import { GOVERNORATES } from "@/lib/constants";
+import { handleMutationError } from "@/lib/utils";
 
 export default function ProviderWorkingAreasPage() {
   const { t } = useTranslation(["provider", "common"]);
@@ -30,7 +29,12 @@ export default function ProviderWorkingAreasPage() {
   const [city, setCity] = useState("");
   const [district, setDistrict] = useState("");
 
-  const { data: areas = [], isLoading } = useQuery({
+  const {
+    data: areas = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["provider-working-areas"],
     queryFn: getWorkingAreas,
   });
@@ -44,11 +48,7 @@ export default function ProviderWorkingAreasPage() {
       setCity("");
       setDistrict("");
     },
-    onError: (error) => {
-      toast.error(t("common:error"), {
-        description: error?.response?.data?.message || "Please check details.",
-      });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   const deleteMutation = useMutation({
@@ -57,15 +57,13 @@ export default function ProviderWorkingAreasPage() {
       toast.success(t("provider:workingAreas.deletedToast"));
       queryClient.invalidateQueries(["provider-working-areas"]);
     },
-    onError: () => {
-      toast.error(t("common:error"));
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   const handleAdd = (e) => {
     e.preventDefault();
     if (!city.trim()) {
-      toast.error(t("common:error"));
+      toast.error(t("provider:workingAreas.cityRequired"));
       return;
     }
     addMutation.mutate();
@@ -91,7 +89,7 @@ export default function ProviderWorkingAreasPage() {
 
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>{t("provider:workingAreas.addArea")}</DialogTitle>
+              <DialogTitle>{t("provider:workingAreas.addModalTitle")}</DialogTitle>
               <DialogDescription className="text-xs mt-0.5">
                 {t("provider:workingAreas.subtitle")}
               </DialogDescription>
@@ -99,13 +97,13 @@ export default function ProviderWorkingAreasPage() {
 
             <form onSubmit={handleAdd} className="space-y-4 pt-2">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">{t("provider:workingAreas.governorate")}</Label>
+                <Label className="text-xs font-semibold">{t("client:profile.governorate")} *</Label>
                 <select
                   value={governorate}
                   onChange={(e) => setGovernorate(e.target.value)}
                   className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
                 >
-                  {COMMON_GOVERNORATES.map((gov) => (
+                  {GOVERNORATES.map((gov) => (
                     <option key={gov} value={gov}>
                       {gov}
                     </option>
@@ -114,29 +112,27 @@ export default function ProviderWorkingAreasPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">{t("provider:workingAreas.city")} *</Label>
+                <Label className="text-xs font-semibold">{t("client:profile.city")} *</Label>
                 <Input
-                  placeholder="e.g. New Cairo / Maadi / Dokki"
+                  placeholder="e.g. Nasr City, Maadi..."
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
+                  className="text-xs"
                 />
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">{t("provider:workingAreas.district")}</Label>
+                <Label className="text-xs font-semibold">{t("client:profile.district")}</Label>
                 <Input
-                  placeholder="e.g. 5th Settlement / Degla"
+                  placeholder="e.g. Zone 1, Degla..."
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
+                  className="text-xs"
                 />
               </div>
 
               <div className="flex justify-end gap-2 pt-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setModalOpen(false)}
-                >
+                <Button type="button" variant="outline" onClick={() => setModalOpen(false)}>
                   {t("common:cancel")}
                 </Button>
                 <Button type="submit" disabled={addMutation.isPending}>
@@ -150,7 +146,9 @@ export default function ProviderWorkingAreasPage() {
 
       <Card className="border-border/70 shadow-sm bg-card">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold">{t("provider:workingAreas.title")} ({areas.length})</CardTitle>
+          <CardTitle className="text-base font-bold">
+            {t("provider:workingAreas.title")} ({areas.length})
+          </CardTitle>
           <CardDescription className="text-xs">
             {t("provider:workingAreas.subtitle")}
           </CardDescription>
@@ -163,18 +161,25 @@ export default function ProviderWorkingAreasPage() {
                 <div key={i} className="h-14 bg-muted/30 rounded-xl animate-pulse" />
               ))}
             </div>
+          ) : isError ? (
+            <div className="py-12">
+              <EmptyState
+                icon={AlertCircle}
+                title={t("common:error")}
+                description={t("common:empty.tryAdjusting")}
+                actionLabel={t("common:actions.retry")}
+                onAction={() => refetch()}
+              />
+            </div>
           ) : areas.length === 0 ? (
-            <div className="text-center py-12 text-xs text-muted-foreground space-y-2">
-              <MapPin className="h-10 w-10 text-muted-foreground/40 mx-auto" />
-              <p>{t("provider:workingAreas.noAreas")}</p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="text-xs mt-2"
-                onClick={() => setModalOpen(true)}
-              >
-                {t("provider:workingAreas.addArea")}
-              </Button>
+            <div className="py-8">
+              <EmptyState
+                icon={MapPin}
+                title={t("provider:workingAreas.noAreas")}
+                description={t("provider:workingAreas.subtitle")}
+                actionLabel={t("provider:workingAreas.addArea")}
+                onAction={() => setModalOpen(true)}
+              />
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -188,9 +193,7 @@ export default function ProviderWorkingAreasPage() {
                       <Building className="h-4 w-4" />
                     </div>
                     <div>
-                      <span className="font-bold text-foreground">
-                        {area.city || "-"}
-                      </span>
+                      <span className="font-bold text-foreground">{area.city || "-"}</span>
                       <span className="text-muted-foreground block text-[11px]">
                         {area.governorate}
                         {area.district ? ` • ${area.district}` : ""}

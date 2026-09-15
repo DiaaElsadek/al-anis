@@ -9,11 +9,7 @@ const ThemeContext = createContext({
 
 const STORAGE_KEY = "alanis-theme";
 
-export function ThemeProvider({
-  children,
-  defaultTheme = "system",
-  storageKey = STORAGE_KEY,
-}) {
+export function ThemeProvider({ children, defaultTheme = "system", storageKey = STORAGE_KEY }) {
   const [theme, setThemeState] = useState(() => {
     try {
       return localStorage.getItem(storageKey) || defaultTheme;
@@ -25,9 +21,7 @@ export function ThemeProvider({
   const [resolvedTheme, setResolvedTheme] = useState(() => {
     if (typeof window === "undefined") return "light";
     if (theme === "system") {
-      return window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
+      return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     }
     return theme;
   });
