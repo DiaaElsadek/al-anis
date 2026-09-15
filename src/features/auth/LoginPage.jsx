@@ -33,6 +33,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+import { UserRole } from "@/lib/constants";
 import { loginSchema } from "@/lib/validators";
 
 export default function LoginPage() {
@@ -59,6 +60,29 @@ export default function LoginPage() {
     },
   });
 
+  const resolvePostLoginRoute = (loggedUser) => {
+    const homeRoute = getHomeRoute(loggedUser);
+    if (!from || from === "/403" || from === "/login" || from === "/") {
+      return homeRoute;
+    }
+
+    const userRole = loggedUser?.role;
+    const isProviderRole =
+      userRole === UserRole.SERVICE_PROVIDER || userRole?.toLowerCase() === "provider";
+    const isAdminRole = userRole === UserRole.ADMIN || userRole?.toLowerCase() === "admin";
+    const isClientRole =
+      userRole === UserRole.USER ||
+      userRole?.toLowerCase() === "user" ||
+      userRole?.toLowerCase() === "client";
+
+    // Only honour 'from' if it belongs to the logged-in user's role domain
+    if (isProviderRole && from.startsWith("/provider")) return from;
+    if (isAdminRole && from.startsWith("/admin")) return from;
+    if (isClientRole && from.startsWith("/app")) return from;
+
+    return homeRoute;
+  };
+
   // Login mutation
   const loginMutation = useMutation({
     mutationFn: (credentials) => login(credentials),
@@ -66,7 +90,7 @@ export default function LoginPage() {
       toast.success(t("auth:login.successToast"), {
         description: `Signed in as ${result?.user?.email || "user"}.`,
       });
-      const destination = from || getHomeRoute(result?.user);
+      const destination = resolvePostLoginRoute(result?.user);
       navigate(destination, { replace: true });
     },
     onError: (error) => {
@@ -87,7 +111,7 @@ export default function LoginPage() {
     mutationFn: (idToken) => loginWithGoogle(idToken),
     onSuccess: (result) => {
       toast.success(t("auth:login.signInWithGoogle"));
-      const destination = from || getHomeRoute(result?.user);
+      const destination = resolvePostLoginRoute(result?.user);
       navigate(destination, { replace: true });
     },
     onError: (error) => {
