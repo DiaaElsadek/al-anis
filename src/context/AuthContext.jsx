@@ -18,6 +18,18 @@ function loadPersistedAuth() {
     if (accessToken) {
       const claims = parseJwt(accessToken);
       if (user) {
+        // Normalize role if stored as raw "Provider" or "Client"
+        if (
+          user.role?.toLowerCase() === "provider" ||
+          user.role?.toLowerCase() === "serviceprovider"
+        ) {
+          user.role = UserRole.SERVICE_PROVIDER;
+        } else if (user.role?.toLowerCase() === "user" || user.role?.toLowerCase() === "client") {
+          user.role = UserRole.USER;
+        } else if (user.role?.toLowerCase() === "admin") {
+          user.role = UserRole.ADMIN;
+        }
+
         // Enrich user with JWT claims if missing
         if (!user.fullName && claims?.FullName) {
           user.fullName = claims.FullName;
@@ -36,6 +48,12 @@ function loadPersistedAuth() {
         }
         if (!user.phoneNumber && claims?.phoneNumber) {
           user.phoneNumber = claims.phoneNumber;
+        }
+        if (claims?.ServiceProviderId && !user.serviceProviderId) {
+          user.serviceProviderId = claims.ServiceProviderId;
+        }
+        if (claims?.ServiceProviderStatus && !user.serviceProviderStatus) {
+          user.serviceProviderStatus = claims.ServiceProviderStatus;
         }
       } else if (claims) {
         const parts = (claims.FullName || "").split(" ");
@@ -61,6 +79,8 @@ function loadPersistedAuth() {
           lastName: parts.slice(1).join(" ") || "",
           phoneNumber: claims.phoneNumber || "",
           role: normalizedRole,
+          serviceProviderId: claims.ServiceProviderId || null,
+          serviceProviderStatus: claims.ServiceProviderStatus || null,
         };
       }
       return { user, accessToken, refreshToken };
@@ -147,6 +167,7 @@ export function AuthProvider({ children }) {
     }
 
     const normalizedUser = {
+      ...userData,
       id: userData.id || userData.userId || jwtClaims?.UserId || jwtClaims?.nameid,
       email: userData.email || jwtClaims?.email,
       fullName: fullName || userData.email?.split("@")[0] || "",
@@ -157,11 +178,13 @@ export function AuthProvider({ children }) {
       role: normalizedRole,
       isEmailConfirmed: userData.isEmailConfirmed ?? true,
       providerStatus: userData.providerStatus,
+      serviceProviderStatus:
+        jwtClaims?.ServiceProviderStatus ||
+        (userData.providerStatus === 1 || userData.providerStatus === 3 ? "Approved" : "Pending"),
       isAvailable: userData.isAvailable ?? true,
       profilePicture: userData.profilePicture || userData.profilePictureUrl || null,
       profilePictureUrl: userData.profilePictureUrl || userData.profilePicture || null,
-      serviceProviderId: userData.serviceProviderId || jwtClaims?.ServiceProviderId,
-      ...userData,
+      serviceProviderId: userData.serviceProviderId || jwtClaims?.ServiceProviderId || null,
     };
 
     if (newAccess) {
@@ -274,8 +297,14 @@ export function AuthProvider({ children }) {
         userRole?.toLowerCase() === "serviceprovider" ||
         userRole?.toLowerCase() === "provider"
       ) {
-        // providerStatus: 1 = approved/active, 0 = pending, 2 = rejected
-        return userObj.providerStatus === 1 ? "/provider/dashboard" : "/provider/pending";
+        // Status 1 or 3 = approved, or "Approved" string in claims/status, or has active provider ID
+        const isApproved =
+          userObj.providerStatus === 1 ||
+          userObj.providerStatus === 3 ||
+          userObj.serviceProviderStatus?.toLowerCase() === "approved" ||
+          !!userObj.serviceProviderId;
+
+        return isApproved ? "/provider/dashboard" : "/provider/pending";
       }
       return "/app/dashboard";
     },
@@ -283,16 +312,40 @@ export function AuthProvider({ children }) {
   );
 
   // Role check helpers
-  const isUser = role === UserRole.USER;
-  const isProvider = role === UserRole.SERVICE_PROVIDER;
-  const isAdmin = role === UserRole.ADMIN;
+  const isUser =
+    role === UserRole.USER || role?.toLowerCase() === "user" || role?.toLowerCase() === "client";
+  const isProvider =
+    role === UserRole.SERVICE_PROVIDER ||
+    role?.toLowerCase() === "serviceprovider" ||
+    role?.toLowerCase() === "provider";
+  const isAdmin = role === UserRole.ADMIN || role?.toLowerCase() === "admin";
 
   const hasRole = useCallback(
     (requiredRole) => {
+      const matchRole = (target, current) => {
+        if (!current) return false;
+        if (target === current) return true;
+        const normTarget = target?.toLowerCase();
+        const normCurrent = current?.toLowerCase();
+        if (
+          (normTarget === "serviceprovider" || normTarget === "provider") &&
+          (normCurrent === "serviceprovider" || normCurrent === "provider")
+        ) {
+          return true;
+        }
+        if (
+          (normTarget === "user" || normTarget === "client") &&
+          (normCurrent === "user" || normCurrent === "client")
+        ) {
+          return true;
+        }
+        return normTarget === normCurrent;
+      };
+
       if (Array.isArray(requiredRole)) {
-        return requiredRole.includes(role);
+        return requiredRole.some((r) => matchRole(r, role));
       }
-      return role === requiredRole;
+      return matchRole(requiredRole, role);
     },
     [role]
   );

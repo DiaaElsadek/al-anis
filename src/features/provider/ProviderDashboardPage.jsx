@@ -11,11 +11,13 @@ import { Button } from "@/components/ui/button";
 import ProviderStatsGrid from "@/features/provider/components/ProviderStatsGrid";
 import RecentRequestsList from "@/features/provider/components/RecentRequestsList";
 import UpcomingJobsList from "@/features/provider/components/UpcomingJobsList";
+import { useAuth } from "@/hooks/useAuth";
 import { getInitials, getMediaUrl, handleMutationError } from "@/lib/utils";
 
 export default function ProviderDashboardPage() {
   const { t, i18n } = useTranslation(["provider", "common"]);
   const queryClient = useQueryClient();
+  const { user } = useAuth();
 
   const { data: dashboard, isLoading } = useQuery({
     queryKey: ["provider-dashboard"],
@@ -51,6 +53,9 @@ export default function ProviderDashboardPage() {
   const isAvail = dashboard?.isAvailable ?? true;
   const recentRequests = dashboard?.recentRequests || [];
   const upcomingJobs = dashboard?.upcomingJobs || [];
+  const displayName =
+    dashboard?.fullName || user?.fullName || user?.name || t("common:roles.provider");
+  const avatarUrl = dashboard?.profilePicture || user?.profilePicture || user?.profilePictureUrl;
 
   return (
     <div className="space-y-8">
@@ -58,15 +63,15 @@ export default function ProviderDashboardPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white shadow-md">
         <div className="flex items-center gap-4">
           <Avatar className="h-14 w-14 rounded-2xl border-2 border-white/20">
-            <AvatarImage src={getMediaUrl(dashboard?.profilePicture)} alt={dashboard?.fullName} />
+            <AvatarImage src={getMediaUrl(avatarUrl)} alt={displayName} />
             <AvatarFallback className="rounded-2xl bg-white/10 text-white font-bold text-lg">
-              {getInitials(dashboard?.fullName || t("common:roles.provider"))}
+              {getInitials(displayName)}
             </AvatarFallback>
           </Avatar>
           <div>
             <div className="flex items-center gap-1.5">
               <h1 className="text-xl font-bold">
-                {t("provider:dashboard.title")}, {dashboard?.fullName || t("common:roles.provider")}
+                {t("provider:dashboard.title")}, {displayName}
               </h1>
               <ShieldCheck className="h-4 w-4 text-emerald-400" />
             </div>
