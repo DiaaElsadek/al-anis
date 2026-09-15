@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   User,
   Briefcase,
@@ -14,7 +15,7 @@ import {
 
 import { getProviderProfile, updateProviderProfile } from "@/api/provider";
 import { useAuth } from "@/hooks/useAuth";
-import { getMediaUrl, getInitials } from "@/lib/utils";
+import { getMediaUrl, getInitials, getLocalizedCategoryName } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -26,6 +27,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import ChangePasswordDialog from "@/features/auth/ChangePasswordDialog";
 
 export default function ProviderEditProfilePage() {
+  const { t, i18n } = useTranslation(["provider", "client", "common"]);
   const queryClient = useQueryClient();
   const { updateUser } = useAuth();
   const fileInputRef = useRef(null);
@@ -64,7 +66,7 @@ export default function ProviderEditProfilePage() {
       return updateProviderProfile(formData);
     },
     onSuccess: (updated) => {
-      toast.success("Profile updated successfully!");
+      toast.success(t("provider:editProfile.successToast"));
       queryClient.invalidateQueries(["provider-profile"]);
       queryClient.invalidateQueries(["provider-dashboard"]);
       if (updated?.profilePicture) {
@@ -72,7 +74,7 @@ export default function ProviderEditProfilePage() {
       }
     },
     onError: (error) => {
-      toast.error("Failed to update profile", {
+      toast.error(t("common:error"), {
         description: error?.response?.data?.message || "Please check inputs.",
       });
     },
@@ -103,25 +105,25 @@ export default function ProviderEditProfilePage() {
   const providerName =
     profile?.fullName ||
     `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() ||
-    "Specialist";
+    t("common:roles.provider");
 
   const displayAvatar = photoPreview || getMediaUrl(profile?.profilePicture);
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Provider Profile & Details</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("provider:editProfile.title")}</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Update your public profile, care introduction, experience, and photo.
+          {t("provider:editProfile.subtitle")}
         </p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Card className="border-border/70 shadow-sm bg-card">
           <CardHeader className="pb-4">
-            <CardTitle className="text-base font-bold">Public Bio & Photo</CardTitle>
+            <CardTitle className="text-base font-bold">{t("client:settings.personalDetails")}</CardTitle>
             <CardDescription className="text-xs">
-              This information is displayed on your verified provider profile to clients.
+              {t("provider:editProfile.subtitle")}
             </CardDescription>
           </CardHeader>
 
@@ -140,10 +142,10 @@ export default function ProviderEditProfilePage() {
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   className="absolute inset-0 rounded-2xl bg-black/50 text-white flex flex-col items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                  title="Change Photo"
+                  title={t("client:settings.uploadPhoto")}
                 >
                   <Camera className="h-5 w-5" />
-                  <span className="text-[10px] font-medium mt-0.5">Edit</span>
+                  <span className="text-[10px] font-medium mt-0.5">{t("common:edit")}</span>
                 </button>
 
                 <input
@@ -168,7 +170,7 @@ export default function ProviderEditProfilePage() {
                   className="h-7 text-xs mt-1"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  Change Profile Picture
+                  {t("client:settings.uploadPhoto")}
                 </Button>
               </div>
             </div>
@@ -176,11 +178,11 @@ export default function ProviderEditProfilePage() {
             {/* Specialties read-only preview */}
             {profile?.categories?.length > 0 && (
               <div className="space-y-1.5 pt-2">
-                <Label className="text-xs font-semibold">Registered Categories</Label>
+                <Label className="text-xs font-semibold">{t("auth:register.categories")}</Label>
                 <div className="flex flex-wrap gap-1.5">
                   {profile.categories.map((c) => (
                     <Badge key={c.id} variant="secondary" className="text-xs">
-                      {c.name}
+                      {getLocalizedCategoryName(c, i18n.language)}
                     </Badge>
                   ))}
                 </div>
@@ -190,11 +192,11 @@ export default function ProviderEditProfilePage() {
             {/* Experience */}
             <div className="space-y-1.5">
               <Label htmlFor="experienceInput" className="text-xs font-semibold">
-                Years & Summary of Experience
+                {t("provider:editProfile.experienceLabel")}
               </Label>
               <Input
                 id="experienceInput"
-                placeholder="e.g. 5 years in intensive nursing and elderly assistance"
+                placeholder="5 years..."
                 {...register("experience")}
               />
             </div>
@@ -202,12 +204,12 @@ export default function ProviderEditProfilePage() {
             {/* Bio */}
             <div className="space-y-1.5">
               <Label htmlFor="bioInput" className="text-xs font-semibold">
-                Professional Bio & Philosophy
+                {t("provider:editProfile.bioLabel")}
               </Label>
               <Textarea
                 id="bioInput"
                 rows={4}
-                placeholder="Share your qualifications, approach to compassionate care, and communication style..."
+                placeholder="..."
                 className="text-xs resize-none"
                 {...register("bio")}
               />
@@ -216,7 +218,7 @@ export default function ProviderEditProfilePage() {
             <div className="flex justify-end pt-2">
               <Button type="submit" disabled={updateMutation.isPending}>
                 <Save className="h-4 w-4 me-2" />
-                {updateMutation.isPending ? "Saving..." : "Save Profile Changes"}
+                {updateMutation.isPending ? t("provider:editProfile.saving") : t("provider:editProfile.saveButton")}
               </Button>
             </div>
           </CardContent>
@@ -226,16 +228,16 @@ export default function ProviderEditProfilePage() {
       {/* Password Management */}
       <Card className="border-border/70 shadow-sm bg-card">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold">Security Settings</CardTitle>
+          <CardTitle className="text-base font-bold">{t("client:settings.security")}</CardTitle>
           <CardDescription className="text-xs">
-            Manage your password and authentication credentials.
+            {t("client:settings.changePasswordDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold text-foreground">Password</p>
+            <p className="text-xs font-semibold text-foreground">{t("client:settings.changePassword")}</p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Keep your account protected with a strong credentials combination.
+              {t("client:settings.changePasswordDesc")}
             </p>
           </div>
           <ChangePasswordDialog />

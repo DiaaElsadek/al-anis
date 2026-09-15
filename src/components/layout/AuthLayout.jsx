@@ -1,8 +1,13 @@
 import { Outlet, Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ShieldCheck, Clock, CheckCircle2, ArrowLeft, Star, Users } from "lucide-react";
 import ThemeToggle from "@/components/shared/ThemeToggle";
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 
 export default function AuthLayout() {
+  const { t } = useTranslation(["auth", "common"]);
+
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-background">
       {/* Brand Hero Panel (Desktop) */}
@@ -20,10 +25,10 @@ export default function AuthLayout() {
             </div>
             <div>
               <span className="text-2xl font-bold tracking-tight bg-gradient-to-r from-white via-teal-100 to-teal-300 bg-clip-text text-transparent">
-                Alanis
+                {t("common:brand.name")}
               </span>
               <span className="block text-xs font-medium text-teal-300/80 tracking-widest uppercase">
-                الأنـيـس • Marketplace
+                {t("common:brand.subtitle")}
               </span>
             </div>
           </Link>
@@ -33,51 +38,50 @@ export default function AuthLayout() {
         <div className="relative z-10 my-auto py-10 max-w-lg">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-300 text-xs font-semibold mb-6">
             <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-            Egypt's #1 Shift-Based Service Platform
+            {t("auth:hero.badge")}
           </div>
 
           <h2 className="text-3xl xl:text-4xl font-extrabold tracking-tight leading-tight text-white mb-4">
-            Reliable hands for when you need them most.
+            {t("auth:hero.headline")}
           </h2>
           <p className="text-teal-100/70 text-base leading-relaxed mb-8">
-            Connect with verified healthcare aides, childcare specialists, tutors,
-            and home professionals booked per shift on your schedule.
+            {t("auth:hero.subtitle")}
           </p>
 
           {/* Value Prop Cards */}
           <div className="space-y-3.5">
             <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm transition-all hover:bg-white/[0.07]">
-              <div className="p-2 rounded-lg bg-teal-500/20 text-teal-300 mt-0.5">
+              <div className="p-2 rounded-lg bg-teal-500/20 text-teal-300 mt-0.5 shrink-0">
                 <ShieldCheck className="h-4 w-4" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Vetted & Background-Checked</h4>
+                <h4 className="text-sm font-semibold text-white">{t("auth:hero.benefit1Title")}</h4>
                 <p className="text-xs text-teal-200/60 mt-0.5">
-                  National ID, criminal background, and professional credentials thoroughly audited.
+                  {t("auth:hero.benefit1Desc")}
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm transition-all hover:bg-white/[0.07]">
-              <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-300 mt-0.5">
+              <div className="p-2 rounded-lg bg-emerald-500/20 text-emerald-300 mt-0.5 shrink-0">
                 <Clock className="h-4 w-4" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Shift-Based Transparency</h4>
+                <h4 className="text-sm font-semibold text-white">{t("auth:hero.benefit2Title")}</h4>
                 <p className="text-xs text-teal-200/60 mt-0.5">
-                  Clear morning, evening, or night shift bookings with upfront, predictable pricing.
+                  {t("auth:hero.benefit2Desc")}
                 </p>
               </div>
             </div>
 
             <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white/[0.04] border border-white/[0.08] backdrop-blur-sm transition-all hover:bg-white/[0.07]">
-              <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-300 mt-0.5">
+              <div className="p-2 rounded-lg bg-cyan-500/20 text-cyan-300 mt-0.5 shrink-0">
                 <CheckCircle2 className="h-4 w-4" />
               </div>
               <div>
-                <h4 className="text-sm font-semibold text-white">Escrow Payment Protection</h4>
+                <h4 className="text-sm font-semibold text-white">{t("auth:hero.benefit3Title")}</h4>
                 <p className="text-xs text-teal-200/60 mt-0.5">
-                  Payments are safely held and released only after the shift is satisfactorily fulfilled.
+                  {t("auth:hero.benefit3Desc")}
                 </p>
               </div>
             </div>
@@ -88,7 +92,7 @@ export default function AuthLayout() {
         <div className="relative z-10 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-teal-200/70">
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-teal-400" />
-            <span><strong className="text-white font-semibold">12,500+</strong> Shifts Booked</span>
+            <span><strong className="text-white font-semibold">{t("auth:hero.shiftsMetric")}</strong></span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="flex text-amber-400">
@@ -96,7 +100,7 @@ export default function AuthLayout() {
                 <Star key={i} className="h-3.5 w-3.5 fill-current" />
               ))}
             </div>
-            <span><strong className="text-white font-semibold">4.9/5</strong> Client Trust</span>
+            <span><strong className="text-white font-semibold">{t("auth:hero.trustMetric")}</strong></span>
           </div>
         </div>
       </div>
@@ -109,19 +113,20 @@ export default function AuthLayout() {
             to="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
           >
-            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            <span>Back to Home</span>
+            <DirectionalIcon icon={ArrowLeft} className="h-4 w-4 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1" />
+            <span>{t("common:nav.backToHome")}</span>
           </Link>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             {/* Mobile brand header */}
             <div className="lg:hidden flex items-center gap-2">
               <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
                 A
               </div>
-              <span className="font-bold text-foreground">Alanis</span>
+              <span className="font-bold text-foreground">{t("common:brand.name")}</span>
             </div>
 
+            <LanguageSwitcher />
             <ThemeToggle />
           </div>
         </div>
@@ -133,7 +138,7 @@ export default function AuthLayout() {
 
         {/* Bottom copyright */}
         <div className="w-full max-w-2xl mx-auto mt-8 pt-4 border-t border-border/40 text-center text-xs text-muted-foreground">
-          © {new Date().getFullYear()} Alanis (الأنـيـس). All rights reserved. Secure 256-bit encrypted authentication.
+          {t("common:footer.copyright", { year: new Date().getFullYear() })}
         </div>
       </div>
     </div>

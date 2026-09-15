@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -22,7 +23,7 @@ import {
   approveServiceProviderApplication,
   rejectServiceProviderApplication,
 } from "@/api/admin";
-import { formatPrice, getMediaUrl } from "@/lib/utils";
+import { formatPrice, formatLocalizedDate, getMediaUrl } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -35,6 +36,7 @@ import StatusBadge from "@/components/shared/StatusBadge";
 import EmptyState from "@/components/shared/EmptyState";
 
 export default function AdminApplicationsPage() {
+  const { t, i18n } = useTranslation(["admin", "common", "auth"]);
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const pageSize = 10;
@@ -108,19 +110,19 @@ export default function AdminApplicationsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Service Provider Applications</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("admin:applications.title")}</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Audit national IDs, professional credentials, and approve or reject provider onboarding.
+          {t("admin:applications.subtitle")}
         </p>
       </div>
 
       {/* Tabs */}
       <div className="flex items-center gap-2 border-b border-border/70 pb-3">
         {[
-          { key: "all", label: "All Submissions" },
-          { key: "pending", label: "Pending Audit" },
-          { key: "approved", label: "Approved" },
-          { key: "rejected", label: "Rejected" },
+          { key: "all", label: t("admin:applications.tabs.all", { count: applications.length }) },
+          { key: "pending", label: t("admin:applications.tabs.pending", { count: applications.filter(a => a.status === 0).length }) },
+          { key: "approved", label: t("admin:applications.tabs.approved", { count: applications.filter(a => a.status === 1).length }) },
+          { key: "rejected", label: t("admin:applications.tabs.rejected", { count: applications.filter(a => a.status === 2).length }) },
         ].map((tab) => (
           <Button
             key={tab.key}
@@ -147,8 +149,8 @@ export default function AdminApplicationsPage() {
             <div className="py-16 text-center">
               <EmptyState
                 icon={FileCheck}
-                title="No applications found"
-                description="New provider registrations will show up here for compliance review."
+                title={t("common:empty.noResults")}
+                description={t("common:empty.tryAdjusting")}
               />
             </div>
           ) : (
@@ -156,13 +158,13 @@ export default function AdminApplicationsPage() {
               <table className="w-full text-xs text-start">
                 <thead>
                   <tr className="border-b border-border/60 bg-muted/20 text-muted-foreground">
-                    <th className="py-3 px-4 font-semibold">Applicant</th>
-                    <th className="py-3 px-4 font-semibold">Contact</th>
-                    <th className="py-3 px-4 font-semibold">Experience</th>
-                    <th className="py-3 px-4 font-semibold">Base Rate</th>
-                    <th className="py-3 px-4 font-semibold">Submitted</th>
-                    <th className="py-3 px-4 font-semibold text-center">Status</th>
-                    <th className="py-3 px-4 font-semibold text-end">Action</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:applications.applicant")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("auth:register.phoneNumber")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:applications.experience")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:applications.hourlyRate")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:applications.submitted")}</th>
+                    <th className="py-3 px-4 font-semibold text-center">{t("admin:applications.status")}</th>
+                    <th className="py-3 px-4 font-semibold text-end">{t("admin:applications.actions")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
@@ -173,16 +175,16 @@ export default function AdminApplicationsPage() {
                       </td>
                       <td className="py-3.5 px-4 text-muted-foreground">
                         <div>{app.userEmail}</div>
-                        <div className="text-[11px]">{app.phoneNumber}</div>
+                        <div className="text-[11px] font-mono">{app.phoneNumber}</div>
                       </td>
                       <td className="py-3.5 px-4 text-foreground/90 max-w-[180px] truncate">
                         {app.experience}
                       </td>
                       <td className="py-3.5 px-4 font-mono font-bold text-primary">
-                        {formatPrice(app.hourlyRate)}/hr
+                        {formatPrice(app.hourlyRate, i18n.language)}
                       </td>
                       <td className="py-3.5 px-4 text-muted-foreground">
-                        {new Date(app.createdAt).toLocaleDateString()}
+                        {formatLocalizedDate(app.createdAt, "PP", i18n.language)}
                       </td>
                       <td className="py-3.5 px-4 text-center">
                         <StatusBadge status={app.status} />
@@ -195,7 +197,7 @@ export default function AdminApplicationsPage() {
                           onClick={() => setSelectedAppId(app.id)}
                         >
                           <Eye className="h-3.5 w-3.5 me-1" />
-                          Review Audit
+                          {t("admin:applications.reviewButton")}
                         </Button>
                       </td>
                     </tr>
@@ -223,11 +225,11 @@ export default function AdminApplicationsPage() {
           <DialogContent className="sm:max-w-xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <div className="flex items-center justify-between">
-                <DialogTitle>Provider Compliance Audit</DialogTitle>
+                <DialogTitle>{t("admin:applications.drawerTitle")}</DialogTitle>
                 {selectedApp && <StatusBadge status={selectedApp.status} />}
               </div>
               <DialogDescription className="text-xs">
-                Review submitted National ID, verified credentials, and experience.
+                {t("admin:applications.drawerSubtitle")}
               </DialogDescription>
             </DialogHeader>
 
@@ -242,41 +244,41 @@ export default function AdminApplicationsPage() {
                 {/* Personal grid */}
                 <div className="grid grid-cols-2 gap-3 p-3 rounded-xl bg-muted/25 border border-border/50">
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Full Name</span>
+                    <span className="text-muted-foreground block text-[11px]">{t("auth:register.fullName")}</span>
                     <span className="font-bold text-foreground">
                       {selectedApp.firstName} {selectedApp.lastName}
                     </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">National ID</span>
+                    <span className="text-muted-foreground block text-[11px]">{t("admin:applications.nationalId")}</span>
                     <span className="font-mono font-bold text-foreground">
-                      {selectedApp.nationalId || "Not specified"}
+                      {selectedApp.nationalId || "—"}
                     </span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Email</span>
+                    <span className="text-muted-foreground block text-[11px]">{t("auth:login.emailLabel")}</span>
                     <span className="text-foreground">{selectedApp.userEmail}</span>
                   </div>
                   <div>
-                    <span className="text-muted-foreground block text-[11px]">Phone</span>
-                    <span className="text-foreground">{selectedApp.phoneNumber}</span>
+                    <span className="text-muted-foreground block text-[11px]">{t("auth:register.phoneNumber")}</span>
+                    <span className="text-foreground font-mono">{selectedApp.phoneNumber}</span>
                   </div>
                   <div className="col-span-2">
-                    <span className="text-muted-foreground block text-[11px]">Address</span>
-                    <span className="text-foreground">{selectedApp.address || "N/A"}</span>
+                    <span className="text-muted-foreground block text-[11px]">{t("client:profile.address")}</span>
+                    <span className="text-foreground">{selectedApp.address || "—"}</span>
                   </div>
                 </div>
 
                 {/* Professional summary */}
                 <div className="space-y-1.5">
-                  <span className="font-semibold text-foreground block">Professional Bio</span>
+                  <span className="font-semibold text-foreground block">{t("auth:register.bio")}</span>
                   <p className="p-3 rounded-lg bg-muted/20 border border-border/40 text-foreground leading-relaxed">
-                    {selectedApp.bio || "No bio provided."}
+                    {selectedApp.bio || "—"}
                   </p>
                 </div>
 
                 <div className="space-y-1.5">
-                  <span className="font-semibold text-foreground block">Experience Summary</span>
+                  <span className="font-semibold text-foreground block">{t("admin:applications.experience")}</span>
                   <p className="p-3 rounded-lg bg-muted/20 border border-border/40 text-foreground leading-relaxed">
                     {selectedApp.experience}
                   </p>
@@ -285,7 +287,7 @@ export default function AdminApplicationsPage() {
                 {/* Uploaded Verification Documents */}
                 <div className="space-y-2 pt-2 border-t border-border/50">
                   <span className="font-semibold text-foreground block">
-                    Verification Documents (Audit Files)
+                    {t("admin:applications.documentsTitle")}
                   </span>
                   <div className="grid grid-cols-2 gap-3">
                     {selectedApp.idDocumentPath ? (
@@ -296,7 +298,7 @@ export default function AdminApplicationsPage() {
                         className="flex items-center gap-2 p-3 rounded-lg border border-border/70 hover:bg-muted/40 transition-colors text-primary font-semibold"
                       >
                         <CreditCard className="h-4 w-4" />
-                        <span>View National ID</span>
+                        <span>{t("admin:applications.idDocument")}</span>
                         <ExternalLink className="h-3 w-3 ms-auto opacity-70" />
                       </a>
                     ) : (
@@ -308,10 +310,10 @@ export default function AdminApplicationsPage() {
                         href={getMediaUrl(selectedApp.certificatePath)}
                         target="_blank"
                         rel="noreferrer"
-                        className="flex items-center gap-2 p-3 rounded-lg border border-border/70 hover:bg-muted/40 transition-colors text-teal-700 font-semibold"
+                        className="flex items-center gap-2 p-3 rounded-lg border border-border/70 hover:bg-muted/40 transition-colors text-teal-700 dark:text-teal-400 font-semibold"
                       >
                         <FileText className="h-4 w-4" />
-                        <span>View Certificate</span>
+                        <span>{t("admin:applications.certificate")}</span>
                         <ExternalLink className="h-3 w-3 ms-auto opacity-70" />
                       </a>
                     ) : (
@@ -326,7 +328,7 @@ export default function AdminApplicationsPage() {
                     variant="outline"
                     onClick={() => setSelectedAppId(null)}
                   >
-                    Close
+                    {t("common:actions.close")}
                   </Button>
 
                   {selectedApp.status === 0 && (
@@ -337,7 +339,7 @@ export default function AdminApplicationsPage() {
                         disabled={approveMutation.isPending}
                       >
                         <XCircle className="h-4 w-4 me-1.5" />
-                        Reject Application
+                        {t("admin:applications.rejectButton")}
                       </Button>
 
                       <Button
@@ -346,7 +348,7 @@ export default function AdminApplicationsPage() {
                         disabled={approveMutation.isPending}
                       >
                         <CheckCircle2 className="h-4 w-4 me-1.5" />
-                        {approveMutation.isPending ? "Approving..." : "Approve & Activate"}
+                        {approveMutation.isPending ? t("admin:applications.approving") : t("admin:applications.approveButton")}
                       </Button>
                     </>
                   )}
@@ -362,17 +364,17 @@ export default function AdminApplicationsPage() {
         <Dialog open={rejectModalOpen} onOpenChange={setRejectModalOpen}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Reject Provider Application</DialogTitle>
+              <DialogTitle>{t("admin:applications.rejectModal.title")}</DialogTitle>
               <DialogDescription className="text-xs mt-0.5">
-                Explain what credentials or documents were missing or invalid.
+                {t("admin:applications.rejectModal.subtitle")}
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 pt-2">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Rejection Feedback *</Label>
+                <Label className="text-xs font-semibold">{t("admin:applications.rejectModal.reasonLabel")} *</Label>
                 <Textarea
-                  placeholder="e.g. National ID photo is blurry / need valid nursing certificate..."
+                  placeholder={t("admin:applications.rejectModal.reasonPlaceholder")}
                   rows={3}
                   className="text-xs resize-none"
                   value={rejectionReason}
@@ -382,7 +384,7 @@ export default function AdminApplicationsPage() {
 
               <div className="flex justify-end gap-2 pt-2">
                 <Button variant="outline" onClick={() => setRejectModalOpen(false)}>
-                  Cancel
+                  {t("common:actions.cancel")}
                 </Button>
                 <Button
                   variant="destructive"
@@ -394,7 +396,7 @@ export default function AdminApplicationsPage() {
                     })
                   }
                 >
-                  {rejectMutation.isPending ? "Rejecting..." : "Confirm Rejection"}
+                  {rejectMutation.isPending ? t("admin:applications.approving") : t("admin:applications.rejectModal.confirmButton")}
                 </Button>
               </div>
             </div>

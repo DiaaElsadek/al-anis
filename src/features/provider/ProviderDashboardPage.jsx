@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   CheckCircle2,
   Clock,
@@ -21,7 +22,7 @@ import {
 import { getProviderDashboard, updateAvailabilityStatus } from "@/api/provider";
 import { respondToRequest } from "@/api/requests";
 import { createOrGetChat } from "@/api/chat";
-import { getMediaUrl, formatPrice, getInitials } from "@/lib/utils";
+import { getMediaUrl, formatPrice, getInitials, formatLocalizedDate } from "@/lib/utils";
 import { ShiftTypeLabels } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -31,6 +32,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import StatusBadge from "@/components/shared/StatusBadge";
 
 export default function ProviderDashboardPage() {
+  const { t, i18n } = useTranslation(["provider", "common"]);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -98,18 +100,18 @@ export default function ProviderDashboardPage() {
           <Avatar className="h-14 w-14 rounded-2xl border-2 border-white/20">
             <AvatarImage src={getMediaUrl(dashboard?.profilePicture)} alt={dashboard?.fullName} />
             <AvatarFallback className="rounded-2xl bg-white/10 text-white font-bold text-lg">
-              {getInitials(dashboard?.fullName || "Provider")}
+              {getInitials(dashboard?.fullName || t("common:roles.provider"))}
             </AvatarFallback>
           </Avatar>
           <div>
             <div className="flex items-center gap-1.5">
               <h1 className="text-xl font-bold">
-                Welcome back, {dashboard?.fullName || "Professional"}!
+                {t("provider:dashboard.title")}, {dashboard?.fullName || t("common:roles.provider")}
               </h1>
               <ShieldCheck className="h-4 w-4 text-emerald-400" />
             </div>
             <p className="text-xs text-teal-100/75 mt-0.5">
-              {dashboard?.categories?.[0]?.name || "Verified Service Specialist"}
+              {dashboard?.categories?.[0]?.name || t("client:directory.verified")}
             </p>
           </div>
         </div>
@@ -118,14 +120,14 @@ export default function ProviderDashboardPage() {
         <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/15">
           <div className="text-end">
             <span className="block text-[11px] uppercase tracking-wider text-teal-200/80 font-bold">
-              Shift Status
+              {t("provider:dashboard.availabilityStatus")}
             </span>
             <span
               className={`text-xs font-bold ${
                 isAvail ? "text-emerald-300" : "text-amber-200"
               }`}
             >
-              {isAvail ? "Accepting Bookings" : "Paused / Offline"}
+              {isAvail ? t("provider:dashboard.available") : t("provider:dashboard.unavailable")}
             </span>
           </div>
 
@@ -141,7 +143,7 @@ export default function ProviderDashboardPage() {
             disabled={availMutation.isPending}
           >
             <Power className="h-3.5 w-3.5 me-1.5" />
-            {isAvail ? "Online" : "Go Online"}
+            {isAvail ? t("provider:dashboard.available") : t("provider:dashboard.unavailable")}
           </Button>
         </div>
       </div>
@@ -152,7 +154,7 @@ export default function ProviderDashboardPage() {
         <Card className="border-border/70 shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">Total Earnings</span>
+              <span className="text-xs font-medium text-muted-foreground">{t("provider:dashboard.totalEarnings")}</span>
               <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600">
                 <DollarSign className="h-4 w-4" />
               </div>
@@ -162,7 +164,7 @@ export default function ProviderDashboardPage() {
                 {formatPrice(stats.totalEarnings || 0)}
               </span>
               <span className="text-[11px] text-muted-foreground block mt-0.5">
-                This month: {formatPrice(stats.currentMonthEarnings || 0)}
+                {formatPrice(stats.currentMonthEarnings || 0)}
               </span>
             </div>
           </CardContent>
@@ -172,7 +174,7 @@ export default function ProviderDashboardPage() {
         <Card className="border-border/70 shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">Completed Shifts</span>
+              <span className="text-xs font-medium text-muted-foreground">{t("provider:dashboard.completedShifts")}</span>
               <div className="p-2 rounded-xl bg-primary/10 text-primary">
                 <CheckCircle2 className="h-4 w-4" />
               </div>
@@ -182,7 +184,7 @@ export default function ProviderDashboardPage() {
                 {stats.completedJobs || 0}
               </span>
               <span className="text-[11px] text-muted-foreground block mt-0.5">
-                {stats.workedDays || 0} active days worked
+                {stats.workedDays || 0}
               </span>
             </div>
           </CardContent>
@@ -192,7 +194,7 @@ export default function ProviderDashboardPage() {
         <Card className="border-border/70 shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">Pending Requests</span>
+              <span className="text-xs font-medium text-muted-foreground">{t("provider:dashboard.pendingRequests")}</span>
               <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600">
                 <Clock className="h-4 w-4" />
               </div>
@@ -202,7 +204,7 @@ export default function ProviderDashboardPage() {
                 {stats.pendingRequests || 0}
               </span>
               <span className="text-[11px] text-amber-600 font-medium block mt-0.5">
-                {stats.pendingRequests > 0 ? "Requires review" : "Inbox cleared"}
+                {stats.pendingRequests > 0 ? t("common:status.pending") : "-"}
               </span>
             </div>
           </CardContent>
@@ -212,7 +214,7 @@ export default function ProviderDashboardPage() {
         <Card className="border-border/70 shadow-sm">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-muted-foreground">Client Rating</span>
+              <span className="text-xs font-medium text-muted-foreground">{t("provider:dashboard.rating")}</span>
               <div className="p-2 rounded-xl bg-amber-500/10 text-amber-500">
                 <Star className="h-4 w-4 fill-current" />
               </div>
@@ -222,7 +224,7 @@ export default function ProviderDashboardPage() {
                 {stats.averageRating ? stats.averageRating.toFixed(1) : "5.0"}
               </span>
               <span className="text-[11px] text-muted-foreground block mt-0.5">
-                Based on {stats.totalReviews || 0} verified reviews
+                {stats.totalReviews || 0}
               </span>
             </div>
           </CardContent>
@@ -235,20 +237,20 @@ export default function ProviderDashboardPage() {
         <Card className="border-border/70 shadow-sm">
           <CardHeader className="pb-3 flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-base font-bold">New Shift Requests</CardTitle>
+              <CardTitle className="text-base font-bold">{t("provider:dashboard.urgentRequests")}</CardTitle>
               <CardDescription className="text-xs">
-                Review and accept incoming booking requests from clients.
+                {t("provider:requests.subtitle")}
               </CardDescription>
             </div>
             <Button variant="ghost" size="sm" className="text-xs" asChild>
-              <Link to="/provider/requests">View All</Link>
+              <Link to="/provider/requests">{t("common:viewAll")}</Link>
             </Button>
           </CardHeader>
 
           <CardContent className="space-y-3">
             {recentRequests.length === 0 ? (
               <div className="text-center py-10 text-xs text-muted-foreground">
-                No pending requests. Keep your availability updated to receive more shifts!
+                {t("provider:dashboard.noUrgentRequests")}
               </div>
             ) : (
               recentRequests.slice(0, 3).map((r) => (
@@ -264,20 +266,20 @@ export default function ProviderDashboardPage() {
                       <p className="text-[11px] text-muted-foreground">
                         {r.categoryName} •{" "}
                         <span className="font-semibold text-primary">
-                          {r.shiftTypeName || ShiftTypeLabels[r.shiftType]} Shift
+                          {r.shiftTypeName || ShiftTypeLabels[r.shiftType]}
                         </span>
                       </p>
                     </div>
 
                     <span className="font-bold text-xs text-foreground">
-                      {r.price ? formatPrice(r.price) : "Standard"}
+                      {r.price ? formatPrice(r.price) : "-"}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <Calendar className="h-3 w-3 text-primary" />
-                      {new Date(r.preferredDate).toLocaleDateString()}
+                      {formatLocalizedDate(r.preferredDate, "dd/MM/yyyy", i18n.language)}
                     </span>
                     <span className="flex items-center gap-1 truncate">
                       <MapPin className="h-3 w-3 text-primary flex-shrink-0" />
@@ -296,12 +298,12 @@ export default function ProviderDashboardPage() {
                           respondMutation.mutate({
                             requestId: r.id,
                             status: 4, // Rejected
-                            reason: "Provider schedule unavailable",
+                            reason: "Schedule unavailable",
                           })
                         }
                         disabled={respondMutation.isPending}
                       >
-                        Decline
+                        {t("provider:requests.rejectButton")}
                       </Button>
                       <Button
                         size="sm"
@@ -314,7 +316,7 @@ export default function ProviderDashboardPage() {
                         }
                         disabled={respondMutation.isPending}
                       >
-                        Accept Shift
+                        {t("provider:requests.acceptButton")}
                       </Button>
                     </div>
                   )}
@@ -328,20 +330,20 @@ export default function ProviderDashboardPage() {
         <Card className="border-border/70 shadow-sm">
           <CardHeader className="pb-3 flex flex-row items-center justify-between">
             <div>
-              <CardTitle className="text-base font-bold">Upcoming Shift Schedule</CardTitle>
+              <CardTitle className="text-base font-bold">{t("provider:dashboard.upcomingSchedule")}</CardTitle>
               <CardDescription className="text-xs">
-                Confirmed and in-progress shifts on your calendar.
+                {t("provider:dashboard.subtitle")}
               </CardDescription>
             </div>
             <Button variant="ghost" size="sm" className="text-xs" asChild>
-              <Link to="/provider/availability">Manage Calendar</Link>
+              <Link to="/provider/availability">{t("provider:dashboard.manageCalendar")}</Link>
             </Button>
           </CardHeader>
 
           <CardContent className="space-y-3">
             {upcomingJobs.length === 0 ? (
               <div className="text-center py-10 text-xs text-muted-foreground">
-                No upcoming confirmed shifts scheduled.
+                {t("provider:dashboard.noUpcomingShifts")}
               </div>
             ) : (
               upcomingJobs.slice(0, 3).map((job) => (
@@ -364,7 +366,7 @@ export default function ProviderDashboardPage() {
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
                     <span className="flex items-center gap-1.5">
                       <Calendar className="h-3.5 w-3.5 text-primary" />
-                      {new Date(job.preferredDate).toLocaleDateString()}
+                      {formatLocalizedDate(job.preferredDate, "dd/MM/yyyy", i18n.language)}
                     </span>
                     <span className="truncate max-w-[180px]">
                       {job.address || job.governorate}

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -29,6 +30,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AdminPricingPage() {
+  const { t, i18n } = useTranslation(["admin", "common"]);
   const queryClient = useQueryClient();
   const [singleModalOpen, setSingleModalOpen] = useState(false);
   const [bulkModalOpen, setBulkModalOpen] = useState(false);
@@ -136,9 +138,9 @@ export default function AdminPricingPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Shift Pricing per Category</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("admin:pricing.title")}</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Configure standardized fixed prices per 8-hour shift (Morning, Evening, Night) for each service.
+            {t("admin:pricing.subtitle")}
           </p>
         </div>
 
@@ -148,7 +150,7 @@ export default function AdminPricingPage() {
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="text-xs font-semibold">
                 <Layers className="h-4 w-4 me-1.5 text-primary" />
-                Bulk Configure All 3 Shifts
+                {t("admin:pricing.bulkPricing")}
               </Button>
             </DialogTrigger>
 
@@ -159,9 +161,9 @@ export default function AdminPricingPage() {
                     <Sparkles className="h-5 w-5" />
                   </div>
                   <div>
-                    <DialogTitle>Bulk Shift Pricing Setup</DialogTitle>
+                    <DialogTitle>{t("admin:pricing.bulkModalTitle")}</DialogTitle>
                     <DialogDescription className="text-xs mt-0.5">
-                      Set Morning, Evening, and Night rates for a category at once.
+                      {t("admin:pricing.subtitle")}
                     </DialogDescription>
                   </div>
                 </div>
@@ -169,16 +171,16 @@ export default function AdminPricingPage() {
 
               <div className="space-y-4 pt-2">
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">Select Category *</Label>
+                  <Label className="text-xs font-semibold">{t("admin:pricing.category")} *</Label>
                   <select
                     value={bulkCatId}
                     onChange={(e) => setBulkCatId(e.target.value)}
                     className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
                   >
-                    <option value="">Choose service category...</option>
+                    <option value="">{t("client:directory.allCategories")}</option>
                     {categories.map((c) => (
                       <option key={c.id} value={c.id}>
-                        {c.name} ({c.nameEn || ""})
+                        {i18n.language === "ar" ? (c.name || c.nameEn) : (c.nameEn || c.name)}
                       </option>
                     ))}
                   </select>
@@ -186,7 +188,7 @@ export default function AdminPricingPage() {
 
                 <div className="grid grid-cols-3 gap-2">
                   <div className="space-y-1.5">
-                    <Label className="text-[11px] font-semibold">Morning (EGP)</Label>
+                    <Label className="text-[11px] font-semibold">{t("common:shifts.morning")}</Label>
                     <Input
                       type="number"
                       value={morningPrice}
@@ -194,7 +196,7 @@ export default function AdminPricingPage() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-[11px] font-semibold">Evening (EGP)</Label>
+                    <Label className="text-[11px] font-semibold">{t("common:shifts.evening")}</Label>
                     <Input
                       type="number"
                       value={eveningPrice}
@@ -202,7 +204,7 @@ export default function AdminPricingPage() {
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <Label className="text-[11px] font-semibold">Night (EGP)</Label>
+                    <Label className="text-[11px] font-semibold">{t("common:shifts.night")}</Label>
                     <Input
                       type="number"
                       value={nightPrice}
@@ -213,13 +215,13 @@ export default function AdminPricingPage() {
 
                 <div className="flex justify-end gap-2 pt-2">
                   <Button variant="outline" onClick={() => setBulkModalOpen(false)}>
-                    Cancel
+                    {t("common:actions.cancel")}
                   </Button>
                   <Button
                     onClick={() => bulkMutation.mutate()}
                     disabled={!bulkCatId || bulkMutation.isPending}
                   >
-                    {bulkMutation.isPending ? "Configuring..." : "Apply Shift Rates"}
+                    {bulkMutation.isPending ? t("common:actions.saveChanges") : t("common:actions.save")}
                   </Button>
                 </div>
               </div>
@@ -241,33 +243,33 @@ export default function AdminPricingPage() {
                 }}
               >
                 <Plus className="h-4 w-4 me-1.5" />
-                Add Single Rate
+                {t("admin:pricing.addPricing")}
               </Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
                 <DialogTitle>
-                  {editingPricing ? "Edit Shift Pricing" : "Add Shift Pricing"}
+                  {editingPricing ? t("admin:pricing.editModalTitle") : t("admin:pricing.addPricing")}
                 </DialogTitle>
                 <DialogDescription className="text-xs mt-0.5">
-                  Set fixed EGP price for this category and shift time.
+                  {t("admin:pricing.subtitle")}
                 </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-4 pt-2">
                 {!editingPricing && (
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Category *</Label>
+                    <Label className="text-xs font-semibold">{t("admin:pricing.category")} *</Label>
                     <select
                       value={selectedCatId}
                       onChange={(e) => setSelectedCatId(e.target.value)}
                       className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
                     >
-                      <option value="">Select category...</option>
+                      <option value="">{t("client:directory.allCategories")}</option>
                       {categories.map((c) => (
                         <option key={c.id} value={c.id}>
-                          {c.name}
+                          {i18n.language === "ar" ? (c.name || c.nameEn) : (c.nameEn || c.name)}
                         </option>
                       ))}
                     </select>
@@ -276,21 +278,21 @@ export default function AdminPricingPage() {
 
                 {!editingPricing && (
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Shift Schedule</Label>
+                    <Label className="text-xs font-semibold">{t("admin:pricing.shiftType")}</Label>
                     <select
                       value={shiftType}
                       onChange={(e) => setShiftType(e.target.value)}
                       className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
                     >
-                      <option value={ShiftType.MORNING}>Morning Shift (8 AM - 4 PM)</option>
-                      <option value={ShiftType.EVENING}>Evening Shift (4 PM - 12 AM)</option>
-                      <option value={ShiftType.NIGHT}>Night Shift (12 AM - 8 AM)</option>
+                      <option value={ShiftType.MORNING}>{t("common:shifts.morning")} ({t("common:shifts.morningTime")})</option>
+                      <option value={ShiftType.EVENING}>{t("common:shifts.evening")} ({t("common:shifts.eveningTime")})</option>
+                      <option value={ShiftType.NIGHT}>{t("common:shifts.night")} ({t("common:shifts.nightTime")})</option>
                     </select>
                   </div>
                 )}
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">Price per Shift (EGP) *</Label>
+                  <Label className="text-xs font-semibold">{t("admin:pricing.price")} *</Label>
                   <Input
                     type="number"
                     min="50"
@@ -300,9 +302,9 @@ export default function AdminPricingPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">Description (Optional)</Label>
+                  <Label className="text-xs font-semibold">{t("admin:categories.description")} ({t("common:actions.filter")})</Label>
                   <Input
-                    placeholder="e.g. Standard 8-hour shift rate"
+                    placeholder={t("admin:categories.description")}
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                   />
@@ -310,13 +312,13 @@ export default function AdminPricingPage() {
 
                 <div className="flex justify-end gap-2 pt-2">
                   <Button variant="outline" onClick={() => setSingleModalOpen(false)}>
-                    Cancel
+                    {t("common:actions.cancel")}
                   </Button>
                   <Button
                     onClick={() => singleMutation.mutate()}
                     disabled={singleMutation.isPending}
                   >
-                    {singleMutation.isPending ? "Saving..." : "Save Rate"}
+                    {singleMutation.isPending ? t("common:actions.saveChanges") : t("common:actions.save")}
                   </Button>
                 </div>
               </div>
@@ -335,9 +337,9 @@ export default function AdminPricingPage() {
       ) : categoriesWithPricing.length === 0 ? (
         <Card className="p-12 text-center border-border/70">
           <DollarSign className="h-10 w-10 text-muted-foreground/40 mx-auto mb-2" />
-          <p className="text-sm font-semibold">No service pricing configured yet</p>
+          <p className="text-sm font-semibold">{t("common:empty.noResults")}</p>
           <p className="text-xs text-muted-foreground mt-1">
-            Click "Bulk Configure All 3 Shifts" above to configure your categories.
+            {t("common:empty.tryAdjusting")}
           </p>
         </Card>
       ) : (
@@ -352,7 +354,7 @@ export default function AdminPricingPage() {
                       {item.categoryName}
                     </h3>
                     <p className="text-[11px] text-muted-foreground">
-                      {item.categoryDescription || "Shift service standard rates"}
+                      {item.categoryDescription || "—"}
                     </p>
                   </div>
                 </div>
@@ -366,16 +368,16 @@ export default function AdminPricingPage() {
                     setBulkModalOpen(true);
                   }}
                 >
-                  Edit Category Shifts
+                  {t("common:actions.edit")}
                 </Button>
               </div>
 
               <CardContent className="p-4">
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                   {[
-                    { shift: ShiftType.MORNING, label: "Morning", hours: "8 AM - 4 PM" },
-                    { shift: ShiftType.EVENING, label: "Evening", hours: "4 PM - 12 AM" },
-                    { shift: ShiftType.NIGHT, label: "Night", hours: "12 AM - 8 AM" },
+                    { shift: ShiftType.MORNING, label: t("common:shifts.morning"), hours: t("common:shifts.morningTime") },
+                    { shift: ShiftType.EVENING, label: t("common:shifts.evening"), hours: t("common:shifts.eveningTime") },
+                    { shift: ShiftType.NIGHT, label: t("common:shifts.night"), hours: t("common:shifts.nightTime") },
                   ].map((s) => {
                     const priceRecord = item.pricing?.find(
                       (p) => Number(p.shiftType) === s.shift
@@ -388,13 +390,13 @@ export default function AdminPricingPage() {
                       >
                         <div>
                           <span className="font-bold text-xs text-foreground block">
-                            {s.label} Shift
+                            {s.label}
                           </span>
                           <span className="text-[10px] text-muted-foreground block">
                             {s.hours}
                           </span>
                           <span className="text-base font-extrabold text-primary block mt-1">
-                            {priceRecord ? formatPrice(priceRecord.pricePerShift) : "Not set"}
+                            {priceRecord ? formatPrice(priceRecord.pricePerShift, i18n.language) : "—"}
                           </span>
                         </div>
 
@@ -405,6 +407,7 @@ export default function AdminPricingPage() {
                               size="icon"
                               className="h-7 w-7 text-muted-foreground hover:text-foreground"
                               onClick={() => handleOpenEdit(priceRecord, item.categoryId)}
+                              title={t("common:actions.edit")}
                             >
                               <Edit2 className="h-3.5 w-3.5" />
                             </Button>
@@ -412,8 +415,9 @@ export default function AdminPricingPage() {
                               variant="ghost"
                               size="icon"
                               className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                              title={t("common:actions.delete")}
                               onClick={() => {
-                                if (confirm("Remove this shift price?")) {
+                                if (confirm(t("common:actions.delete") + "?")) {
                                   deleteMutation.mutate(priceRecord.id);
                                 }
                               }}

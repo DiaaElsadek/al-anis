@@ -1,16 +1,19 @@
 import { Outlet, NavLink } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import Navbar from "./Navbar";
 import { Search, FileText, MessageSquare, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const clientNavItems = [
-  { to: "/app/providers", label: "Find Providers", icon: Search },
-  { to: "/app/requests", label: "My Requests", icon: FileText },
-  { to: "/app/chats", label: "Messages", icon: MessageSquare },
-  { to: "/app/settings", label: "Settings", icon: Settings },
-];
-
 export default function ClientLayout() {
+  const { t } = useTranslation("common");
+
+  const clientNavItems = [
+    { to: "/app/providers", label: t("nav.findProviders"), icon: Search },
+    { to: "/app/requests", label: t("nav.myRequests"), icon: FileText },
+    { to: "/app/chats", label: t("nav.messages"), icon: MessageSquare },
+    { to: "/app/settings", label: t("nav.settings"), icon: Settings },
+  ];
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar />

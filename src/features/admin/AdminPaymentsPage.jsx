@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import {
@@ -20,7 +21,7 @@ import {
 import { toast } from "sonner";
 
 import { getAdminPayments, getDashboardStats } from "@/api/admin";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatLocalizedDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -28,8 +29,10 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "@/components/shared/EmptyState";
+import StatusBadge from "@/components/shared/StatusBadge";
 
 export default function AdminPaymentsPage() {
+  const { t, i18n } = useTranslation(["admin", "common"]);
   const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [copiedId, setCopiedId] = useState(null);
@@ -65,7 +68,7 @@ export default function AdminPaymentsPage() {
   const handleCopyId = (id) => {
     navigator.clipboard.writeText(id);
     setCopiedId(id);
-    toast.success("Transaction ID copied to clipboard");
+    toast.success(t("common:toasts.copiedToClipboard"));
     setTimeout(() => setCopiedId(null), 2000);
   };
 
@@ -93,7 +96,7 @@ export default function AdminPaymentsPage() {
   // Export visible transactions to CSV
   const handleExportCsv = () => {
     if (!filteredPayments.length) {
-      toast.info("No transaction data available to export");
+      toast.info(t("common:empty.noResults"));
       return;
     }
 
@@ -116,7 +119,7 @@ export default function AdminPaymentsPage() {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    toast.success("Payments CSV exported successfully");
+    toast.success(t("common:toasts.copiedToClipboard"));
   };
 
   const totalCalculated = useMemo(() => {
@@ -132,10 +135,10 @@ export default function AdminPaymentsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-            Payments & Escrow Ledger
+            {t("admin:payments.title")}
           </h1>
           <p className="text-sm sm:text-base text-muted-foreground mt-1">
-            Monitor escrow payments, transaction audit logs, and platform shift earnings.
+            {t("admin:payments.subtitle")}
           </p>
         </div>
 
@@ -148,7 +151,7 @@ export default function AdminPaymentsPage() {
             className="h-9 gap-1.5"
           >
             <RefreshCw className={`h-4 w-4 ${isRefetching ? "animate-spin" : ""}`} />
-            Refresh
+            {t("common:actions.refresh")}
           </Button>
           <Button
             size="sm"
@@ -156,7 +159,7 @@ export default function AdminPaymentsPage() {
             className="h-9 gap-1.5 shadow-sm"
           >
             <Download className="h-4 w-4" />
-            Export CSV
+            {t("common:actions.exportCsv")}
           </Button>
         </div>
       </div>
@@ -167,12 +170,12 @@ export default function AdminPaymentsPage() {
           <CardContent className="p-5 flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Total Escrow Volume
+                {t("admin:payments.totalVolume")}
               </p>
               <h3 className="text-2xl font-bold mt-1 text-foreground">
-                {statsLoading ? <Skeleton className="h-8 w-24" /> : formatPrice(totalRevenue)}
+                {statsLoading ? <Skeleton className="h-8 w-24" /> : formatPrice(totalRevenue, i18n.language)}
               </h3>
-              <p className="text-xs text-muted-foreground mt-1">Gross platform transaction value</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("admin:dashboard.revenueDesc")}</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
               <DollarSign className="h-6 w-6" />
@@ -184,7 +187,7 @@ export default function AdminPaymentsPage() {
           <CardContent className="p-5 flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Total Transactions
+                {t("admin:payments.totalTransactions")}
               </p>
               <h3 className="text-2xl font-bold mt-1 text-foreground">
                 {paymentsLoading ? (
@@ -193,7 +196,7 @@ export default function AdminPaymentsPage() {
                   rawPayments.length || stats?.completedServiceRequests || 0
                 )}
               </h3>
-              <p className="text-xs text-muted-foreground mt-1">Recorded shift payments</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("admin:dashboard.completedShifts")}</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-blue-500/10 text-blue-600 flex items-center justify-center shrink-0">
               <CreditCard className="h-6 w-6" />
@@ -205,12 +208,12 @@ export default function AdminPaymentsPage() {
           <CardContent className="p-5 flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Avg. Shift Value
+                {t("admin:payments.avgShift")}
               </p>
               <h3 className="text-2xl font-bold mt-1 text-foreground">
-                {formatPrice(avgTransaction || 450)}
+                {formatPrice(avgTransaction || 450, i18n.language)}
               </h3>
-              <p className="text-xs text-muted-foreground mt-1">Average paid per booked shift</p>
+              <p className="text-xs text-muted-foreground mt-1">{t("admin:pricing.subtitle")}</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-600 flex items-center justify-center shrink-0">
               <TrendingUp className="h-6 w-6" />
@@ -222,10 +225,10 @@ export default function AdminPaymentsPage() {
           <CardContent className="p-5 flex items-center justify-between">
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                Escrow Security
+                {t("admin:payments.escrowSecurity")}
               </p>
-              <h3 className="text-2xl font-bold mt-1 text-foreground">100% Safe</h3>
-              <p className="text-xs text-muted-foreground mt-1">Payout released upon shift completion</p>
+              <h3 className="text-2xl font-bold mt-1 text-foreground">100%</h3>
+              <p className="text-xs text-muted-foreground mt-1">{t("common:footer.escrowBadge")}</p>
             </div>
             <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center shrink-0">
               <ShieldCheck className="h-6 w-6" />
@@ -239,28 +242,28 @@ export default function AdminPaymentsPage() {
         <CardContent className="p-4 sm:p-5">
           <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
             <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input
-                placeholder="Search transaction ID, client, or provider..."
+                placeholder={t("admin:payments.searchPlaceholder")}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9 h-10"
+                className="ps-9 h-10 text-xs rounded-xl"
               />
             </div>
 
             <div className="flex items-center gap-3">
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-[180px] h-10">
+                <SelectTrigger className="w-[180px] h-10 text-xs">
                   <div className="flex items-center gap-2">
                     <Filter className="h-4 w-4 text-muted-foreground" />
-                    <SelectValue placeholder="All Statuses" />
+                    <SelectValue placeholder={t("admin:payments.statusFilter")} />
                   </div>
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Statuses</SelectItem>
-                  <SelectItem value="completed">Completed / Paid</SelectItem>
-                  <SelectItem value="pending">Pending Escrow</SelectItem>
-                  <SelectItem value="failed">Failed / Refunded</SelectItem>
+                  <SelectItem value="all">{t("admin:users.allStatuses")}</SelectItem>
+                  <SelectItem value="completed">{t("common:status.completed")}</SelectItem>
+                  <SelectItem value="pending">{t("common:status.pending")}</SelectItem>
+                  <SelectItem value="failed">{t("common:status.failed")}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -273,9 +276,9 @@ export default function AdminPaymentsPage() {
         <CardHeader className="p-5 pb-3 border-b">
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle className="text-lg font-bold">Transaction History</CardTitle>
-              <CardDescription>
-                Showing {filteredPayments.length} of {rawPayments.length} platform transactions
+              <CardTitle className="text-lg font-bold">{t("admin:dashboard.recentBookings")}</CardTitle>
+              <CardDescription className="text-xs">
+                {t("admin:payments.subtitle")}
               </CardDescription>
             </div>
           </div>
@@ -297,12 +300,8 @@ export default function AdminPaymentsPage() {
             <div className="py-12">
               <EmptyState
                 icon={CreditCard}
-                title="No Transactions Found"
-                description={
-                  searchQuery || statusFilter !== "all"
-                    ? "No transactions match your search filters. Try adjusting your query."
-                    : "No shift payments or escrow transactions have been processed yet."
-                }
+                title={t("common:empty.noResults")}
+                description={t("common:empty.tryAdjusting")}
                 action={
                   searchQuery || statusFilter !== "all" ? (
                     <Button
@@ -313,7 +312,7 @@ export default function AdminPaymentsPage() {
                         setStatusFilter("all");
                       }}
                     >
-                      Clear Filters
+                      {t("common:actions.clearFilters")}
                     </Button>
                   ) : null
                 }
@@ -321,16 +320,16 @@ export default function AdminPaymentsPage() {
             </div>
           ) : (
             <div className="overflow-x-auto">
-              <table className="w-full text-sm text-left">
+              <table className="w-full text-xs text-start">
                 <thead className="bg-muted/50 text-muted-foreground text-xs uppercase tracking-wider font-semibold border-b">
                   <tr>
-                    <th className="px-5 py-3.5">Transaction ID</th>
-                    <th className="px-5 py-3.5">Client</th>
-                    <th className="px-5 py-3.5">Service Provider</th>
-                    <th className="px-5 py-3.5">Payment Method</th>
-                    <th className="px-5 py-3.5">Date & Time</th>
-                    <th className="px-5 py-3.5 text-right">Amount</th>
-                    <th className="px-5 py-3.5 text-center">Status</th>
+                    <th className="px-5 py-3.5 text-start">{t("admin:payments.transactionId")}</th>
+                    <th className="px-5 py-3.5 text-start">{t("admin:payments.client")}</th>
+                    <th className="px-5 py-3.5 text-start">{t("admin:payments.provider")}</th>
+                    <th className="px-5 py-3.5 text-start">{t("admin:payments.method")}</th>
+                    <th className="px-5 py-3.5 text-start">{t("admin:payments.date")}</th>
+                    <th className="px-5 py-3.5 text-end">{t("admin:payments.amount")}</th>
+                    <th className="px-5 py-3.5 text-center">{t("admin:payments.status")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
@@ -339,11 +338,6 @@ export default function AdminPaymentsPage() {
                     const dateStr = payment?.createdAt || payment?.paymentDate || payment?.date;
                     const amount = Number(payment?.amount) || 0;
                     const statusStr = (payment?.status || payment?.paymentStatus || "Completed").toString();
-                    const isSuccess =
-                      statusStr.toLowerCase().includes("complet") ||
-                      statusStr.toLowerCase().includes("succeed") ||
-                      statusStr === "1" ||
-                      statusStr.toLowerCase() === "paid";
 
                     return (
                       <tr key={payment?.id || idx} className="hover:bg-muted/30 transition-colors">
@@ -353,7 +347,7 @@ export default function AdminPaymentsPage() {
                             <button
                               onClick={() => handleCopyId(txId)}
                               className="text-muted-foreground hover:text-foreground transition-colors p-1 rounded"
-                              title="Copy ID"
+                              title={t("common:actions.copy")}
                             >
                               {copiedId === txId ? (
                                 <Check className="h-3 w-3 text-emerald-600" />
@@ -371,16 +365,16 @@ export default function AdminPaymentsPage() {
 
                         <td className="px-5 py-4">
                           <div className="font-medium text-foreground">
-                            {payment?.clientName || payment?.userName || "Verified Client"}
+                            {payment?.clientName || payment?.userName || t("common:roles.user")}
                           </div>
-                          <div className="text-xs text-muted-foreground">
-                            {payment?.clientEmail || payment?.userEmail || "client@alanis.app"}
+                          <div className="text-xs text-muted-foreground font-mono">
+                            {payment?.clientEmail || payment?.userEmail || "—"}
                           </div>
                         </td>
 
                         <td className="px-5 py-4">
                           <div className="font-medium text-foreground">
-                            {payment?.providerName || payment?.serviceProviderName || "Verified Provider"}
+                            {payment?.providerName || payment?.serviceProviderName || t("common:roles.serviceProvider")}
                           </div>
                           <div className="text-xs text-muted-foreground">
                             {payment?.categoryName || "Healthcare Shift"}
@@ -392,43 +386,21 @@ export default function AdminPaymentsPage() {
                             <CreditCard className="h-3.5 w-3.5 text-primary" />
                             <span>{payment?.paymentMethod || "Credit / Debit Card"}</span>
                           </div>
-                          <span className="text-[11px] text-muted-foreground block">Escrow Protected</span>
+                          <span className="text-[11px] text-muted-foreground block">{t("common:footer.escrowBadge")}</span>
                         </td>
 
                         <td className="px-5 py-4 text-xs text-muted-foreground">
-                          {dateStr ? (
-                            <>
-                              <div>{format(new Date(dateStr), "dd MMM yyyy")}</div>
-                              <div className="text-[11px]">{format(new Date(dateStr), "hh:mm a")}</div>
-                            </>
-                          ) : (
-                            "Recent"
-                          )}
+                          {dateStr ? formatLocalizedDate(dateStr, "PP", i18n.language) : "—"}
                         </td>
 
-                        <td className="px-5 py-4 text-right">
-                          <span className="font-bold text-base text-foreground">
-                            {formatPrice(amount)}
+                        <td className="px-5 py-4 text-end">
+                          <span className="font-bold text-sm text-foreground">
+                            {formatPrice(amount, i18n.language)}
                           </span>
                         </td>
 
                         <td className="px-5 py-4 text-center">
-                          {isSuccess ? (
-                            <Badge className="bg-emerald-500/10 text-emerald-600 hover:bg-emerald-500/20 border-emerald-500/20 gap-1">
-                              <CheckCircle2 className="h-3 w-3" />
-                              Completed
-                            </Badge>
-                          ) : statusStr.toLowerCase().includes("pend") ? (
-                            <Badge variant="outline" className="bg-amber-500/10 text-amber-600 border-amber-500/20 gap-1">
-                              <Clock className="h-3 w-3" />
-                              In Escrow
-                            </Badge>
-                          ) : (
-                            <Badge variant="destructive" className="gap-1">
-                              <AlertCircle className="h-3 w-3" />
-                              {statusStr}
-                            </Badge>
-                          )}
+                          <StatusBadge status={statusStr} />
                         </td>
                       </tr>
                     );

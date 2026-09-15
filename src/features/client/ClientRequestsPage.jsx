@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   FileText,
   Calendar,
@@ -12,7 +13,6 @@ import {
   Star,
   CheckCircle2,
   AlertCircle,
-  ArrowRight,
   ExternalLink,
 } from "lucide-react";
 
@@ -20,7 +20,8 @@ import { getUserRequests } from "@/api/requests";
 import { createCheckout } from "@/api/payments";
 import { createOrGetChat } from "@/api/chat";
 import { ShiftTypeLabels } from "@/lib/constants";
-import { getMediaUrl, getInitials, formatPrice } from "@/lib/utils";
+import { getMediaUrl, getInitials, formatPrice, formatLocalizedDate } from "@/lib/utils";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -32,6 +33,7 @@ import StatusBadge from "@/components/shared/StatusBadge";
 import ReviewModal from "./ReviewModal";
 
 export default function ClientRequestsPage() {
+  const { t, i18n } = useTranslation(["client", "common"]);
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState("all");
@@ -50,10 +52,10 @@ export default function ClientRequestsPage() {
     onSuccess: (result) => {
       const checkoutUrl = result?.checkoutUrl || result?.data?.checkoutUrl;
       if (checkoutUrl) {
-        toast.info("Redirecting to secure escrow checkout...");
+        toast.info(t("common:loading"));
         window.location.href = checkoutUrl;
       } else {
-        toast.success("Payment session verified!");
+        toast.success(t("common:success"));
         refetch();
       }
     },
@@ -61,8 +63,8 @@ export default function ClientRequestsPage() {
       const msg =
         error?.response?.data?.message ||
         error?.message ||
-        "Payment checkout could not be initiated.";
-      toast.error("Payment error", { description: msg });
+        t("common:error");
+      toast.error(t("common:error"), { description: msg });
     },
   });
 
@@ -74,7 +76,7 @@ export default function ClientRequestsPage() {
       navigate(`/app/chats?active=${chatId}`);
     },
     onError: (error) => {
-      toast.error("Chat error", {
+      toast.error(t("common:error"), {
         description: error?.response?.data?.message || "Failed to open chat.",
       });
     },
@@ -96,16 +98,16 @@ export default function ClientRequestsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">My Service Requests</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("client:requests.title")}</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Track shift confirmations, payments, provider chat, and completion reviews.
+            {t("client:requests.subtitle")}
           </p>
         </div>
 
         <Button asChild className="font-semibold shadow-sm shadow-primary/20">
           <Link to="/app/providers">
-            Find New Provider
-            <ArrowRight className="h-4 w-4 ms-2" />
+            <span>{t("client:requests.findProvidersButton")}</span>
+            <DirectionalIcon className="h-4 w-4 ms-2" />
           </Link>
         </Button>
       </div>
@@ -114,16 +116,16 @@ export default function ClientRequestsPage() {
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-4 w-full sm:w-auto h-10 p-1 bg-muted/60">
           <TabsTrigger value="all" className="text-xs font-semibold">
-            All ({requests.length})
+            {t("client:requests.tabs.all")} ({requests.length})
           </TabsTrigger>
           <TabsTrigger value="pending" className="text-xs font-semibold">
-            Pending
+            {t("client:requests.tabs.pending")}
           </TabsTrigger>
           <TabsTrigger value="active" className="text-xs font-semibold">
-            In Progress
+            {t("client:requests.tabs.active")}
           </TabsTrigger>
           <TabsTrigger value="completed" className="text-xs font-semibold">
-            Completed
+            {t("client:requests.tabs.completed")}
           </TabsTrigger>
         </TabsList>
       </Tabs>
@@ -145,9 +147,9 @@ export default function ClientRequestsPage() {
       ) : filteredRequests.length === 0 ? (
         <EmptyState
           icon={FileText}
-          title="No service requests in this category"
-          description="You can book verified specialists per morning, evening, or night shift."
-          actionLabel="Browse Verified Specialists"
+          title={t("client:requests.emptyTitle")}
+          description={t("client:requests.emptyDesc")}
+          actionLabel={t("client:requests.findProvidersButton")}
           onAction={() => navigate("/app/providers")}
         />
       ) : (
@@ -176,14 +178,14 @@ export default function ClientRequestsPage() {
                           {req.categoryName}
                         </h3>
                         <p className="text-xs text-muted-foreground">
-                          Provider: <strong className="text-foreground">{req.providerName}</strong>
+                          {t("client:requests.providerLabel")} <strong className="text-foreground">{req.providerName}</strong>
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-sm font-bold text-primary">
-                        {req.totalPrice ? formatPrice(req.totalPrice) : "Pending Rate"}
+                        {req.totalPrice ? formatPrice(req.totalPrice) : "-"}
                       </span>
                       <StatusBadge status={req.status} label={req.statusName} />
                     </div>
@@ -193,12 +195,12 @@ export default function ClientRequestsPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-primary" />
-                      <span>{new Date(req.preferredDate).toLocaleDateString()}</span>
+                      <span>{formatLocalizedDate(req.preferredDate, "dd/MM/yyyy", i18n.language)}</span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-teal-600" />
-                      <span className="capitalize">{shiftLabel} Shift</span>
+                      <span className="capitalize">{shiftLabel}</span>
                     </div>
 
                     <div className="flex items-center gap-2 truncate">
@@ -225,7 +227,7 @@ export default function ClientRequestsPage() {
                       disabled={chatMutation.isPending}
                     >
                       <MessageSquare className="h-3.5 w-3.5 me-1.5" />
-                      Chat with Provider
+                      {t("client:requests.chatButton")}
                     </Button>
 
                     {/* Pay Checkout Button (when canPay === true) */}
@@ -237,7 +239,7 @@ export default function ClientRequestsPage() {
                         disabled={checkoutMutation.isPending}
                       >
                         <CreditCard className="h-3.5 w-3.5 me-1.5" />
-                        {checkoutMutation.isPending ? "Processing..." : "Pay via Escrow"}
+                        {checkoutMutation.isPending ? t("common:loading") : t("client:requests.payButton")}
                       </Button>
                     )}
 
@@ -250,7 +252,7 @@ export default function ClientRequestsPage() {
                         onClick={() => setReviewingRequest(req)}
                       >
                         <Star className="h-3.5 w-3.5 me-1.5 fill-current" />
-                        Write Review
+                        {t("client:requests.reviewButton")}
                       </Button>
                     )}
                   </div>

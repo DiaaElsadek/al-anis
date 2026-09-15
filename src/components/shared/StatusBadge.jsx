@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 
@@ -10,15 +11,41 @@ const colorVariants = {
   gray: "bg-gray-100 text-gray-800 border-gray-200 dark:bg-gray-900/30 dark:text-gray-400 dark:border-gray-800",
 };
 
+const keyMap = {
+  pending: "pending",
+  accepted: "accepted",
+  "in progress": "inProgress",
+  inprogress: "inProgress",
+  completed: "completed",
+  rejected: "rejected",
+  cancelled: "cancelled",
+  active: "active",
+  suspended: "suspended",
+  approved: "approved",
+  paid: "paid",
+  "in escrow": "escrowed",
+  escrowed: "escrowed",
+  failed: "failed",
+  refunded: "refunded",
+};
+
 /**
- * StatusBadge — color-coded badge for any status enum
+ * StatusBadge — color-coded badge for any status enum with automatic localization
  *
  * @param {Object} props
- * @param {string} props.label — display text
+ * @param {string} props.label — display text or status enum string
  * @param {"amber"|"blue"|"purple"|"green"|"red"|"gray"} props.color — color variant
  * @param {string} [props.className]
  */
 export default function StatusBadge({ label, color = "gray", className }) {
+  const { t, i18n } = useTranslation("common");
+
+  const normalizedKey = typeof label === "string" ? keyMap[label.toLowerCase()] : null;
+  const displayLabel =
+    normalizedKey && i18n.exists(`status.${normalizedKey}`)
+      ? t(`status.${normalizedKey}`)
+      : label;
+
   return (
     <Badge
       variant="outline"
@@ -28,7 +55,7 @@ export default function StatusBadge({ label, color = "gray", className }) {
         className
       )}
     >
-      {label}
+      {displayLabel}
     </Badge>
   );
 }

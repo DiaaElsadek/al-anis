@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -18,6 +19,7 @@ import {
   updateCategory,
   deleteCategory,
 } from "@/api/category";
+import { getLocalizedCategoryName } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -30,6 +32,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "@/components/shared/EmptyState";
 
 export default function AdminCategoriesPage() {
+  const { t, i18n } = useTranslation(["admin", "common"]);
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
@@ -130,15 +133,15 @@ export default function AdminCategoriesPage() {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Service Categories</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("admin:categories.title")}</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Manage public specialties (Healthcare, Babysitting, Elderly Care) available for client shifts.
+            {t("admin:categories.subtitle")}
           </p>
         </div>
 
         <Button size="sm" className="text-xs font-semibold shadow-sm" onClick={handleCreate}>
           <Plus className="h-4 w-4 me-1.5" />
-          Add Service Category
+          {t("admin:categories.addCategory")}
         </Button>
       </div>
 
@@ -154,8 +157,8 @@ export default function AdminCategoriesPage() {
             <div className="py-16 text-center">
               <EmptyState
                 icon={FolderTree}
-                title="No categories configured"
-                description="Add your first service category to enable bookings."
+                title={t("common:empty.noResults")}
+                description={t("common:empty.tryAdjusting")}
               />
             </div>
           ) : (
@@ -163,12 +166,12 @@ export default function AdminCategoriesPage() {
               <table className="w-full text-xs text-start">
                 <thead>
                   <tr className="border-b border-border/60 bg-muted/20 text-muted-foreground">
-                    <th className="py-3 px-4 font-semibold">Icon</th>
-                    <th className="py-3 px-4 font-semibold">Category Name</th>
-                    <th className="py-3 px-4 font-semibold">English Name</th>
-                    <th className="py-3 px-4 font-semibold">Description</th>
-                    <th className="py-3 px-4 font-semibold text-center">Status</th>
-                    <th className="py-3 px-4 font-semibold text-end">Actions</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:categories.icon")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:categories.nameAr")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:categories.nameEn")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:categories.description")}</th>
+                    <th className="py-3 px-4 font-semibold text-center">{t("admin:categories.activeStatus")}</th>
+                    <th className="py-3 px-4 font-semibold text-end">{t("admin:applications.actions")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
@@ -178,7 +181,7 @@ export default function AdminCategoriesPage() {
                       <td className="py-3 px-4 font-bold text-foreground">{c.name}</td>
                       <td className="py-3 px-4 text-muted-foreground">{c.nameEn || "—"}</td>
                       <td className="py-3 px-4 text-muted-foreground max-w-[240px] truncate">
-                        {c.description || "No description."}
+                        {c.description || "—"}
                       </td>
                       <td className="py-3 px-4 text-center">
                         <Badge
@@ -189,7 +192,7 @@ export default function AdminCategoriesPage() {
                               : "bg-muted text-muted-foreground"
                           }
                         >
-                          {c.isActive ? "Active" : "Disabled"}
+                          {c.isActive ? t("common:status.active") : t("common:status.suspended")}
                         </Badge>
                       </td>
                       <td className="py-3 px-4 text-end">
@@ -199,6 +202,7 @@ export default function AdminCategoriesPage() {
                             size="icon"
                             className="h-7 w-7 text-muted-foreground hover:text-foreground"
                             onClick={() => handleEdit(c)}
+                            title={t("common:actions.edit")}
                           >
                             <Edit2 className="h-3.5 w-3.5" />
                           </Button>
@@ -206,8 +210,9 @@ export default function AdminCategoriesPage() {
                             variant="ghost"
                             size="icon"
                             className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                            title={t("common:actions.delete")}
                             onClick={() => {
-                              if (confirm(`Delete category "${c.name}"?`)) {
+                              if (confirm(t("admin:categories.deleteConfirm"))) {
                                 deleteMutation.mutate(c.id);
                               }
                             }}
@@ -230,17 +235,17 @@ export default function AdminCategoriesPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {editingCategory ? "Edit Category" : "Create New Category"}
+              {editingCategory ? t("admin:categories.editModalTitle") : t("admin:categories.createModalTitle")}
             </DialogTitle>
             <DialogDescription className="text-xs mt-0.5">
-              Specify category titles, emoji symbol, and customer description.
+              {t("admin:categories.subtitle")}
             </DialogDescription>
           </DialogHeader>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
             <div className="grid grid-cols-3 gap-3">
               <div className="space-y-1.5 col-span-2">
-                <Label className="text-xs font-semibold">Category Name (Primary) *</Label>
+                <Label className="text-xs font-semibold">{t("admin:categories.nameAr")} *</Label>
                 <Input
                   placeholder="e.g. تمريض منزلي"
                   {...register("name", { required: true })}
@@ -248,7 +253,7 @@ export default function AdminCategoriesPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Emoji / Icon</Label>
+                <Label className="text-xs font-semibold">{t("admin:categories.icon")}</Label>
                 <Input
                   placeholder="🩺"
                   className="text-center text-lg"
@@ -259,7 +264,7 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">English Title</Label>
+              <Label className="text-xs font-semibold">{t("admin:categories.nameEn")}</Label>
               <Input
                 placeholder="e.g. Home Nursing"
                 {...register("nameEn")}
@@ -267,16 +272,16 @@ export default function AdminCategoriesPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">Service Description</Label>
+              <Label className="text-xs font-semibold">{t("admin:categories.description")}</Label>
               <Textarea
                 rows={3}
-                placeholder="Brief description of the service scope and tasks..."
+                placeholder="Brief description..."
                 className="text-xs resize-none"
                 {...register("description")}
               />
             </div>
 
-            <div className="flex items-center space-x-2 pt-1">
+            <div className="flex items-center gap-2 pt-1">
               <Checkbox
                 id="catActive"
                 checked={isActiveValue}
@@ -284,9 +289,9 @@ export default function AdminCategoriesPage() {
               />
               <label
                 htmlFor="catActive"
-                className="text-xs font-medium text-foreground cursor-pointer"
+                className="text-xs font-medium text-foreground cursor-pointer select-none"
               >
-                Category is active & discoverable by clients
+                {t("admin:categories.activeStatus")}
               </label>
             </div>
 
@@ -296,10 +301,10 @@ export default function AdminCategoriesPage() {
                 variant="outline"
                 onClick={() => setModalOpen(false)}
               >
-                Cancel
+                {t("common:actions.cancel")}
               </Button>
               <Button type="submit" disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? "Saving..." : "Save Category"}
+                {saveMutation.isPending ? t("common:actions.saveChanges") : t("common:actions.save")}
               </Button>
             </div>
           </form>

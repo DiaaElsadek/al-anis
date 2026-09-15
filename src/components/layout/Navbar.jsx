@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { getInitials, getMediaUrl } from "@/lib/utils";
 import { UserRole } from "@/lib/constants";
 import ThemeToggle from "@/components/shared/ThemeToggle";
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import {
   LogOut,
   User,
@@ -21,10 +23,10 @@ import {
   Menu,
   ShieldCheck,
   MessageSquare,
-  Sparkles,
 } from "lucide-react";
 
 export default function Navbar({ onMobileMenuToggle }) {
+  const { t } = useTranslation("common");
   const { user, isAuthenticated, role, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -49,19 +51,19 @@ export default function Navbar({ onMobileMenuToggle }) {
       case UserRole.ADMIN:
         return (
           <Badge className="bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/20 text-[10px] px-1.5 py-0">
-            Admin
+            {t("roles.admin")}
           </Badge>
         );
       case UserRole.SERVICE_PROVIDER:
         return (
           <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px] px-1.5 py-0">
-            Provider
+            {t("roles.serviceProvider")}
           </Badge>
         );
       default:
         return (
           <Badge className="bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20 text-[10px] px-1.5 py-0">
-            Client
+            {t("roles.user")}
           </Badge>
         );
     }
@@ -90,10 +92,10 @@ export default function Navbar({ onMobileMenuToggle }) {
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
-                Alanis
+                {t("brand.name")}
               </span>
               <span className="text-[10px] font-medium text-muted-foreground tracking-wider -mt-1 uppercase hidden sm:block">
-                الأنـيـس • Marketplace
+                {t("brand.subtitle")}
               </span>
             </div>
           </Link>
@@ -101,6 +103,9 @@ export default function Navbar({ onMobileMenuToggle }) {
 
         {/* Right Navigation & Controls */}
         <nav className="flex items-center gap-2 sm:gap-3">
+          {/* Language Switcher */}
+          <LanguageSwitcher />
+
           {/* Theme Toggle Button */}
           <ThemeToggle />
 
@@ -144,7 +149,7 @@ export default function Navbar({ onMobileMenuToggle }) {
                   <DropdownMenuItem asChild>
                     <Link to={getDashboardLink()} className="cursor-pointer">
                       <LayoutDashboard className="h-4 w-4 me-2 text-primary" />
-                      <span>Dashboard</span>
+                      <span>{t("nav.dashboard")}</span>
                     </Link>
                   </DropdownMenuItem>
 
@@ -153,13 +158,13 @@ export default function Navbar({ onMobileMenuToggle }) {
                       <DropdownMenuItem asChild>
                         <Link to="/app/chats" className="cursor-pointer">
                           <MessageSquare className="h-4 w-4 me-2 text-primary" />
-                          <span>Messages</span>
+                          <span>{t("nav.messages")}</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link to="/app/settings" className="cursor-pointer">
                           <Settings className="h-4 w-4 me-2 text-primary" />
-                          <span>Settings</span>
+                          <span>{t("nav.settings")}</span>
                         </Link>
                       </DropdownMenuItem>
                     </>
@@ -170,13 +175,13 @@ export default function Navbar({ onMobileMenuToggle }) {
                       <DropdownMenuItem asChild>
                         <Link to="/provider/chats" className="cursor-pointer">
                           <MessageSquare className="h-4 w-4 me-2 text-primary" />
-                          <span>Messages</span>
+                          <span>{t("nav.messages")}</span>
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
                         <Link to="/provider/profile" className="cursor-pointer">
                           <User className="h-4 w-4 me-2 text-primary" />
-                          <span>My Profile</span>
+                          <span>{t("nav.myProfile")}</span>
                         </Link>
                       </DropdownMenuItem>
                     </>
@@ -190,7 +195,7 @@ export default function Navbar({ onMobileMenuToggle }) {
                     className="text-destructive focus:text-destructive cursor-pointer"
                   >
                     <LogOut className="h-4 w-4 me-2" />
-                    <span>Log out</span>
+                    <span>{t("nav.logOut")}</span>
                   </DropdownMenuItem>
                 </div>
               </DropdownMenuContent>
@@ -198,10 +203,10 @@ export default function Navbar({ onMobileMenuToggle }) {
           ) : (
             <div className="flex items-center gap-2">
               <Button variant="ghost" size="sm" asChild className="font-medium">
-                <Link to="/login">Sign In</Link>
+                <Link to="/login">{t("nav.signIn")}</Link>
               </Button>
               <Button size="sm" asChild className="font-medium shadow-xs">
-                <Link to="/register">Get Started</Link>
+                <Link to="/register">{t("nav.getStarted")}</Link>
               </Button>
             </div>
           )}

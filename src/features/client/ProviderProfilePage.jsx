@@ -4,6 +4,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   Star,
   ShieldCheck,
@@ -12,7 +13,6 @@ import {
   Clock,
   Briefcase,
   DollarSign,
-  ArrowLeft,
   CheckCircle2,
   AlertCircle,
   MessageSquare,
@@ -24,7 +24,8 @@ import { getProviderReviews } from "@/api/reviews";
 import { createRequest } from "@/api/requests";
 import { createRequestSchema } from "@/lib/validators";
 import { ShiftType, ShiftTypeLabels } from "@/lib/constants";
-import { getMediaUrl, getInitials, formatPrice } from "@/lib/utils";
+import { getMediaUrl, getInitials, formatPrice, formatLocalizedDate, getLocalizedCategoryName } from "@/lib/utils";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -36,6 +37,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProviderProfilePage() {
+  const { t, i18n } = useTranslation(["client", "common"]);
   const { id: providerId } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -102,9 +104,7 @@ export default function ProviderProfilePage() {
         description: data.description,
       }),
     onSuccess: () => {
-      toast.success("Shift request submitted!", {
-        description: "The provider will review your request shortly.",
-      });
+      toast.success(t("client:profile.bookShiftModal.successToast"));
       setBookingOpen(false);
       queryClient.invalidateQueries(["user-requests"]);
       navigate("/app/requests");
@@ -113,8 +113,8 @@ export default function ProviderProfilePage() {
       const msg =
         error?.response?.data?.message ||
         error?.message ||
-        "Failed to send request. Please try again.";
-      toast.error("Booking error", { description: msg });
+        t("common:error");
+      toast.error(t("common:error"), { description: msg });
     },
   });
 
@@ -139,12 +139,12 @@ export default function ProviderProfilePage() {
     return (
       <div className="text-center py-16 max-w-md mx-auto space-y-4">
         <AlertCircle className="h-12 w-12 text-destructive mx-auto" />
-        <h2 className="text-xl font-bold">Provider Not Found</h2>
+        <h2 className="text-xl font-bold">{t("client:directory.noProvidersTitle")}</h2>
         <p className="text-sm text-muted-foreground">
-          The requested service provider could not be loaded or may no longer be active.
+          {t("client:directory.noProvidersDesc")}
         </p>
         <Button asChild variant="outline">
-          <Link to="/app/providers">Back to Providers</Link>
+          <Link to="/app/providers">{t("common:back")}</Link>
         </Button>
       </div>
     );
@@ -153,7 +153,7 @@ export default function ProviderProfilePage() {
   const providerName =
     provider.fullName ||
     `${provider.firstName || ""} ${provider.lastName || ""}`.trim() ||
-    "Specialist";
+    t("common:roles.provider");
 
   return (
     <div className="space-y-8 max-w-4xl mx-auto">
@@ -162,8 +162,8 @@ export default function ProviderProfilePage() {
         to="/app/providers"
         className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
       >
-        <ArrowLeft className="h-4 w-4 me-2 transition-transform group-hover:-translate-x-1" />
-        Back to Find Providers
+        <DirectionalIcon className="h-4 w-4 me-2 transition-transform group-hover:-translate-x-1" />
+        <span>{t("common:back")}</span>
       </Link>
 
       {/* Header Profile Hero Card */}
@@ -183,19 +183,19 @@ export default function ProviderProfilePage() {
               <div className="space-y-1 mb-1">
                 <div className="flex items-center gap-2">
                   <h1 className="text-2xl font-bold text-foreground">{providerName}</h1>
-                  <ShieldCheck className="h-5 w-5 text-teal-600" title="Verified Specialist" />
+                  <ShieldCheck className="h-5 w-5 text-teal-600" title={t("client:directory.verified")} />
                 </div>
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <span className="flex items-center text-amber-500 font-bold">
                     <Star className="h-3.5 w-3.5 fill-current me-1" />
-                    {provider.averageRating ? provider.averageRating.toFixed(1) : "New"}
+                    {provider.averageRating ? provider.averageRating.toFixed(1) : t("common:new")}
                   </span>
                   <span>•</span>
-                  <span>{provider.totalReviews || 0} reviews</span>
+                  <span>{t("client:directory.reviewsCount", { count: provider.totalReviews || 0 })}</span>
                   <span>•</span>
                   <span className="flex items-center text-emerald-600 font-medium">
                     <CheckCircle2 className="h-3.5 w-3.5 me-1" />
-                    Background Checked
+                    {t("client:profile.nationalIdVerified")}
                   </span>
                 </div>
               </div>
@@ -214,7 +214,7 @@ export default function ProviderProfilePage() {
                   }}
                 >
                   <Calendar className="h-4 w-4 me-2" />
-                  Request Shift Booking
+                  {t("client:profile.requestBooking")}
                 </Button>
               </DialogTrigger>
 
@@ -225,9 +225,9 @@ export default function ProviderProfilePage() {
                       <Sparkles className="h-5 w-5" />
                     </div>
                     <div>
-                      <DialogTitle>Book a Shift with {providerName}</DialogTitle>
+                      <DialogTitle>{t("client:profile.bookShiftModal.title")}</DialogTitle>
                       <DialogDescription className="text-xs mt-0.5">
-                        Choose your service, preferred shift time, and location.
+                        {t("client:profile.bookShiftModal.subtitle")}
                       </DialogDescription>
                     </div>
                   </div>
@@ -237,17 +237,17 @@ export default function ProviderProfilePage() {
                   {/* Category Selection */}
                   <div className="space-y-1.5">
                     <Label htmlFor="catSelect" className="text-xs font-semibold">
-                      Service Specialty <span className="text-destructive">*</span>
+                      {t("auth:register.categories")} <span className="text-destructive">*</span>
                     </Label>
                     <select
                       id="catSelect"
                       className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm focus:ring-1 focus:ring-primary outline-none"
                       {...register("categoryId")}
                     >
-                      <option value="">Select service specialty...</option>
+                      <option value="">{t("auth:register.categories")}...</option>
                       {provider.categories?.map((cat) => (
                         <option key={cat.id} value={cat.id}>
-                          {cat.name}
+                          {getLocalizedCategoryName(cat, i18n.language)}
                         </option>
                       ))}
                     </select>
@@ -259,13 +259,13 @@ export default function ProviderProfilePage() {
                   {/* Shift Type (Morning, Evening, Night) */}
                   <div className="space-y-1.5">
                     <Label className="text-xs font-semibold">
-                      Shift Schedule <span className="text-destructive">*</span>
+                      {t("client:profile.bookShiftModal.shiftLabel")} <span className="text-destructive">*</span>
                     </Label>
                     <div className="grid grid-cols-3 gap-2">
                       {[
-                        { type: ShiftType.MORNING, label: "Morning", hours: "8 AM - 4 PM" },
-                        { type: ShiftType.EVENING, label: "Evening", hours: "4 PM - 12 AM" },
-                        { type: ShiftType.NIGHT, label: "Night", hours: "12 AM - 8 AM" },
+                        { type: ShiftType.MORNING, label: t("common:shifts.morning"), hours: "8 AM - 4 PM" },
+                        { type: ShiftType.EVENING, label: t("common:shifts.evening"), hours: "4 PM - 12 AM" },
+                        { type: ShiftType.NIGHT, label: t("common:shifts.night"), hours: "12 AM - 8 AM" },
                       ].map((s) => {
                         const isSelected = Number(selectedShift) === s.type;
                         return (
@@ -291,7 +291,7 @@ export default function ProviderProfilePage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="space-y-1.5">
                       <Label htmlFor="reqDate" className="text-xs font-semibold">
-                        Shift Date <span className="text-destructive">*</span>
+                        {t("client:profile.bookShiftModal.dateLabel")} <span className="text-destructive">*</span>
                       </Label>
                       <Input
                         id="reqDate"
@@ -306,11 +306,11 @@ export default function ProviderProfilePage() {
 
                     <div className="space-y-1.5">
                       <Label htmlFor="reqAddress" className="text-xs font-semibold">
-                        Service Address <span className="text-destructive">*</span>
+                        {t("client:profile.bookShiftModal.addressLabel")} <span className="text-destructive">*</span>
                       </Label>
                       <Input
                         id="reqAddress"
-                        placeholder="Street, Building, Apt..."
+                        placeholder={t("client:profile.bookShiftModal.addressPlaceholder")}
                         {...register("address")}
                       />
                       {errors.address && (
@@ -322,12 +322,12 @@ export default function ProviderProfilePage() {
                   {/* Description / Medical or task notes */}
                   <div className="space-y-1.5">
                     <Label htmlFor="reqDesc" className="text-xs font-semibold">
-                      Shift Details & Instructions <span className="text-destructive">*</span>
+                      {t("client:profile.bookShiftModal.notesLabel")} <span className="text-destructive">*</span>
                     </Label>
                     <Textarea
                       id="reqDesc"
                       rows={3}
-                      placeholder="Specify patient condition, tasks needed, or specific requests..."
+                      placeholder={t("client:profile.bookShiftModal.notesPlaceholder")}
                       className="resize-none text-xs"
                       {...register("description")}
                     />
@@ -339,13 +339,13 @@ export default function ProviderProfilePage() {
                   {/* Estimated Price summary */}
                   <div className="p-3 rounded-xl bg-muted/40 border border-border flex items-center justify-between">
                     <div>
-                      <span className="text-xs text-muted-foreground block">Estimated Shift Price</span>
+                      <span className="text-xs text-muted-foreground block">{t("client:requests.amountLabel")}</span>
                       <span className="text-xs font-medium text-foreground">
-                        {ShiftTypeLabels[selectedShift]} Shift (8 Hours)
+                        {ShiftTypeLabels[selectedShift]} (8h)
                       </span>
                     </div>
                     <span className="text-lg font-bold text-primary">
-                      {matchedPrice ? formatPrice(matchedPrice) : "Calculated at checkout"}
+                      {matchedPrice ? formatPrice(matchedPrice) : "-"}
                     </span>
                   </div>
 
@@ -355,10 +355,10 @@ export default function ProviderProfilePage() {
                       variant="outline"
                       onClick={() => setBookingOpen(false)}
                     >
-                      Cancel
+                      {t("common:cancel")}
                     </Button>
                     <Button type="submit" disabled={requestMutation.isPending}>
-                      {requestMutation.isPending ? "Sending Request..." : "Confirm Shift Request"}
+                      {requestMutation.isPending ? t("client:profile.bookShiftModal.submitting") : t("client:profile.bookShiftModal.submitButton")}
                     </Button>
                   </div>
                 </form>
@@ -369,10 +369,10 @@ export default function ProviderProfilePage() {
           {/* Bio section */}
           <div className="space-y-2 border-t border-border/60 pt-4">
             <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              About & Care Philosophy
+              {t("client:profile.about")}
             </h3>
             <p className="text-sm text-foreground/90 leading-relaxed">
-              {provider.bio || "No biography provided yet."}
+              {provider.bio || "-"}
             </p>
           </div>
         </div>
@@ -385,10 +385,10 @@ export default function ProviderProfilePage() {
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
               <DollarSign className="h-4 w-4 text-emerald-600" />
-              <CardTitle className="text-base font-bold">Standard Shift Pricing</CardTitle>
+              <CardTitle className="text-base font-bold">{t("client:profile.shiftPricing")}</CardTitle>
             </div>
             <CardDescription className="text-xs">
-              Predictable fixed pricing per 8-hour shift in Egyptian Pounds.
+              {t("client:profile.shiftPricingSubtitle")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
@@ -409,7 +409,7 @@ export default function ProviderProfilePage() {
               ))
             ) : (
               <div className="p-4 text-center text-xs text-muted-foreground bg-muted/20 rounded-lg">
-                Shift pricing calculated upon booking based on category standards.
+                -
               </div>
             )}
           </CardContent>
@@ -420,10 +420,10 @@ export default function ProviderProfilePage() {
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
               <MapPin className="h-4 w-4 text-teal-600" />
-              <CardTitle className="text-base font-bold">Service Coverage Areas</CardTitle>
+              <CardTitle className="text-base font-bold">{t("client:profile.workingAreas")}</CardTitle>
             </div>
             <CardDescription className="text-xs">
-              Locations where this professional accepts shift assignments.
+              {t("client:profile.shiftPricingSubtitle")}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -443,7 +443,7 @@ export default function ProviderProfilePage() {
                 ))}
               </div>
             ) : (
-              <p className="text-xs text-muted-foreground">Servicing Greater Cairo & surrounding areas.</p>
+              <p className="text-xs text-muted-foreground">-</p>
             )}
           </CardContent>
         </Card>
@@ -455,10 +455,10 @@ export default function ProviderProfilePage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Star className="h-4 w-4 text-amber-500 fill-current" />
-              <CardTitle className="text-base font-bold">Client Reviews ({reviews.length})</CardTitle>
+              <CardTitle className="text-base font-bold">{t("client:profile.reviewsTitle")} ({reviews.length})</CardTitle>
             </div>
             <span className="text-xs font-semibold text-muted-foreground">
-              Average Rating: <strong className="text-foreground">{provider.averageRating?.toFixed(1) || "5.0"} / 5</strong>
+              {t("client:directory.rating")}: <strong className="text-foreground">{provider.averageRating?.toFixed(1) || "5.0"} / 5</strong>
             </span>
           </div>
         </CardHeader>
@@ -466,7 +466,7 @@ export default function ProviderProfilePage() {
         <CardContent className="space-y-3">
           {reviews.length === 0 ? (
             <div className="text-center py-8 text-xs text-muted-foreground">
-              No reviews recorded for this provider yet. Be the first to book and share your experience!
+              {t("client:profile.noReviews")}
             </div>
           ) : (
             reviews.map((rev) => (
@@ -483,7 +483,7 @@ export default function ProviderProfilePage() {
                       </AvatarFallback>
                     </Avatar>
                     <span className="text-xs font-semibold text-foreground">
-                      {rev.clientName || "Verified Client"}
+                      {rev.clientName || t("common:roles.client")}
                     </span>
                   </div>
 
@@ -501,7 +501,7 @@ export default function ProviderProfilePage() {
 
                 <p className="text-xs text-foreground/85 leading-relaxed">{rev.comment}</p>
                 <span className="text-[10px] text-muted-foreground block">
-                  {new Date(rev.createdAt).toLocaleDateString()}
+                  {formatLocalizedDate(rev.createdAt, "dd/MM/yyyy", i18n.language)}
                 </span>
               </div>
             ))

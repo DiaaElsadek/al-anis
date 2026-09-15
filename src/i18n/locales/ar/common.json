@@ -1,0 +1,132 @@
+{
+  "brand": {
+    "name": "الأنيس",
+    "tagline": "منصة مزودي الخدمات والورديات",
+    "subtitle": "الأنـيـس • منصة الخدمات"
+  },
+  "nav": {
+    "home": "الرئيسية",
+    "findProviders": "البحث عن مزودين",
+    "myRequests": "طلباتي",
+    "messages": "الرسائل",
+    "settings": "الإعدادات",
+    "dashboard": "لوحة التحكم",
+    "myProfile": "ملفي الشخصي",
+    "availability": "جدول التوفر",
+    "workingAreas": "نطاق العمل",
+    "requests": "الطلبات",
+    "applications": "طلبات الانضمام",
+    "users": "المستخدمون",
+    "categories": "الأقسام",
+    "pricing": "أسعار الورديات",
+    "payments": "المدفوعات",
+    "logOut": "تسجيل الخروج",
+    "signIn": "تسجيل الدخول",
+    "getStarted": "ابدأ الآن",
+    "backToHome": "العودة للرئيسية",
+    "providerPanel": "لوحة مزود الخدمة",
+    "adminPanel": "لوحة الإدارة"
+  },
+  "actions": {
+    "submit": "إرسال",
+    "save": "حفظ",
+    "saveChanges": "حفظ التغييرات",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض",
+    "search": "بحث",
+    "filter": "تصفية",
+    "clear": "مسح",
+    "clearFilters": "إعادة ضبط التصفية",
+    "refresh": "تحديث",
+    "exportCsv": "تصدير CSV",
+    "copy": "نسخ",
+    "copied": "تم النسخ",
+    "close": "إغلاق",
+    "accept": "قبول",
+    "reject": "رفض",
+    "payNow": "ادفع الآن",
+    "start": "بدء الوردية",
+    "complete": "إتمام الوردية",
+    "writeReview": "كتابة تقييم",
+    "chat": "محادثة",
+    "apply": "تقديم الطلب",
+    "loadMore": "تحميل المزيد",
+    "next": "التالي",
+    "previous": "السابق"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "accepted": "مقبول",
+    "inProgress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "rejected": "مرفوض",
+    "cancelled": "ملغي",
+    "active": "نشط",
+    "suspended": "موقوف",
+    "approved": "معتمد",
+    "paid": "مدفوع",
+    "escrowed": "معلق بالضمان",
+    "failed": "فشل",
+    "refunded": "مسترد"
+  },
+  "roles": {
+    "user": "عميل",
+    "serviceProvider": "مزود خدمة",
+    "admin": "مسؤول النظام"
+  },
+  "shifts": {
+    "morning": "وردية صباحية",
+    "evening": "وردية مسائية",
+    "night": "وردية ليلية",
+    "morningTime": "8:00 ص – 4:00 م",
+    "eveningTime": "4:00 م – 12:00 ص",
+    "nightTime": "12:00 ص – 8:00 ص"
+  },
+  "theme": {
+    "toggle": "تغيير المظهر",
+    "light": "فاتح",
+    "dark": "داكن",
+    "system": "تلقائي (النظام)"
+  },
+  "language": {
+    "toggle": "تغيير اللغة",
+    "en": "English",
+    "ar": "العربية"
+  },
+  "toasts": {
+    "somethingWentWrong": "حدث خطأ ما",
+    "pleaseFixErrors": "يرجى مراجعة الحقول المحددة",
+    "copiedToClipboard": "تم النسخ إلى الحافظة بنجاح"
+  },
+  "empty": {
+    "noResults": "لم يتم العثور على نتائج",
+    "tryAdjusting": "جرب تغيير مصطلحات البحث أو فلاتر التصفية."
+  },
+  "footer": {
+    "copyright": "© {{year}} الأنيس. جميع الحقوق محفوظة.",
+    "escrowBadge": "حماية كاملة بالدفع الضامن"
+  },
+  "chat": {
+    "directMessages": "الرسائل المباشرة",
+    "threads": "{{count}} محادثات",
+    "searchConversations": "البحث في المحادثات...",
+    "noConversations": "لا توجد محادثات حتى الآن",
+    "noConversationsDesc": "عندما تحجز أو تتلقى طلب وردية، ستظهر محادثتك هنا.",
+    "activeNow": "نشط الآن",
+    "offline": "غير متصل",
+    "linkedToRequest": "مرتبط بطلب الخدمة",
+    "requestNumber": "طلب #{{id}}",
+    "startConversation": "ابدأ المحادثة",
+    "startConversationDesc": "أرسل رسالة لتنسيق متطلبات الوردية وموعد الوصول والتفاصيل.",
+    "typeMessage": "اكتب رسالتك هنا...",
+    "sendFailed": "فشل إرسال الرسالة",
+    "checkConnection": "يرجى التحقق من الاتصال بالإنترنت.",
+    "noActiveChat": "لم يتم تحديد أي محادثة",
+    "chooseConversation": "اختر محادثة من القائمة لبدء المراسلة.",
+    "participant": "المشارك",
+    "shiftChatInit": "تم بدء محادثة الوردية"
+  }
+}

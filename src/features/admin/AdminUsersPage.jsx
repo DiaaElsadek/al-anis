@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import {
@@ -22,7 +23,7 @@ import {
   activateServiceProvider,
 } from "@/api/admin";
 import { useDebounce } from "@/hooks/useDebounce";
-import { getMediaUrl, getInitials } from "@/lib/utils";
+import { getMediaUrl, getInitials, formatLocalizedDate } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -33,6 +34,7 @@ import Pagination from "@/components/shared/Pagination";
 import EmptyState from "@/components/shared/EmptyState";
 
 export default function AdminUsersPage() {
+  const { t, i18n } = useTranslation(["admin", "common", "auth"]);
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
   const debouncedSearch = useDebounce(searchTerm, 400);
@@ -98,9 +100,9 @@ export default function AdminUsersPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">User Management</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("admin:users.title")}</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Manage all registered platform accounts, roles, access permissions, and account status.
+          {t("admin:users.subtitle")}
         </p>
       </div>
 
@@ -109,7 +111,7 @@ export default function AdminUsersPage() {
         <div className="relative w-full sm:w-72">
           <Search className="absolute start-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
-            placeholder="Search by name, email, or phone..."
+            placeholder={t("admin:users.searchPlaceholder")}
             value={searchTerm}
             onChange={(e) => {
               setSearchTerm(e.target.value);
@@ -129,10 +131,10 @@ export default function AdminUsersPage() {
             }}
             className="h-9 rounded-lg border border-input bg-background px-3 text-xs text-foreground focus:ring-1 focus:ring-primary"
           >
-            <option value="all">All Roles</option>
-            <option value="User">Client (User)</option>
-            <option value="ServiceProvider">Service Provider</option>
-            <option value="Admin">Administrator</option>
+            <option value="all">{t("admin:users.allRoles")}</option>
+            <option value="User">{t("common:roles.user")}</option>
+            <option value="ServiceProvider">{t("common:roles.serviceProvider")}</option>
+            <option value="Admin">{t("common:roles.admin")}</option>
           </select>
 
           {/* Status Filter */}
@@ -144,9 +146,9 @@ export default function AdminUsersPage() {
             }}
             className="h-9 rounded-lg border border-input bg-background px-3 text-xs text-foreground focus:ring-1 focus:ring-primary"
           >
-            <option value="all">All Statuses</option>
-            <option value="Active">Active</option>
-            <option value="Suspended">Suspended</option>
+            <option value="all">{t("admin:users.allStatuses")}</option>
+            <option value="Active">{t("common:status.active")}</option>
+            <option value="Suspended">{t("common:status.suspended")}</option>
           </select>
         </div>
       </div>
@@ -164,8 +166,8 @@ export default function AdminUsersPage() {
             <div className="py-16 text-center">
               <EmptyState
                 icon={Users}
-                title="No users match your criteria"
-                description="Try broadening your search query or reset the role and status filters."
+                title={t("common:empty.noResults")}
+                description={t("common:empty.tryAdjusting")}
               />
             </div>
           ) : (
@@ -173,18 +175,25 @@ export default function AdminUsersPage() {
               <table className="w-full text-xs text-start">
                 <thead>
                   <tr className="border-b border-border/60 bg-muted/20 text-muted-foreground">
-                    <th className="py-3 px-4 font-semibold">User</th>
-                    <th className="py-3 px-4 font-semibold">Contact</th>
-                    <th className="py-3 px-4 font-semibold">Role</th>
-                    <th className="py-3 px-4 font-semibold">Joined Date</th>
-                    <th className="py-3 px-4 font-semibold text-center">Status</th>
-                    <th className="py-3 px-4 font-semibold text-end">Account Action</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:users.userCol")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("auth:register.phoneNumber")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:users.roleCol")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">{t("admin:users.joinedCol")}</th>
+                    <th className="py-3 px-4 font-semibold text-center">{t("admin:users.statusCol")}</th>
+                    <th className="py-3 px-4 font-semibold text-end">{t("admin:users.actionsCol")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
                   {users.map((u) => {
                     const isSuspended =
                       u.status?.toLowerCase().includes("suspend") || false;
+
+                    const roleLabel =
+                      u.role === "Admin"
+                        ? t("common:roles.admin")
+                        : u.role === "ServiceProvider"
+                        ? t("common:roles.serviceProvider")
+                        : t("common:roles.user");
 
                     return (
                       <tr key={u.id} className="hover:bg-muted/25 transition-colors">
@@ -196,13 +205,13 @@ export default function AdminUsersPage() {
                                 {getInitials(u.name)}
                               </AvatarFallback>
                             </Avatar>
-                            <span>{u.name || "Platform User"}</span>
+                            <span>{u.name || t("common:roles.user")}</span>
                           </div>
                         </td>
 
                         <td className="py-3 px-4 text-muted-foreground">
                           <div>{u.email}</div>
-                          <div className="text-[11px]">{u.phone || "—"}</div>
+                          <div className="text-[11px] font-mono">{u.phone || "—"}</div>
                         </td>
 
                         <td className="py-3 px-4">
@@ -216,12 +225,12 @@ export default function AdminUsersPage() {
                                 : "bg-primary/10 text-primary border-primary/20"
                             }`}
                           >
-                            {u.role || "User"}
+                            {roleLabel}
                           </Badge>
                         </td>
 
                         <td className="py-3 px-4 text-muted-foreground">
-                          {u.joined ? new Date(u.joined).toLocaleDateString() : "—"}
+                          {u.joined ? formatLocalizedDate(u.joined, "PP", i18n.language) : "—"}
                         </td>
 
                         <td className="py-3 px-4 text-center">
@@ -235,7 +244,7 @@ export default function AdminUsersPage() {
                                 isSuspended ? "bg-destructive" : "bg-emerald-500"
                               }`}
                             />
-                            {isSuspended ? "Suspended" : "Active"}
+                            {isSuspended ? t("common:status.suspended") : t("common:status.active")}
                           </span>
                         </td>
 
@@ -244,14 +253,14 @@ export default function AdminUsersPage() {
                             <Button
                               size="sm"
                               variant="outline"
-                              className="h-7 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50"
+                              className="h-7 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
                               onClick={() =>
                                 activateMutation.mutate({ userId: u.id, role: u.role })
                               }
                               disabled={activateMutation.isPending}
                             >
                               <Unlock className="h-3 w-3 me-1" />
-                              Activate
+                              {t("admin:users.activateButton")}
                             </Button>
                           ) : (
                             <Button
@@ -264,7 +273,7 @@ export default function AdminUsersPage() {
                               disabled={suspendMutation.isPending}
                             >
                               <Lock className="h-3 w-3 me-1" />
-                              Suspend
+                              {t("admin:users.suspendButton")}
                             </Button>
                           )}
                         </td>
