@@ -1,66 +1,87 @@
 import axiosClient from "./axiosClient";
 
 /**
- * GET /api/Admin/dashboard — admin dashboard stats
+ * GET /api/Admin/dashboard-stats
  */
-export const getDashboardStats = () => axiosClient.get("/Admin/dashboard");
+export const getDashboardStats = () =>
+  axiosClient.get("/Admin/dashboard-stats");
 
 /**
- * GET /api/Admin/applications — provider applications queue
+ * GET /api/Admin/service-provider-applications
+ * @param {Object} [params] - { page, pageSize }
  */
-export const getApplications = (params) =>
-  axiosClient.get("/Admin/applications", { params });
+export const getServiceProviderApplications = (params = { page: 1, pageSize: 10 }) =>
+  axiosClient.get("/Admin/service-provider-applications", { params });
 
 /**
- * GET /api/Admin/applications/:id — single application detail
+ * GET /api/Admin/service-provider-applications/{id}
+ * @param {string} id
  */
-export const getApplication = (id) =>
-  axiosClient.get(`/Admin/applications/${id}`);
+export const getServiceProviderApplication = (id) =>
+  axiosClient.get(`/Admin/service-provider-applications/${id}`);
 
 /**
- * PUT /api/Admin/applications/:id/approve
+ * POST /api/Admin/service-provider-applications/{id}/approve
+ * @param {string} id
  */
-export const approveApplication = (id) =>
-  axiosClient.put(`/Admin/applications/${id}/approve`);
+export const approveServiceProviderApplication = (id) =>
+  axiosClient.post(`/Admin/service-provider-applications/${id}/approve`);
 
 /**
- * PUT /api/Admin/applications/:id/reject
+ * POST /api/Admin/service-provider-applications/{id}/reject
+ * @param {string} id
+ * @param {string} rejectionReason
  */
-export const rejectApplication = (id, reason) =>
-  axiosClient.put(`/Admin/applications/${id}/reject`, { reason });
+export const rejectServiceProviderApplication = (id, rejectionReason) =>
+  axiosClient.post(`/Admin/service-provider-applications/${id}/reject`, {
+    rejectionReason,
+  });
 
 /**
- * GET /api/Admin/users — user management list
+ * POST /api/Admin/service-providers/{id}/suspend
+ * @param {string} id
+ * @param {string} reason
+ */
+export const suspendServiceProvider = (id, reason) =>
+  axiosClient.post(`/Admin/service-providers/${id}/suspend`, { reason });
+
+/**
+ * POST /api/Admin/service-providers/{id}/activate
+ * @param {string} id
+ */
+export const activateServiceProvider = (id) =>
+  axiosClient.post(`/Admin/service-providers/${id}/activate`);
+
+/**
+ * GET /api/Admin/users
+ * @param {Object} [params] - { Search, Role, Status, Page, PageSize }
  */
 export const getUsers = (params) =>
   axiosClient.get("/Admin/users", { params });
 
 /**
- * PUT /api/Admin/users/:id/suspend
+ * POST /api/Admin/users/{userId}/suspend
+ * @param {string} userId
  */
-export const suspendUser = (id) =>
-  axiosClient.put(`/Admin/users/${id}/suspend`);
+export const suspendUser = (userId) =>
+  axiosClient.post(`/Admin/users/${userId}/suspend`);
 
 /**
- * PUT /api/Admin/users/:id/activate
+ * POST /api/Admin/users/{userId}/activate
+ * @param {string} userId
  */
-export const activateUser = (id) =>
-  axiosClient.put(`/Admin/users/${id}/activate`);
+export const activateUser = (userId) =>
+  axiosClient.post(`/Admin/users/${userId}/activate`);
 
 /**
- * GET /api/Admin/bookings — recent bookings
+ * GET /api/Admin/bookings/recent
+ * @param {Object} [params] - { limit }
  */
-export const getRecentBookings = (params) =>
-  axiosClient.get("/Admin/bookings", { params });
+export const getRecentBookings = (params = { limit: 10 }) =>
+  axiosClient.get("/Admin/bookings/recent", { params });
 
 /**
- * GET /api/Admin/payments — payment transactions
+ * GET /api/Admin/payments
  */
-export const getAdminPayments = (params) =>
-  axiosClient.get("/Admin/payments", { params });
-
-/**
- * GET /api/Admin/payments/summary — revenue summary
- */
-export const getPaymentsSummary = () =>
-  axiosClient.get("/Admin/payments/summary");
+export const getAdminPayments = () =>
+  axiosClient.get("/Admin/payments");

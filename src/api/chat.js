@@ -1,29 +1,36 @@
 import axiosClient from "./axiosClient";
 
 /**
- * GET /api/Chat/threads — list chat threads
+ * POST /api/Chat/create-or-get/{serviceRequestId}
+ * @param {string} serviceRequestId
  */
-export const getThreads = () => axiosClient.get("/Chat/threads");
+export const createOrGetChat = (serviceRequestId) =>
+  axiosClient.post(`/Chat/create-or-get/${serviceRequestId}`);
 
 /**
- * GET /api/Chat/threads/:id/messages — get messages in a thread
+ * GET /api/Chat/my-chats
  */
-export const getMessages = (threadId, params) =>
-  axiosClient.get(`/Chat/threads/${threadId}/messages`, { params });
+export const getMyChats = () =>
+  axiosClient.get("/Chat/my-chats");
 
 /**
- * POST /api/Chat/threads/:id/messages — send a message
+ * GET /api/Chat/{chatId}/messages
+ * @param {string} chatId
+ * @param {Object} [params] - { page, pageSize }
  */
-export const sendMessage = (threadId, data) =>
-  axiosClient.post(`/Chat/threads/${threadId}/messages`, data);
+export const getChatMessages = (chatId, params = { page: 1, pageSize: 50 }) =>
+  axiosClient.get(`/Chat/${chatId}/messages`, { params });
 
 /**
- * PUT /api/Chat/threads/:id/mark-read
+ * POST /api/Chat/send-message
+ * @param {Object} payload - { chatId, message }
  */
-export const markThreadRead = (threadId) =>
-  axiosClient.put(`/Chat/threads/${threadId}/mark-read`);
+export const sendChatMessage = ({ chatId, message }) =>
+  axiosClient.post("/Chat/send-message", { chatId, message });
 
 /**
- * GET /api/Chat/unread-count
+ * PUT /api/Chat/{chatId}/mark-read
+ * @param {string} chatId
  */
-export const getUnreadCount = () => axiosClient.get("/Chat/unread-count");
+export const markChatAsRead = (chatId) =>
+  axiosClient.put(`/Chat/${chatId}/mark-read`);

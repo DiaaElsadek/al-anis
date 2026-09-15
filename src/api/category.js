@@ -1,28 +1,42 @@
 import axiosClient from "./axiosClient";
 
 /**
- * GET /api/Category — list all categories
+ * GET /api/Category
  */
-export const getCategories = (params) =>
-  axiosClient.get("/Category", { params });
+export const getCategories = () =>
+  axiosClient.get("/Category");
 
 /**
- * GET /api/Category/:id — single category
+ * GET /api/Category/active
  */
-export const getCategory = (id) => axiosClient.get(`/Category/${id}`);
+export const getActiveCategories = () =>
+  axiosClient.get("/Category/active");
 
 /**
- * POST /api/Category — create category (admin)
+ * GET /api/Category/{id}
+ * @param {string} id
  */
-export const createCategory = (data) => axiosClient.post("/Category", data);
+export const getCategory = (id) =>
+  axiosClient.get(`/Category/${id}`);
 
 /**
- * PUT /api/Category/:id — update category (admin)
+ * POST /api/Category
+ * @param {Object} data - { name, nameEn, description, icon, isActive }
+ */
+export const createCategory = (data) =>
+  axiosClient.post("/Category", data);
+
+/**
+ * PUT /api/Category/{id}
+ * @param {string} id
+ * @param {Object} data - { name, nameEn, description, icon, isActive }
  */
 export const updateCategory = (id, data) =>
   axiosClient.put(`/Category/${id}`, data);
 
 /**
- * DELETE /api/Category/:id — delete category (admin)
+ * DELETE /api/Category/{id}
+ * @param {string} id
  */
-export const deleteCategory = (id) => axiosClient.delete(`/Category/${id}`);
+export const deleteCategory = (id) =>
+  axiosClient.delete(`/Category/${id}`);

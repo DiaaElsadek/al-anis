@@ -15,9 +15,6 @@ import LandingPage from "@/features/landing/LandingPage";
 import NotFoundPage from "@/features/errors/NotFoundPage";
 import ForbiddenPage from "@/features/errors/ForbiddenPage";
 
-// Placeholder (will be replaced in later phases)
-import PlaceholderPage from "@/features/placeholder/PlaceholderPage";
-
 // Auth pages
 import LoginPage from "@/features/auth/LoginPage";
 import RegisterPage from "@/features/auth/RegisterPage";
@@ -25,37 +22,30 @@ import VerifyOtpPage from "@/features/auth/VerifyOtpPage";
 import ForgotPasswordPage from "@/features/auth/ForgotPasswordPage";
 import ResetPasswordPage from "@/features/auth/ResetPasswordPage";
 
-// ============================================================
-// Client Pages (placeholder for Phases 3-4)
-// ============================================================
-const ProviderDirectoryPage = () => <PlaceholderPage title="Find Providers" description="Browse and filter verified service providers" />;
-const ProviderProfilePage = () => <PlaceholderPage title="Provider Profile" description="View provider details, availability, and reviews" />;
-const ClientRequestsPage = () => <PlaceholderPage title="My Requests" description="View and manage your service requests" />;
-const ClientRequestDetailPage = () => <PlaceholderPage title="Request Detail" description="View request status, chat, and actions" />;
-const ChatInboxPage = () => <PlaceholderPage title="Messages" description="Your chat conversations" />;
-const ClientSettingsPage = () => <PlaceholderPage title="Settings" description="Manage your profile and preferences" />;
+// Client Pages
+import ProviderDirectoryPage from "@/features/client/ProviderDirectoryPage";
+import ProviderProfilePage from "@/features/client/ProviderProfilePage";
+import ClientRequestsPage from "@/features/client/ClientRequestsPage";
+import ClientSettingsPage from "@/features/client/ClientSettingsPage";
 
-// ============================================================
-// Provider Pages (placeholder for Phases 3-4)
-// ============================================================
-const ProviderApplyPage = () => <PlaceholderPage title="Apply as Provider" description="Complete the provider onboarding wizard" />;
-const ProviderPendingPage = () => <PlaceholderPage title="Application Pending" description="Your application is under review" />;
-const ProviderDashboardPage = () => <PlaceholderPage title="Provider Dashboard" description="View your stats and recent activity" />;
-const ProviderEditProfilePage = () => <PlaceholderPage title="Edit Profile" description="Update your provider profile" />;
-const ProviderAvailabilityPage = () => <PlaceholderPage title="Availability" description="Set your availability calendar" />;
-const ProviderWorkingAreasPage = () => <PlaceholderPage title="Working Areas" description="Manage your service areas" />;
-const ProviderRequestsPage = () => <PlaceholderPage title="Incoming Requests" description="Manage service requests from clients" />;
-const ProviderRequestDetailPage = () => <PlaceholderPage title="Request Detail" description="View and manage this request" />;
+// Unified Chat
+import ChatInboxPage from "@/features/chat/ChatInboxPage";
 
-// ============================================================
-// Admin Pages (placeholder for Phases 3-4)
-// ============================================================
-const AdminDashboardPage = () => <PlaceholderPage title="Admin Dashboard" description="Platform overview and statistics" />;
-const AdminApplicationsPage = () => <PlaceholderPage title="Provider Applications" description="Review and process provider applications" />;
-const AdminUsersPage = () => <PlaceholderPage title="User Management" description="Manage platform users" />;
-const AdminCategoriesPage = () => <PlaceholderPage title="Categories" description="Manage service categories" />;
-const AdminPricingPage = () => <PlaceholderPage title="Service Pricing" description="Manage shift pricing per category" />;
-const AdminPaymentsPage = () => <PlaceholderPage title="Payments" description="View transactions and revenue" />;
+// Provider Pages
+import ProviderPendingPage from "@/features/provider/ProviderPendingPage";
+import ProviderDashboardPage from "@/features/provider/ProviderDashboardPage";
+import ProviderEditProfilePage from "@/features/provider/ProviderEditProfilePage";
+import ProviderAvailabilityPage from "@/features/provider/ProviderAvailabilityPage";
+import ProviderWorkingAreasPage from "@/features/provider/ProviderWorkingAreasPage";
+import ProviderRequestsPage from "@/features/provider/ProviderRequestsPage";
+
+// Admin Pages
+import AdminDashboardPage from "@/features/admin/AdminDashboardPage";
+import AdminApplicationsPage from "@/features/admin/AdminApplicationsPage";
+import AdminUsersPage from "@/features/admin/AdminUsersPage";
+import AdminCategoriesPage from "@/features/admin/AdminCategoriesPage";
+import AdminPricingPage from "@/features/admin/AdminPricingPage";
+import AdminPaymentsPage from "@/features/admin/AdminPaymentsPage";
 
 // ============================================================
 // AppRouter Component
@@ -89,7 +79,7 @@ export default function AppRouter() {
           <Route path="providers" element={<ProviderDirectoryPage />} />
           <Route path="providers/:id" element={<ProviderProfilePage />} />
           <Route path="requests" element={<ClientRequestsPage />} />
-          <Route path="requests/:id" element={<ClientRequestDetailPage />} />
+          <Route path="requests/:id" element={<ClientRequestsPage />} />
           <Route path="chats" element={<ChatInboxPage />} />
           <Route path="settings" element={<ClientSettingsPage />} />
         </Route>
@@ -104,14 +94,15 @@ export default function AppRouter() {
           }
         >
           <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="apply" element={<ProviderApplyPage />} />
+          <Route path="apply" element={<Navigate to="/register" replace />} />
           <Route path="pending" element={<ProviderPendingPage />} />
           <Route path="dashboard" element={<ProviderDashboardPage />} />
           <Route path="profile" element={<ProviderEditProfilePage />} />
           <Route path="availability" element={<ProviderAvailabilityPage />} />
           <Route path="working-areas" element={<ProviderWorkingAreasPage />} />
           <Route path="requests" element={<ProviderRequestsPage />} />
-          <Route path="requests/:id" element={<ProviderRequestDetailPage />} />
+          <Route path="requests/:id" element={<ProviderRequestsPage />} />
+          <Route path="chats" element={<ChatInboxPage />} />
         </Route>
 
         {/* Admin routes */}
