@@ -63,7 +63,9 @@ export default function LanguageSwitcher({ className, align = "end", compact = f
           className="flex items-center justify-between gap-2 cursor-pointer font-medium"
         >
           <div className="flex items-center gap-2">
-            <span>🇺🇸</span>
+            <span className="h-5 w-5 rounded-md bg-muted text-foreground text-[10px] font-bold flex items-center justify-center border border-border/80">
+              EN
+            </span>
             <span>English</span>
           </div>
           {currentLang === "en" && <Check className="h-3.5 w-3.5 text-primary" />}
@@ -74,7 +76,9 @@ export default function LanguageSwitcher({ className, align = "end", compact = f
           className="flex items-center justify-between gap-2 cursor-pointer font-medium font-arabic"
         >
           <div className="flex items-center gap-2">
-            <span>🇪🇬</span>
+            <span className="h-5 w-5 rounded-md bg-muted text-foreground text-[10px] font-bold flex items-center justify-center border border-border/80">
+              ع
+            </span>
             <span>العربية</span>
           </div>
           {currentLang === "ar" && <Check className="h-3.5 w-3.5 text-primary" />}

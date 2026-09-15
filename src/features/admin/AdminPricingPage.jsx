@@ -21,6 +21,7 @@ import {
 import { getCategories } from "@/api/category";
 import { ShiftType, ShiftTypeLabels } from "@/lib/constants";
 import { formatPrice } from "@/lib/utils";
+import CategoryIcon from "@/components/shared/CategoryIcon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -348,7 +349,9 @@ export default function AdminPricingPage() {
             <Card key={item.categoryId} className="border-border/70 shadow-sm bg-card overflow-hidden">
               <div className="p-4 bg-muted/20 border-b border-border/50 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <span className="text-lg">{item.categoryIcon || "🩺"}</span>
+                  <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                    <CategoryIcon icon={item.categoryIcon} name={item.categoryName} className="h-4 w-4" />
+                  </div>
                   <div>
                     <h3 className="font-bold text-sm text-foreground">
                       {item.categoryName}

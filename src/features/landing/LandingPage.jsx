@@ -71,6 +71,7 @@ import {
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import CategoryIcon from "@/components/shared/CategoryIcon";
 
 // Fallback categories if backend is still initializing
 const FALLBACK_CATEGORIES = [
@@ -78,7 +79,7 @@ const FALLBACK_CATEGORIES = [
     id: "cat-1",
     name: "تمريض منزلي ورعاية صحية",
     nameEn: "Home Nursing & Medical Care",
-    icon: "🩺",
+    icon: "Stethoscope",
     providersCount: 340,
     startingPrice: 400,
     description: "Certified nurses for post-op recovery, injections, and vitals monitoring.",
@@ -88,7 +89,7 @@ const FALLBACK_CATEGORIES = [
     id: "cat-2",
     name: "رعاية كبار السن وجليسات",
     nameEn: "Elderly Care & Companionship",
-    icon: "👵",
+    icon: "HeartHandshake",
     providersCount: 280,
     startingPrice: 350,
     description: "Compassionate aides assisting with mobility, companionship, and medication.",
@@ -98,7 +99,7 @@ const FALLBACK_CATEGORIES = [
     id: "cat-3",
     name: "رعاية وجليسات أطفال",
     nameEn: "Childcare & Babysitting",
-    icon: "👶",
+    icon: "Baby",
     providersCount: 210,
     startingPrice: 300,
     description: "Vetted nannies and babysitters trained in child safety and developmental play.",
@@ -108,7 +109,7 @@ const FALLBACK_CATEGORIES = [
     id: "cat-4",
     name: "علاج طبيعي وتأهيل حركي",
     nameEn: "Physiotherapy & Rehab",
-    icon: "🏃‍♂️",
+    icon: "Activity",
     providersCount: 160,
     startingPrice: 450,
     description: "Licensed therapists helping restore mobility, strength, and recovery at home.",
@@ -118,7 +119,7 @@ const FALLBACK_CATEGORIES = [
     id: "cat-5",
     name: "دروس وتأسيس أكاديمي",
     nameEn: "Private Tutoring & Foundations",
-    icon: "📚",
+    icon: "GraduationCap",
     providersCount: 190,
     startingPrice: 250,
     description: "Qualified educators providing focused one-on-one lessons for school students.",
@@ -128,7 +129,7 @@ const FALLBACK_CATEGORIES = [
     id: "cat-6",
     name: "تدبير ومساعد منزلي",
     nameEn: "Housekeeping & Domestic Aid",
-    icon: "🧹",
+    icon: "Sparkles",
     providersCount: 150,
     startingPrice: 250,
     description: "Trustworthy domestic aides for deep organization, meal prep, and upkeep.",
@@ -595,7 +596,10 @@ export default function LandingPage() {
                           <SelectItem value="all">{isArabic ? "جميع التخصصات" : "All Specialties"}</SelectItem>
                           {categories.map((cat) => (
                             <SelectItem key={cat.id} value={cat.id}>
-                              {cat.icon} {getLocalizedCategoryName(cat, i18n.language)}
+                              <div className="flex items-center gap-2">
+                                <CategoryIcon icon={cat.icon} name={cat.name} className="h-3.5 w-3.5 text-primary shrink-0" />
+                                <span>{getLocalizedCategoryName(cat, i18n.language)}</span>
+                              </div>
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -613,9 +617,24 @@ export default function LandingPage() {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="all">{isArabic ? "كافة الورديات (24 ساعة)" : "Any Shift (24 Hours)"}</SelectItem>
-                          <SelectItem value="morning">🌅 {isArabic ? "صباحية (8 ص – 4 م)" : "Morning (8am - 4pm)"}</SelectItem>
-                          <SelectItem value="evening">🌇 {isArabic ? "مسائية (4 م – 12 ص)" : "Evening (4pm - 12am)"}</SelectItem>
-                          <SelectItem value="night">🌙 {isArabic ? "ليلية (12 ص – 8 ص)" : "Night (12am - 8am)"}</SelectItem>
+                          <SelectItem value="morning">
+                            <div className="flex items-center gap-2">
+                              <Sun className="h-3.5 w-3.5 text-amber-500 shrink-0" />
+                              <span>{isArabic ? "صباحية (8 ص – 4 م)" : "Morning (8am - 4pm)"}</span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="evening">
+                            <div className="flex items-center gap-2">
+                              <Sunset className="h-3.5 w-3.5 text-orange-500 shrink-0" />
+                              <span>{isArabic ? "مسائية (4 م – 12 ص)" : "Evening (4pm - 12am)"}</span>
+                            </div>
+                          </SelectItem>
+                          <SelectItem value="night">
+                            <div className="flex items-center gap-2">
+                              <Moon className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
+                              <span>{isArabic ? "ليلية (12 ص – 8 ص)" : "Night (12am - 8am)"}</span>
+                            </div>
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                     </div>
@@ -852,9 +871,15 @@ export default function LandingPage() {
                           </span>
                         </div>
 
-                        <div className="text-[11px] text-muted-foreground space-y-1 bg-card/60 p-2.5 rounded-xl border border-border/50">
-                          <p>✓ {isArabic ? "ضمان استرداد فوري في حال الإلغاء" : "100% Escrow protected refund"}</p>
-                          <p>✓ {isArabic ? "تدقيق جنائي للرقم القومي" : "National ID vetted caregiver"}</p>
+                        <div className="text-[11px] text-muted-foreground space-y-1.5 bg-card/60 p-2.5 rounded-xl border border-border/50 text-start">
+                          <p className="flex items-center gap-1.5">
+                            <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                            <span>{isArabic ? "ضمان استرداد فوري في حال الإلغاء" : "100% Escrow protected refund"}</span>
+                          </p>
+                          <p className="flex items-center gap-1.5">
+                            <Check className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+                            <span>{isArabic ? "تدقيق جنائي للرقم القومي" : "National ID vetted caregiver"}</span>
+                          </p>
                         </div>
 
                         <Button size="lg" asChild className="w-full font-bold">
@@ -912,9 +937,9 @@ export default function LandingPage() {
                   >
                     <CardContent className="p-6 space-y-4">
                       <div className="flex items-center justify-between">
-                        <span className="text-3xl p-3 rounded-2xl bg-muted/40 group-hover:scale-110 transition-transform">
-                          {cat.icon || "🌟"}
-                        </span>
+                        <div className="p-3 rounded-2xl bg-primary/10 text-primary group-hover:scale-110 transition-transform">
+                          <CategoryIcon icon={cat.icon} name={cat.name} className="h-6 w-6" />
+                        </div>
                         <Badge className="bg-primary/10 text-primary border-primary/20 text-[10px]">
                           {isArabic ? "مدقق ومعتمد" : "Verified"}
                         </Badge>
@@ -1358,10 +1383,19 @@ export default function LandingPage() {
                   </Button>
                 </div>
 
-                <div className="pt-4 flex items-center justify-center gap-6 text-xs text-white/70">
-                  <span>✓ {isArabic ? "بدون عمولات خفية" : "No hidden broker fees"}</span>
-                  <span>✓ {isArabic ? "حماية الضمان 100%" : "100% Escrow guarantee"}</span>
-                  <span>✓ {isArabic ? "دعم على مدار الساعة" : "24/7 Support line"}</span>
+                <div className="pt-4 flex flex-wrap items-center justify-center gap-6 text-xs text-white/80">
+                  <span className="flex items-center gap-1.5">
+                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                    <span>{isArabic ? "بدون عمولات خفية" : "No hidden broker fees"}</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                    <span>{isArabic ? "حماية الضمان 100%" : "100% Escrow guarantee"}</span>
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Check className="h-3.5 w-3.5 text-emerald-400 shrink-0" />
+                    <span>{isArabic ? "دعم على مدار الساعة" : "24/7 Support line"}</span>
+                  </span>
                 </div>
               </div>
             </div>

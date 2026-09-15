@@ -19,6 +19,7 @@ import { getActiveCategories } from "@/api/category";
 import { useDebounce } from "@/hooks/useDebounce";
 import { getMediaUrl, getInitials, formatPrice, getLocalizedCategoryName } from "@/lib/utils";
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import CategoryIcon from "@/components/shared/CategoryIcon";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -152,7 +153,7 @@ export default function ProviderDirectoryPage() {
                 setPage(1);
               }}
             >
-              {cat.icon && <span className="me-1.5">{cat.icon}</span>}
+              <CategoryIcon icon={cat.icon} name={cat.name} className="h-3.5 w-3.5 me-1.5 inline-block" />
               {getLocalizedCategoryName(cat, i18n.language)}
             </Button>
           ))}
