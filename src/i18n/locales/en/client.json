@@ -91,5 +91,51 @@
     "changePassword": "Change Password",
     "changePasswordDesc": "Update your account password to maintain security.",
     "photoUpdatedToast": "Profile picture updated successfully!"
+  },
+  "dashboard": {
+    "welcomeGreeting": "Welcome back,",
+    "welcomeSubtitle": "Manage your care requests, schedule upcoming shifts, and connect with trusted professionals.",
+    "emailVerified": "Email Verified",
+    "phoneVerified": "Phone Active",
+    "clientAccount": "Client Account",
+    "quickBook": "Find a Caregiver",
+    "viewRequests": "My Requests",
+    "chatWithCaregiver": "Messages",
+    "stats": {
+      "totalRequests": "Total Requests",
+      "totalRequestsDesc": "All shift bookings",
+      "activeShifts": "Active Care",
+      "activeShiftsDesc": "In progress & accepted",
+      "completedShifts": "Completed Services",
+      "completedShiftsDesc": "Successfully fulfilled",
+      "conversations": "Messages",
+      "conversationsDesc": "Direct caregiver chats"
+    },
+    "activeCareTitle": "Current & Upcoming Care",
+    "activeCareSubtitle": "Real-time status of your accepted and ongoing home care shifts",
+    "noActiveCareTitle": "No Active Shifts Right Now",
+    "noActiveCareDesc": "Need a nurse, nanny, physiotherapist, or companion today? Book a verified caregiver in seconds.",
+    "recentRequestsTitle": "Recent Shift Requests",
+    "recentRequestsSubtitle": "Track your latest bookings and care schedules",
+    "viewAll": "View All Requests",
+    "bookBySpecialty": "Book by Specialty",
+    "bookBySpecialtySubtitle": "Select a home care specialty to browse verified caregivers",
+    "trustTitle": "Safe & Guaranteed Home Care",
+    "trustDesc": "Every caregiver on Alanis undergoes strict background and ID auditing. Payments are protected in escrow until your shift is completed.",
+    "supportButton": "24/7 Client Support",
+    "specialties": {
+      "nursing": "Home Nursing",
+      "nursingDesc": "Post-op care & injections",
+      "elderly": "Elderly Care",
+      "elderlyDesc": "Companionship & assistance",
+      "childcare": "Childcare & Babysitting",
+      "childcareDesc": "Qualified early child care",
+      "physio": "Physiotherapy",
+      "physioDesc": "Mobility & rehabilitation",
+      "tutoring": "Home Tutoring",
+      "tutoringDesc": "Academic study support",
+      "housekeeping": "Domestic Assistance",
+      "housekeepingDesc": "Daily home support"
+    }
   }
 }

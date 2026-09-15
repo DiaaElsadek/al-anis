@@ -1,4 +1,4 @@
-import { Search, FileText, MessageSquare, Settings } from "lucide-react";
+import { LayoutDashboard, Search, FileText, MessageSquare, Settings } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Outlet, NavLink } from "react-router-dom";
 
@@ -10,6 +10,7 @@ export default function ClientLayout() {
   const { t } = useTranslation("common");
 
   const clientNavItems = [
+    { to: "/app/dashboard", label: t("nav.dashboard"), icon: LayoutDashboard },
     { to: "/app/providers", label: t("nav.findProviders"), icon: Search },
     { to: "/app/requests", label: t("nav.myRequests"), icon: FileText },
     { to: "/app/chats", label: t("nav.messages"), icon: MessageSquare },

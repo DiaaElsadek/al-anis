@@ -91,5 +91,51 @@
     "changePassword": "تغيير كلمة المرور",
     "changePasswordDesc": "قم بتحديث كلمة مرورك بانتظام لحماية حسابك.",
     "photoUpdatedToast": "تم تحديث الصورة الشخصية بنجاح!"
+  },
+  "dashboard": {
+    "welcomeGreeting": "مرحباً بعودتك،",
+    "welcomeSubtitle": "تابع طلبات الرعاية، وجدول وردياتك القادمة، وتواصل مع متخصصين موثوقين بكل سهولة.",
+    "emailVerified": "البريد موثق",
+    "phoneVerified": "رقم الهاتف نشط",
+    "clientAccount": "حساب عميل",
+    "quickBook": "ابحث عن مقدم رعاية",
+    "viewRequests": "طلباتي",
+    "chatWithCaregiver": "الرسائل",
+    "stats": {
+      "totalRequests": "إجمالي الطلبات",
+      "totalRequestsDesc": "كافة الورديات المحجوزة",
+      "activeShifts": "رعاية نشطة",
+      "activeShiftsDesc": "قيد التنفيذ والمقبولة",
+      "completedShifts": "خدمات مكتملة",
+      "completedShiftsDesc": "تم إنجازها بنجاح",
+      "conversations": "الرسائل",
+      "conversationsDesc": "محادثاتك مع مقدمي الرعاية"
+    },
+    "activeCareTitle": "الرعاية الحالية والقادمة",
+    "activeCareSubtitle": "متابعة فورية لحالة الورديات المقبولة والجارية لديك",
+    "noActiveCareTitle": "لا توجد ورديات نشطة حالياً",
+    "noActiveCareDesc": "هل تحتاج إلى ممرض، جليسة أطفال، أخصائي علاج طبيعي، أو رفيق مسن اليوم؟ احجز متخصصك المعتمد في دقائق.",
+    "recentRequestsTitle": "أحدث طلبات الخدمة",
+    "recentRequestsSubtitle": "متابعة سريعة لأحدث حجوزاتك وجداول الرعاية",
+    "viewAll": "عرض كافة الطلبات",
+    "bookBySpecialty": "احجز حسب التخصص",
+    "bookBySpecialtySubtitle": "اختر التخصص المطلوب لتصفح أفضل مقدمي الخدمة المتاحين",
+    "trustTitle": "رعاية منزلية آمنة ومضمونة",
+    "trustDesc": "يخضع جميع مقدمي الرعاية في الأنيس لتدقيق وفحص أمني لبطاقات الهوية والشهادات. مدفوعاتك محفوظة بالضمان حتى اكتمال الوردية.",
+    "supportButton": "دعم العملاء 24/7",
+    "specialties": {
+      "nursing": "تمريض منزلي",
+      "nursingDesc": "عناية بعد العمليات وحقن",
+      "elderly": "رعاية كبار السن",
+      "elderlyDesc": "مرافقة ودعم يومي",
+      "childcare": "جليسة أطفال ورعاية",
+      "childcareDesc": "رعاية مؤهلة للطفولة",
+      "physio": "علاج طبيعي وتأهيل",
+      "physioDesc": "استعادة الحركة والتأهيل",
+      "tutoring": "دروس خصوصية منزلية",
+      "tutoringDesc": "دعم أكاديمي وتأسيس",
+      "housekeeping": "مساعدة منزلية ونظافة",
+      "housekeepingDesc": "دعم الأعمال المنزلية"
+    }
   }
 }
