@@ -1,56 +1,37 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { FolderTree, Plus, Edit2, Trash2, AlertCircle } from "lucide-react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
-import {
-  FolderTree,
-  Plus,
-  Edit2,
-  Trash2,
-  Check,
-  X,
-  Sparkles,
-} from "lucide-react";
 
-import {
-  getCategories,
-  createCategory,
-  updateCategory,
-  deleteCategory,
-} from "@/api/category";
-import { getLocalizedCategoryName } from "@/lib/utils";
+import { getCategories, createCategory, updateCategory, deleteCategory } from "@/api/category";
 import CategoryIcon from "@/components/shared/CategoryIcon";
+import EmptyState from "@/components/shared/EmptyState";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
-import EmptyState from "@/components/shared/EmptyState";
+import CategoryFormDialog from "@/features/admin/components/CategoryFormDialog";
+import { handleMutationError } from "@/lib/utils";
 
 export default function AdminCategoriesPage() {
-  const { t, i18n } = useTranslation(["admin", "common"]);
+  const { t } = useTranslation(["admin", "common"]);
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
 
-  const { data: categories = [], isLoading } = useQuery({
+  const {
+    data: categories = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["admin-categories"],
     queryFn: getCategories,
   });
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    setValue,
-    watch,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, reset, setValue, watch } = useForm({
     defaultValues: {
       name: "",
       nameEn: "",
@@ -66,11 +47,11 @@ export default function AdminCategoriesPage() {
   const handleEdit = (cat) => {
     setEditingCategory(cat);
     reset({
-      name: cat.name || "",
+      name: cat.name,
       nameEn: cat.nameEn || "",
       description: cat.description || "",
       icon: cat.icon || "Stethoscope",
-      isActive: cat.isActive ?? true,
+      isActive: cat.isActive,
     });
     setModalOpen(true);
   };
@@ -88,46 +69,41 @@ export default function AdminCategoriesPage() {
     setModalOpen(true);
   };
 
-  // Create/Update mutation
+  // Create / Update mutation
   const saveMutation = useMutation({
-    mutationFn: (data) => {
+    mutationFn: (formData) => {
       if (editingCategory) {
-        return updateCategory(editingCategory.id, data);
+        return updateCategory(editingCategory.id, formData);
       }
-      return createCategory(data);
+      return createCategory(formData);
     },
     onSuccess: () => {
       toast.success(
-        editingCategory ? "Category updated!" : "Category created successfully!"
+        editingCategory
+          ? t("admin:categories.toasts.updated")
+          : t("admin:categories.toasts.created")
       );
       queryClient.invalidateQueries(["admin-categories"]);
       queryClient.invalidateQueries(["active-categories"]);
       setModalOpen(false);
+      reset();
     },
-    onError: (error) => {
-      toast.error("Category save error", {
-        description: error?.response?.data?.message || "Please check inputs.",
-      });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   // Delete mutation
   const deleteMutation = useMutation({
     mutationFn: (id) => deleteCategory(id),
     onSuccess: () => {
-      toast.success("Category deleted.");
+      toast.success(t("admin:categories.toasts.deleted"));
       queryClient.invalidateQueries(["admin-categories"]);
       queryClient.invalidateQueries(["active-categories"]);
     },
-    onError: (error) => {
-      toast.error("Could not delete category", {
-        description: error?.response?.data?.message || "Ensure no active pricing relies on it.",
-      });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
-  const onSubmit = (data) => {
-    saveMutation.mutate(data);
+  const onSubmit = (values) => {
+    saveMutation.mutate(values);
   };
 
   return (
@@ -135,9 +111,7 @@ export default function AdminCategoriesPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">{t("admin:categories.title")}</h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {t("admin:categories.subtitle")}
-          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">{t("admin:categories.subtitle")}</p>
         </div>
 
         <Button size="sm" className="text-xs font-semibold shadow-sm" onClick={handleCreate}>
@@ -154,6 +128,16 @@ export default function AdminCategoriesPage() {
                 <Skeleton key={i} className="h-12 w-full rounded-lg" />
               ))}
             </div>
+          ) : isError ? (
+            <div className="py-16 text-center">
+              <EmptyState
+                icon={AlertCircle}
+                title={t("common:error")}
+                description={t("common:empty.tryAdjusting")}
+                actionLabel={t("common:actions.retry")}
+                onAction={() => refetch()}
+              />
+            </div>
           ) : categories.length === 0 ? (
             <div className="py-16 text-center">
               <EmptyState
@@ -167,12 +151,24 @@ export default function AdminCategoriesPage() {
               <table className="w-full text-xs text-start">
                 <thead>
                   <tr className="border-b border-border/60 bg-muted/20 text-muted-foreground">
-                    <th className="py-3 px-4 font-semibold text-start">{t("admin:categories.icon")}</th>
-                    <th className="py-3 px-4 font-semibold text-start">{t("admin:categories.nameAr")}</th>
-                    <th className="py-3 px-4 font-semibold text-start">{t("admin:categories.nameEn")}</th>
-                    <th className="py-3 px-4 font-semibold text-start">{t("admin:categories.description")}</th>
-                    <th className="py-3 px-4 font-semibold text-center">{t("admin:categories.activeStatus")}</th>
-                    <th className="py-3 px-4 font-semibold text-end">{t("admin:applications.actions")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">
+                      {t("admin:categories.icon")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-start">
+                      {t("admin:categories.nameAr")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-start">
+                      {t("admin:categories.nameEn")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-start">
+                      {t("admin:categories.description")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-center">
+                      {t("admin:categories.activeStatus")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-end">
+                      {t("admin:applications.actions")}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
@@ -236,89 +232,18 @@ export default function AdminCategoriesPage() {
       </Card>
 
       {/* Category Create/Edit Modal Dialog */}
-      <Dialog open={modalOpen} onOpenChange={setModalOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>
-              {editingCategory ? t("admin:categories.editModalTitle") : t("admin:categories.createModalTitle")}
-            </DialogTitle>
-            <DialogDescription className="text-xs mt-0.5">
-              {t("admin:categories.subtitle")}
-            </DialogDescription>
-          </DialogHeader>
-
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-2">
-            <div className="grid grid-cols-3 gap-3">
-              <div className="space-y-1.5 col-span-2">
-                <Label className="text-xs font-semibold">{t("admin:categories.nameAr")} *</Label>
-                <Input
-                  placeholder="e.g. تمريض منزلي"
-                  {...register("name", { required: true })}
-                />
-              </div>
-
-              <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">{t("admin:categories.icon")}</Label>
-                <div className="flex items-center gap-2">
-                  <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center text-primary shrink-0 border border-input">
-                    <CategoryIcon icon={watch("icon")} className="h-4 w-4" />
-                  </div>
-                  <Input
-                    placeholder="Stethoscope"
-                    className="text-xs"
-                    {...register("icon")}
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">{t("admin:categories.nameEn")}</Label>
-              <Input
-                placeholder="e.g. Home Nursing"
-                {...register("nameEn")}
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <Label className="text-xs font-semibold">{t("admin:categories.description")}</Label>
-              <Textarea
-                rows={3}
-                placeholder="Brief description..."
-                className="text-xs resize-none"
-                {...register("description")}
-              />
-            </div>
-
-            <div className="flex items-center gap-2 pt-1">
-              <Checkbox
-                id="catActive"
-                checked={isActiveValue}
-                onCheckedChange={(val) => setValue("isActive", !!val)}
-              />
-              <label
-                htmlFor="catActive"
-                className="text-xs font-medium text-foreground cursor-pointer select-none"
-              >
-                {t("admin:categories.activeStatus")}
-              </label>
-            </div>
-
-            <div className="flex justify-end gap-2 pt-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => setModalOpen(false)}
-              >
-                {t("common:actions.cancel")}
-              </Button>
-              <Button type="submit" disabled={saveMutation.isPending}>
-                {saveMutation.isPending ? t("common:actions.saveChanges") : t("common:actions.save")}
-              </Button>
-            </div>
-          </form>
-        </DialogContent>
-      </Dialog>
+      <CategoryFormDialog
+        open={modalOpen}
+        onOpenChange={setModalOpen}
+        editingCategory={editingCategory}
+        register={register}
+        handleSubmit={handleSubmit}
+        onSubmit={onSubmit}
+        watch={watch}
+        setValue={setValue}
+        isActiveValue={isActiveValue}
+        isSaving={saveMutation.isPending}
+      />
     </div>
   );
 }

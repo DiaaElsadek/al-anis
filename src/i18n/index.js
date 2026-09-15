@@ -1,22 +1,22 @@
 import i18n from "i18next";
-import { initReactI18next } from "react-i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
+import { initReactI18next } from "react-i18next";
 
 // English namespaces
-import commonEn from "./locales/en/common.json";
-import authEn from "./locales/en/auth.json";
-import clientEn from "./locales/en/client.json";
-import providerEn from "./locales/en/provider.json";
-import adminEn from "./locales/en/admin.json";
-import errorsEn from "./locales/en/errors.json";
-
-// Arabic namespaces
-import commonAr from "./locales/ar/common.json";
+import adminAr from "./locales/ar/admin.json";
 import authAr from "./locales/ar/auth.json";
 import clientAr from "./locales/ar/client.json";
-import providerAr from "./locales/ar/provider.json";
-import adminAr from "./locales/ar/admin.json";
+import commonAr from "./locales/ar/common.json";
 import errorsAr from "./locales/ar/errors.json";
+import providerAr from "./locales/ar/provider.json";
+import adminEn from "./locales/en/admin.json";
+import authEn from "./locales/en/auth.json";
+import clientEn from "./locales/en/client.json";
+import commonEn from "./locales/en/common.json";
+import errorsEn from "./locales/en/errors.json";
+import providerEn from "./locales/en/provider.json";
+
+// Arabic namespaces
 
 const resources = {
   en: {

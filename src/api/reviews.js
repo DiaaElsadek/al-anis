@@ -17,12 +17,10 @@ export const getProviderReviews = (providerId) =>
 /**
  * GET /api/Reviews/user — current user's submitted reviews
  */
-export const getUserReviews = () =>
-  axiosClient.get("/Reviews/user");
+export const getUserReviews = () => axiosClient.get("/Reviews/user");
 
 /**
  * GET /api/Reviews/request/{requestId} — review for a specific request
  * @param {string} requestId
  */
-export const getRequestReview = (requestId) =>
-  axiosClient.get(`/Reviews/request/${requestId}`);
+export const getRequestReview = (requestId) => axiosClient.get(`/Reviews/request/${requestId}`);

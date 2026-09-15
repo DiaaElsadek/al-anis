@@ -51,8 +51,7 @@ export const registerServiceProvider = (formData) =>
  * @param {string} adminData.firstName
  * @param {string} adminData.lastName
  */
-export const createAdmin = (adminData) =>
-  axiosClient.post("/Account/create-admin", adminData);
+export const createAdmin = (adminData) => axiosClient.post("/Account/create-admin", adminData);
 
 /**
  * POST /api/Account/verify-otp

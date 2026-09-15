@@ -3,8 +3,7 @@ import axiosClient from "./axiosClient";
 /**
  * GET /api/User/profile
  */
-export const getUserProfile = () =>
-  axiosClient.get("/User/profile");
+export const getUserProfile = () => axiosClient.get("/User/profile");
 
 /**
  * PUT /api/User/profile-picture

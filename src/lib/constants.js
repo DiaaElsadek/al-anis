@@ -152,3 +152,76 @@ export const ACCEPTED_FILE_TYPES = {
 };
 
 export const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+// ============================================================
+// Egyptian Governorates (shared across provider directory & working areas)
+// ============================================================
+
+export const GOVERNORATES = [
+  "Cairo",
+  "Giza",
+  "Alexandria",
+  "Dakahlia",
+  "Sharqia",
+  "Qalyubia",
+  "Gharbia",
+  "Menofia",
+];
+
+// ============================================================
+// Fallback Categories (used when backend hasn't loaded yet)
+// ============================================================
+
+export const FALLBACK_CATEGORIES = [
+  {
+    id: "cat-1",
+    name: "تمريض منزلي ورعاية صحية",
+    nameEn: "Home Nursing & Medical Care",
+    icon: "Stethoscope",
+    providersCount: 340,
+    startingPrice: 400,
+    description: "Certified nurses for post-op recovery, injections, and vitals monitoring.",
+    descriptionAr:
+      "ممرضون مؤهلون لمتابعة الحالات بعد العمليات، وإعطاء الحقن، ومتابعة المؤشرات الحيوية.",
+  },
+  {
+    id: "cat-2",
+    name: "رعاية كبار السن وجليسات",
+    nameEn: "Elderly Care & Companionship",
+    icon: "HeartHandshake",
+    providersCount: 280,
+    startingPrice: 350,
+    description: "Compassionate aides assisting with mobility, companionship, and medication.",
+    descriptionAr: "مساعدون رحماء للمساعدة في الحركة وتناول الأدوية والمرافقة اليومية باهتمام.",
+  },
+  {
+    id: "cat-3",
+    name: "رعاية وجليسات أطفال",
+    nameEn: "Childcare & Babysitting",
+    icon: "Baby",
+    providersCount: 310,
+    startingPrice: 250,
+    description: "Qualified nannies for infants, toddlers, and school-age children.",
+    descriptionAr: "مربيات مؤهلات لرعاية الرضع والأطفال في سن المدرسة بأمان.",
+  },
+  {
+    id: "cat-4",
+    name: "علاج طبيعي وتأهيل",
+    nameEn: "Physiotherapy & Rehabilitation",
+    icon: "Stethoscope",
+    providersCount: 180,
+    startingPrice: 500,
+    description: "Licensed physiotherapists for post-surgery and chronic pain management.",
+    descriptionAr: "أخصائيو علاج طبيعي مرخصون لإعادة التأهيل وإدارة الألم المزمن.",
+  },
+  {
+    id: "cat-5",
+    name: "دروس خصوصية وتأسيس",
+    nameEn: "Private Tutoring",
+    icon: "GraduationCap",
+    providersCount: 420,
+    startingPrice: 200,
+    description: "Expert tutors covering all subjects from primary through university level.",
+    descriptionAr: "معلمون خبراء في جميع المواد من المرحلة الابتدائية حتى الجامعية.",
+  },
+];

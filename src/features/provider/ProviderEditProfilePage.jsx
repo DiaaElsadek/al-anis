@@ -1,30 +1,28 @@
-import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Camera, ShieldCheck, Save, AlertCircle } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
-import {
-  User,
-  Briefcase,
-  Camera,
-  ShieldCheck,
-  MapPin,
-  Save,
-  CheckCircle2,
-} from "lucide-react";
+import { toast } from "sonner";
 
 import { getProviderProfile, updateProviderProfile } from "@/api/provider";
-import { useAuth } from "@/hooks/useAuth";
-import { getMediaUrl, getInitials, getLocalizedCategoryName } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import EmptyState from "@/components/shared/EmptyState";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import ChangePasswordDialog from "@/features/auth/ChangePasswordDialog";
+import { useAuth } from "@/hooks/useAuth";
+import {
+  getInitials,
+  getLocalizedCategoryName,
+  getMediaUrl,
+  handleMutationError,
+} from "@/lib/utils";
 
 export default function ProviderEditProfilePage() {
   const { t, i18n } = useTranslation(["provider", "client", "common"]);
@@ -34,7 +32,12 @@ export default function ProviderEditProfilePage() {
   const [photoPreview, setPhotoPreview] = useState(null);
   const [selectedPhotoFile, setSelectedPhotoFile] = useState(null);
 
-  const { data: profile, isLoading } = useQuery({
+  const {
+    data: profile,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["provider-profile"],
     queryFn: getProviderProfile,
   });
@@ -73,11 +76,7 @@ export default function ProviderEditProfilePage() {
         updateUser({ profilePicture: updated.profilePicture });
       }
     },
-    onError: (error) => {
-      toast.error(t("common:error"), {
-        description: error?.response?.data?.message || "Please check inputs.",
-      });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   const handlePhotoSelect = (e) => {
@@ -102,6 +101,20 @@ export default function ProviderEditProfilePage() {
     );
   }
 
+  if (isError) {
+    return (
+      <div className="max-w-2xl mx-auto py-16">
+        <EmptyState
+          icon={AlertCircle}
+          title={t("common:error")}
+          description={t("common:empty.tryAdjusting")}
+          actionLabel={t("common:actions.retry")}
+          onAction={() => refetch()}
+        />
+      </div>
+    );
+  }
+
   const providerName =
     profile?.fullName ||
     `${profile?.firstName || ""} ${profile?.lastName || ""}`.trim() ||
@@ -113,15 +126,15 @@ export default function ProviderEditProfilePage() {
     <div className="space-y-6 max-w-2xl mx-auto">
       <div>
         <h1 className="text-2xl font-bold text-foreground">{t("provider:editProfile.title")}</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {t("provider:editProfile.subtitle")}
-        </p>
+        <p className="text-xs text-muted-foreground mt-0.5">{t("provider:editProfile.subtitle")}</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <Card className="border-border/70 shadow-sm bg-card">
           <CardHeader className="pb-4">
-            <CardTitle className="text-base font-bold">{t("client:settings.personalDetails")}</CardTitle>
+            <CardTitle className="text-base font-bold">
+              {t("client:settings.personalDetails")}
+            </CardTitle>
             <CardDescription className="text-xs">
               {t("provider:editProfile.subtitle")}
             </CardDescription>
@@ -194,11 +207,7 @@ export default function ProviderEditProfilePage() {
               <Label htmlFor="experienceInput" className="text-xs font-semibold">
                 {t("provider:editProfile.experienceLabel")}
               </Label>
-              <Input
-                id="experienceInput"
-                placeholder="5 years..."
-                {...register("experience")}
-              />
+              <Input id="experienceInput" placeholder="5 years..." {...register("experience")} />
             </div>
 
             {/* Bio */}
@@ -218,7 +227,9 @@ export default function ProviderEditProfilePage() {
             <div className="flex justify-end pt-2">
               <Button type="submit" disabled={updateMutation.isPending}>
                 <Save className="h-4 w-4 me-2" />
-                {updateMutation.isPending ? t("provider:editProfile.saving") : t("provider:editProfile.saveButton")}
+                {updateMutation.isPending
+                  ? t("provider:editProfile.saving")
+                  : t("provider:editProfile.saveButton")}
               </Button>
             </div>
           </CardContent>
@@ -235,7 +246,9 @@ export default function ProviderEditProfilePage() {
         </CardHeader>
         <CardContent className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold text-foreground">{t("client:settings.changePassword")}</p>
+            <p className="text-xs font-semibold text-foreground">
+              {t("client:settings.changePassword")}
+            </p>
             <p className="text-xs text-muted-foreground mt-0.5">
               {t("client:settings.changePasswordDesc")}
             </p>

@@ -1,19 +1,8 @@
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { Users, Search, AlertCircle, Lock, Unlock } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import {
-  Users,
-  Search,
-  Shield,
-  Briefcase,
-  User,
-  Power,
-  AlertCircle,
-  CheckCircle2,
-  Lock,
-  Unlock,
-} from "lucide-react";
 
 import {
   getUsers,
@@ -22,16 +11,16 @@ import {
   suspendServiceProvider,
   activateServiceProvider,
 } from "@/api/admin";
-import { useDebounce } from "@/hooks/useDebounce";
-import { getMediaUrl, getInitials, formatLocalizedDate } from "@/lib/utils";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Skeleton } from "@/components/ui/skeleton";
-import Pagination from "@/components/shared/Pagination";
 import EmptyState from "@/components/shared/EmptyState";
+import Pagination from "@/components/shared/Pagination";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useDebounce } from "@/hooks/useDebounce";
+import { formatLocalizedDate, getInitials, getMediaUrl, handleMutationError } from "@/lib/utils";
 
 export default function AdminUsersPage() {
   const { t, i18n } = useTranslation(["admin", "common", "auth"]);
@@ -43,7 +32,12 @@ export default function AdminUsersPage() {
   const [page, setPage] = useState(1);
   const pageSize = 10;
 
-  const { data: usersData, isLoading } = useQuery({
+  const {
+    data: usersData,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["admin-users", debouncedSearch, roleFilter, statusFilter, page],
     queryFn: () =>
       getUsers({
@@ -71,11 +65,7 @@ export default function AdminUsersPage() {
       toast.success("User account suspended.");
       queryClient.invalidateQueries(["admin-users"]);
     },
-    onError: (error) => {
-      toast.error("Action error", {
-        description: error?.response?.data?.message || "Could not suspend account.",
-      });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   // Activate mutation
@@ -90,20 +80,14 @@ export default function AdminUsersPage() {
       toast.success("User account activated!");
       queryClient.invalidateQueries(["admin-users"]);
     },
-    onError: (error) => {
-      toast.error("Action error", {
-        description: error?.response?.data?.message || "Could not activate account.",
-      });
-    },
+    onError: (error) => handleMutationError(error, t, "common:error"),
   });
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground">{t("admin:users.title")}</h1>
-        <p className="text-xs text-muted-foreground mt-0.5">
-          {t("admin:users.subtitle")}
-        </p>
+        <p className="text-xs text-muted-foreground mt-0.5">{t("admin:users.subtitle")}</p>
       </div>
 
       {/* Filter toolbar */}
@@ -162,6 +146,16 @@ export default function AdminUsersPage() {
                 <Skeleton key={i} className="h-12 w-full rounded-lg" />
               ))}
             </div>
+          ) : isError ? (
+            <div className="py-16 text-center">
+              <EmptyState
+                icon={AlertCircle}
+                title={t("common:error")}
+                description={t("common:empty.tryAdjusting")}
+                actionLabel={t("common:actions.retry")}
+                onAction={() => refetch()}
+              />
+            </div>
           ) : users.length === 0 ? (
             <div className="py-16 text-center">
               <EmptyState
@@ -175,25 +169,36 @@ export default function AdminUsersPage() {
               <table className="w-full text-xs text-start">
                 <thead>
                   <tr className="border-b border-border/60 bg-muted/20 text-muted-foreground">
-                    <th className="py-3 px-4 font-semibold text-start">{t("admin:users.userCol")}</th>
-                    <th className="py-3 px-4 font-semibold text-start">{t("auth:register.phoneNumber")}</th>
-                    <th className="py-3 px-4 font-semibold text-start">{t("admin:users.roleCol")}</th>
-                    <th className="py-3 px-4 font-semibold text-start">{t("admin:users.joinedCol")}</th>
-                    <th className="py-3 px-4 font-semibold text-center">{t("admin:users.statusCol")}</th>
-                    <th className="py-3 px-4 font-semibold text-end">{t("admin:users.actionsCol")}</th>
+                    <th className="py-3 px-4 font-semibold text-start">
+                      {t("admin:users.userCol")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-start">
+                      {t("auth:register.phoneNumber")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-start">
+                      {t("admin:users.roleCol")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-start">
+                      {t("admin:users.joinedCol")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-center">
+                      {t("admin:users.statusCol")}
+                    </th>
+                    <th className="py-3 px-4 font-semibold text-end">
+                      {t("admin:users.actionsCol")}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/40">
                   {users.map((u) => {
-                    const isSuspended =
-                      u.status?.toLowerCase().includes("suspend") || false;
+                    const isSuspended = u.status?.toLowerCase().includes("suspend") || false;
 
                     const roleLabel =
                       u.role === "Admin"
                         ? t("common:roles.admin")
                         : u.role === "ServiceProvider"
-                        ? t("common:roles.serviceProvider")
-                        : t("common:roles.user");
+                          ? t("common:roles.serviceProvider")
+                          : t("common:roles.user");
 
                     return (
                       <tr key={u.id} className="hover:bg-muted/25 transition-colors">
@@ -221,8 +226,8 @@ export default function AdminUsersPage() {
                               u.role === "Admin"
                                 ? "bg-amber-500/10 text-amber-700 border-amber-500/20"
                                 : u.role === "ServiceProvider"
-                                ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
-                                : "bg-primary/10 text-primary border-primary/20"
+                                  ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
+                                  : "bg-primary/10 text-primary border-primary/20"
                             }`}
                           >
                             {roleLabel}
@@ -267,9 +272,7 @@ export default function AdminUsersPage() {
                               size="sm"
                               variant="outline"
                               className="h-7 text-xs text-destructive hover:bg-destructive/10"
-                              onClick={() =>
-                                suspendMutation.mutate({ userId: u.id, role: u.role })
-                              }
+                              onClick={() => suspendMutation.mutate({ userId: u.id, role: u.role })}
                               disabled={suspendMutation.isPending}
                             >
                               <Lock className="h-3 w-3 me-1" />
@@ -289,11 +292,7 @@ export default function AdminUsersPage() {
 
       {totalPages > 1 && (
         <div className="flex justify-center pt-2">
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            onPageChange={setPage}
-          />
+          <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
         </div>
       )}
     </div>

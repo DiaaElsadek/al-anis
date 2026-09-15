@@ -3,8 +3,7 @@ import axiosClient from "./axiosClient";
 /**
  * GET /api/Admin/dashboard-stats
  */
-export const getDashboardStats = () =>
-  axiosClient.get("/Admin/dashboard-stats");
+export const getDashboardStats = () => axiosClient.get("/Admin/dashboard-stats");
 
 /**
  * GET /api/Admin/service-provider-applications
@@ -56,22 +55,19 @@ export const activateServiceProvider = (id) =>
  * GET /api/Admin/users
  * @param {Object} [params] - { Search, Role, Status, Page, PageSize }
  */
-export const getUsers = (params) =>
-  axiosClient.get("/Admin/users", { params });
+export const getUsers = (params) => axiosClient.get("/Admin/users", { params });
 
 /**
  * POST /api/Admin/users/{userId}/suspend
  * @param {string} userId
  */
-export const suspendUser = (userId) =>
-  axiosClient.post(`/Admin/users/${userId}/suspend`);
+export const suspendUser = (userId) => axiosClient.post(`/Admin/users/${userId}/suspend`);
 
 /**
  * POST /api/Admin/users/{userId}/activate
  * @param {string} userId
  */
-export const activateUser = (userId) =>
-  axiosClient.post(`/Admin/users/${userId}/activate`);
+export const activateUser = (userId) => axiosClient.post(`/Admin/users/${userId}/activate`);
 
 /**
  * GET /api/Admin/bookings/recent
@@ -83,5 +79,4 @@ export const getRecentBookings = (params = { limit: 10 }) =>
 /**
  * GET /api/Admin/payments
  */
-export const getAdminPayments = () =>
-  axiosClient.get("/Admin/payments");
+export const getAdminPayments = () => axiosClient.get("/Admin/payments");

@@ -1,3 +1,6 @@
+import { AlertTriangle } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -6,8 +9,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { AlertTriangle } from "lucide-react";
 
 /**
  * ConfirmDialog — confirmation dialog for destructive actions
@@ -46,25 +47,15 @@ export default function ConfirmDialog({
             )}
             <div>
               <DialogTitle>{title}</DialogTitle>
-              <DialogDescription className="mt-1">
-                {description}
-              </DialogDescription>
+              <DialogDescription className="mt-1">{description}</DialogDescription>
             </div>
           </div>
         </DialogHeader>
         <DialogFooter className="gap-2 sm:gap-0">
-          <Button
-            variant="outline"
-            onClick={() => onOpenChange(false)}
-            disabled={loading}
-          >
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
             {cancelLabel}
           </Button>
-          <Button
-            variant={variant}
-            onClick={onConfirm}
-            disabled={loading}
-          >
+          <Button variant={variant} onClick={onConfirm} disabled={loading}>
             {loading ? "Processing..." : confirmLabel}
           </Button>
         </DialogFooter>

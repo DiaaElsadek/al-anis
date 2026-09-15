@@ -1,10 +1,5 @@
-import { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 import {
   Mail,
   Lock,
@@ -18,15 +13,27 @@ import {
   Sparkles,
   AlertCircle,
 } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "sonner";
 
-import { loginSchema } from "@/lib/validators";
-import { useAuth } from "@/hooks/useAuth";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import { useAuth } from "@/hooks/useAuth";
+import { loginSchema } from "@/lib/validators";
 
 export default function LoginPage() {
   const { t } = useTranslation(["auth", "common"]);
@@ -63,7 +70,10 @@ export default function LoginPage() {
       navigate(destination, { replace: true });
     },
     onError: (error) => {
-      const msg = error?.response?.data?.message || error?.message || t("auth:login.invalidCredentials", { defaultValue: "Invalid email or password." });
+      const msg =
+        error?.response?.data?.message ||
+        error?.message ||
+        t("auth:login.invalidCredentials", { defaultValue: "Invalid email or password." });
       setAuthError(msg);
       toast.error(t("common:toasts.somethingWentWrong"), {
         id: "login-error",

@@ -1,4 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
+
 import { PAGINATION_DEFAULT_PAGE_SIZE } from "@/lib/constants";
 
 /**
@@ -9,10 +10,7 @@ export function usePagination(defaultPageSize = PAGINATION_DEFAULT_PAGE_SIZE) {
   const [pageSize, setPageSize] = useState(defaultPageSize);
   const [totalCount, setTotalCount] = useState(0);
 
-  const totalPages = useMemo(
-    () => Math.ceil(totalCount / pageSize) || 1,
-    [totalCount, pageSize]
-  );
+  const totalPages = useMemo(() => Math.ceil(totalCount / pageSize) || 1, [totalCount, pageSize]);
 
   const hasNextPage = page < totalPages;
   const hasPreviousPage = page > 1;

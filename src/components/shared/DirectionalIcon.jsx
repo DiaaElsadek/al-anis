@@ -9,10 +9,5 @@ import { cn } from "@/lib/utils";
  */
 export default function DirectionalIcon({ icon: Icon, className, ...props }) {
   if (!Icon) return null;
-  return (
-    <Icon
-      className={cn("rtl:-scale-x-100 transition-transform", className)}
-      {...props}
-    />
-  );
+  return <Icon className={cn("rtl:-scale-x-100 transition-transform", className)} {...props} />;
 }

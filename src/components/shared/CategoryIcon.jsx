@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Stethoscope,
   HeartHandshake,
@@ -7,10 +6,8 @@ import {
   GraduationCap,
   Sparkles,
   HeartPulse,
-  UserCheck,
-  ShieldCheck,
-  Briefcase,
 } from "lucide-react";
+
 import { cn } from "@/lib/utils";
 
 // Mapping of emoji / icon string tokens to Lucide components
@@ -92,10 +89,19 @@ export function resolveCategoryIcon(icon, name = "") {
   if (lowerName.includes("elder") || lowerName.includes("مسن") || lowerName.includes("كبر")) {
     return HeartHandshake;
   }
-  if (lowerName.includes("child") || lowerName.includes("baby") || lowerName.includes("طفل") || lowerName.includes("أطفال")) {
+  if (
+    lowerName.includes("child") ||
+    lowerName.includes("baby") ||
+    lowerName.includes("طفل") ||
+    lowerName.includes("أطفال")
+  ) {
     return Baby;
   }
-  if (lowerName.includes("physio") || lowerName.includes("علاج طبيعي") || lowerName.includes("تأهيل")) {
+  if (
+    lowerName.includes("physio") ||
+    lowerName.includes("علاج طبيعي") ||
+    lowerName.includes("تأهيل")
+  ) {
     return Activity;
   }
   if (lowerName.includes("tutor") || lowerName.includes("درس") || lowerName.includes("تعليم")) {

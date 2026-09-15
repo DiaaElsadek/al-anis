@@ -1,8 +1,4 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "sonner";
-import { useTranslation } from "react-i18next";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import {
   FileText,
   Calendar,
@@ -11,36 +7,50 @@ import {
   CreditCard,
   MessageSquare,
   Star,
-  CheckCircle2,
   AlertCircle,
-  ExternalLink,
 } from "lucide-react";
+import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
-import { getUserRequests } from "@/api/requests";
 import { createCheckout } from "@/api/payments";
-import { createOrGetChat } from "@/api/chat";
-import { ShiftTypeLabels } from "@/lib/constants";
-import { getMediaUrl, getInitials, formatPrice, formatLocalizedDate } from "@/lib/utils";
+import { getUserRequests } from "@/api/requests";
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "@/components/shared/EmptyState";
 import StatusBadge from "@/components/shared/StatusBadge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useChatNavigation } from "@/hooks/useChatNavigation";
+import {
+  filterRequestsByTab,
+  formatLocalizedDate,
+  formatPrice,
+  getInitials,
+  getMediaUrl,
+  getShiftLabel,
+  handleMutationError,
+} from "@/lib/utils";
+
 import ReviewModal from "./ReviewModal";
 
 export default function ClientRequestsPage() {
   const { t, i18n } = useTranslation(["client", "common"]);
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { startChat, isStartingChat } = useChatNavigation();
   const [activeTab, setActiveTab] = useState("all");
   const [reviewingRequest, setReviewingRequest] = useState(null);
 
   // Fetch client's requests
-  const { data: requests = [], isLoading, refetch } = useQuery({
+  const {
+    data: requests = [],
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["user-requests"],
     queryFn: getUserRequests,
     refetchInterval: 15000,
@@ -59,39 +69,14 @@ export default function ClientRequestsPage() {
         refetch();
       }
     },
-    onError: (error) => {
-      const msg =
-        error?.response?.data?.message ||
-        error?.message ||
-        t("common:error");
-      toast.error(t("common:error"), { description: msg });
-    },
+    onError: (error) => handleMutationError(error, t),
   });
 
-  // Chat initiation
-  const chatMutation = useMutation({
-    mutationFn: (serviceRequestId) => createOrGetChat(serviceRequestId),
-    onSuccess: (chat) => {
-      const chatId = chat?.id || chat?.data?.id;
-      navigate(`/app/chats?active=${chatId}`);
-    },
-    onError: (error) => {
-      toast.error(t("common:error"), {
-        description: error?.response?.data?.message || "Failed to open chat.",
-      });
-    },
-  });
-
-  // Filter requests by tab
-  const filteredRequests = requests.filter((r) => {
-    if (activeTab === "all") return true;
-    const s = r.statusName?.toLowerCase() || "";
-    if (activeTab === "pending") return s.includes("pending") || r.status === 0;
-    if (activeTab === "active")
-      return s.includes("accept") || s.includes("progress") || r.status === 1 || r.status === 2;
-    if (activeTab === "completed") return s.includes("complete") || r.status === 3;
-    return true;
-  });
+  // Filter requests by tab (D4 — using shared util + S2 — wrapped in useMemo)
+  const filteredRequests = useMemo(
+    () => filterRequestsByTab(requests, activeTab),
+    [requests, activeTab]
+  );
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
@@ -99,9 +84,7 @@ export default function ClientRequestsPage() {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-foreground">{t("client:requests.title")}</h1>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            {t("client:requests.subtitle")}
-          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">{t("client:requests.subtitle")}</p>
         </div>
 
         <Button asChild className="font-semibold shadow-sm shadow-primary/20">
@@ -130,11 +113,11 @@ export default function ClientRequestsPage() {
         </TabsList>
       </Tabs>
 
-      {/* Requests List */}
+      {/* Requests Stream */}
       {isLoading ? (
         <div className="space-y-4">
           {[...Array(3)].map((_, i) => (
-            <Card key={i} className="p-6 space-y-3">
+            <Card key={i} className="p-5 space-y-4">
               <div className="flex justify-between">
                 <Skeleton className="h-6 w-40" />
                 <Skeleton className="h-6 w-20" />
@@ -144,6 +127,14 @@ export default function ClientRequestsPage() {
             </Card>
           ))}
         </div>
+      ) : isError ? (
+        <EmptyState
+          icon={AlertCircle}
+          title={t("common:error")}
+          description={t("common:empty.tryAdjusting")}
+          actionLabel={t("common:actions.retry")}
+          onAction={() => refetch()}
+        />
       ) : filteredRequests.length === 0 ? (
         <EmptyState
           icon={FileText}
@@ -155,8 +146,7 @@ export default function ClientRequestsPage() {
       ) : (
         <div className="space-y-4">
           {filteredRequests.map((req) => {
-            const shiftLabel =
-              req.shiftTypeName || ShiftTypeLabels[req.shiftType] || "Shift";
+            const shiftLabel = getShiftLabel(req.shiftType, t, req.shiftTypeName);
 
             return (
               <Card
@@ -174,11 +164,10 @@ export default function ClientRequestsPage() {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <h3 className="font-bold text-sm text-foreground">
-                          {req.categoryName}
-                        </h3>
+                        <h3 className="font-bold text-sm text-foreground">{req.categoryName}</h3>
                         <p className="text-xs text-muted-foreground">
-                          {t("client:requests.providerLabel")} <strong className="text-foreground">{req.providerName}</strong>
+                          {t("client:requests.providerLabel")}{" "}
+                          <strong className="text-foreground">{req.providerName}</strong>
                         </p>
                       </div>
                     </div>
@@ -195,7 +184,9 @@ export default function ClientRequestsPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-primary" />
-                      <span>{formatLocalizedDate(req.preferredDate, "dd/MM/yyyy", i18n.language)}</span>
+                      <span>
+                        {formatLocalizedDate(req.preferredDate, "dd/MM/yyyy", i18n.language)}
+                      </span>
                     </div>
 
                     <div className="flex items-center gap-2">
@@ -223,8 +214,8 @@ export default function ClientRequestsPage() {
                       variant="outline"
                       size="sm"
                       className="text-xs font-semibold h-8"
-                      onClick={() => chatMutation.mutate(req.id)}
-                      disabled={chatMutation.isPending}
+                      onClick={() => startChat(req.id)}
+                      disabled={isStartingChat}
                     >
                       <MessageSquare className="h-3.5 w-3.5 me-1.5" />
                       {t("client:requests.chatButton")}
@@ -239,7 +230,9 @@ export default function ClientRequestsPage() {
                         disabled={checkoutMutation.isPending}
                       >
                         <CreditCard className="h-3.5 w-3.5 me-1.5" />
-                        {checkoutMutation.isPending ? t("common:loading") : t("client:requests.payButton")}
+                        {checkoutMutation.isPending
+                          ? t("common:loading")
+                          : t("client:requests.payButton")}
                       </Button>
                     )}
 

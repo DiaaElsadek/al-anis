@@ -1,12 +1,12 @@
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
+import { Lock, Eye, EyeOff, ShieldCheck } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { Lock, Eye, EyeOff, ShieldCheck, ArrowRight } from "lucide-react";
 
-import { changePasswordSchema } from "@/lib/validators";
 import { changePassword } from "@/api/account";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
@@ -15,9 +15,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { changePasswordSchema } from "@/lib/validators";
 
 export default function ChangePasswordDialog({ trigger }) {
   const [open, setOpen] = useState(false);
@@ -99,9 +99,7 @@ export default function ChangePasswordDialog({ trigger }) {
               {...register("currentPassword")}
             />
             {errors.currentPassword && (
-              <p className="text-xs text-destructive">
-                {errors.currentPassword.message}
-              </p>
+              <p className="text-xs text-destructive">{errors.currentPassword.message}</p>
             )}
           </div>
 
@@ -144,18 +142,12 @@ export default function ChangePasswordDialog({ trigger }) {
               {...register("confirmNewPassword")}
             />
             {errors.confirmNewPassword && (
-              <p className="text-xs text-destructive">
-                {errors.confirmNewPassword.message}
-              </p>
+              <p className="text-xs text-destructive">{errors.confirmNewPassword.message}</p>
             )}
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setOpen(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => setOpen(false)}>
               Cancel
             </Button>
             <Button type="submit" disabled={mutation.isPending}>

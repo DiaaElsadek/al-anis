@@ -1,8 +1,10 @@
-import { Outlet, NavLink } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import Navbar from "./Navbar";
 import { Search, FileText, MessageSquare, Settings } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Outlet, NavLink } from "react-router-dom";
+
 import { cn } from "@/lib/utils";
+
+import Navbar from "./Navbar";
 
 export default function ClientLayout() {
   const { t } = useTranslation("common");

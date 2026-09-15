@@ -1,9 +1,10 @@
-import { Outlet, Link } from "react-router-dom";
-import { useTranslation } from "react-i18next";
 import { ShieldCheck, Clock, CheckCircle2, ArrowLeft, Star, Users } from "lucide-react";
-import ThemeToggle from "@/components/shared/ThemeToggle";
-import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import { useTranslation } from "react-i18next";
+import { Outlet, Link } from "react-router-dom";
+
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 
 export default function AuthLayout() {
   const { t } = useTranslation(["auth", "common"]);
@@ -56,9 +57,7 @@ export default function AuthLayout() {
               </div>
               <div>
                 <h4 className="text-sm font-semibold text-white">{t("auth:hero.benefit1Title")}</h4>
-                <p className="text-xs text-teal-200/60 mt-0.5">
-                  {t("auth:hero.benefit1Desc")}
-                </p>
+                <p className="text-xs text-teal-200/60 mt-0.5">{t("auth:hero.benefit1Desc")}</p>
               </div>
             </div>
 
@@ -68,9 +67,7 @@ export default function AuthLayout() {
               </div>
               <div>
                 <h4 className="text-sm font-semibold text-white">{t("auth:hero.benefit2Title")}</h4>
-                <p className="text-xs text-teal-200/60 mt-0.5">
-                  {t("auth:hero.benefit2Desc")}
-                </p>
+                <p className="text-xs text-teal-200/60 mt-0.5">{t("auth:hero.benefit2Desc")}</p>
               </div>
             </div>
 
@@ -80,9 +77,7 @@ export default function AuthLayout() {
               </div>
               <div>
                 <h4 className="text-sm font-semibold text-white">{t("auth:hero.benefit3Title")}</h4>
-                <p className="text-xs text-teal-200/60 mt-0.5">
-                  {t("auth:hero.benefit3Desc")}
-                </p>
+                <p className="text-xs text-teal-200/60 mt-0.5">{t("auth:hero.benefit3Desc")}</p>
               </div>
             </div>
           </div>
@@ -92,7 +87,9 @@ export default function AuthLayout() {
         <div className="relative z-10 pt-6 border-t border-white/10 flex items-center justify-between text-xs text-teal-200/70">
           <div className="flex items-center gap-2">
             <Users className="h-4 w-4 text-teal-400" />
-            <span><strong className="text-white font-semibold">{t("auth:hero.shiftsMetric")}</strong></span>
+            <span>
+              <strong className="text-white font-semibold">{t("auth:hero.shiftsMetric")}</strong>
+            </span>
           </div>
           <div className="flex items-center gap-1.5">
             <div className="flex text-amber-400">
@@ -100,7 +97,9 @@ export default function AuthLayout() {
                 <Star key={i} className="h-3.5 w-3.5 fill-current" />
               ))}
             </div>
-            <span><strong className="text-white font-semibold">{t("auth:hero.trustMetric")}</strong></span>
+            <span>
+              <strong className="text-white font-semibold">{t("auth:hero.trustMetric")}</strong>
+            </span>
           </div>
         </div>
       </div>
@@ -113,7 +112,10 @@ export default function AuthLayout() {
             to="/"
             className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
           >
-            <DirectionalIcon icon={ArrowLeft} className="h-4 w-4 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1" />
+            <DirectionalIcon
+              icon={ArrowLeft}
+              className="h-4 w-4 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1"
+            />
             <span>{t("common:nav.backToHome")}</span>
           </Link>
 

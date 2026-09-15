@@ -1,6 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import { Button } from "@/components/ui/button";
 
 /**
  * Pagination — page navigation controls with automatic RTL chevron flipping
@@ -19,7 +20,7 @@ export default function Pagination({
     const pages = [];
     const maxVisible = 5;
     let start = Math.max(1, page - Math.floor(maxVisible / 2));
-    let end = Math.min(totalPages, start + maxVisible - 1);
+    const end = Math.min(totalPages, start + maxVisible - 1);
 
     if (end - start + 1 < maxVisible) {
       start = Math.max(1, end - maxVisible + 1);

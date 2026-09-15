@@ -1,17 +1,12 @@
+import { LayoutDashboard, User, CalendarDays, MapPin, FileText, MessageSquare } from "lucide-react";
 import { useState } from "react";
-import { Outlet, NavLink } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import Navbar from "./Navbar";
+import { Outlet, NavLink } from "react-router-dom";
+
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import {
-  LayoutDashboard,
-  User,
-  CalendarDays,
-  MapPin,
-  FileText,
-  MessageSquare,
-} from "lucide-react";
+
+import Navbar from "./Navbar";
 
 export default function ProviderLayout() {
   const { t } = useTranslation("common");

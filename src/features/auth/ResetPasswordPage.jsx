@@ -1,10 +1,5 @@
-import { useState, useMemo } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { toast } from "sonner";
 import {
   Lock,
   Eye,
@@ -17,22 +12,33 @@ import {
   Key,
   ShieldCheck,
 } from "lucide-react";
+import { useState, useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { toast } from "sonner";
 
-import { resetPasswordSchema } from "@/lib/validators";
 import { resetPassword } from "@/api/account";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import { resetPasswordSchema } from "@/lib/validators";
 
 export default function ResetPasswordPage() {
   const { t } = useTranslation(["auth", "common"]);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const initialUserId =
-    location.state?.userId || localStorage.getItem("pendingUserId") || "";
+  const initialUserId = location.state?.userId || localStorage.getItem("pendingUserId") || "";
   const registeredEmail = location.state?.email || "";
 
   const [showPassword, setShowPassword] = useState(false);
@@ -58,10 +64,22 @@ export default function ResetPasswordPage() {
   // Password strength calculations
   const strengthChecks = useMemo(() => {
     return [
-      { label: t("auth:resetPassword.ruleLength", { defaultValue: "At least 8 characters" }), valid: newPasswordValue.length >= 8 },
-      { label: t("auth:resetPassword.ruleUppercase", { defaultValue: "Uppercase letter (A-Z)" }), valid: /[A-Z]/.test(newPasswordValue) },
-      { label: t("auth:resetPassword.ruleLowercase", { defaultValue: "Lowercase letter (a-z)" }), valid: /[a-z]/.test(newPasswordValue) },
-      { label: t("auth:resetPassword.ruleNumber", { defaultValue: "At least one number (0-9)" }), valid: /[0-9]/.test(newPasswordValue) },
+      {
+        label: t("auth:resetPassword.ruleLength", { defaultValue: "At least 8 characters" }),
+        valid: newPasswordValue.length >= 8,
+      },
+      {
+        label: t("auth:resetPassword.ruleUppercase", { defaultValue: "Uppercase letter (A-Z)" }),
+        valid: /[A-Z]/.test(newPasswordValue),
+      },
+      {
+        label: t("auth:resetPassword.ruleLowercase", { defaultValue: "Lowercase letter (a-z)" }),
+        valid: /[a-z]/.test(newPasswordValue),
+      },
+      {
+        label: t("auth:resetPassword.ruleNumber", { defaultValue: "At least one number (0-9)" }),
+        valid: /[0-9]/.test(newPasswordValue),
+      },
       {
         label: t("auth:resetPassword.ruleSpecial", { defaultValue: "Special character (!@#$%)" }),
         valid: /[^A-Za-z0-9]/.test(newPasswordValue),
@@ -72,17 +90,13 @@ export default function ResetPasswordPage() {
   const passedCount = strengthChecks.filter((c) => c.valid).length;
   const strengthPercent = (passedCount / 5) * 100;
   const strengthColor =
-    passedCount <= 2
-      ? "bg-destructive"
-      : passedCount <= 4
-      ? "bg-amber-500"
-      : "bg-emerald-500";
+    passedCount <= 2 ? "bg-destructive" : passedCount <= 4 ? "bg-amber-500" : "bg-emerald-500";
   const strengthText =
     passedCount <= 2
       ? t("auth:resetPassword.strengthWeak")
       : passedCount <= 4
-      ? t("auth:resetPassword.strengthMedium")
-      : t("auth:resetPassword.strengthStrong");
+        ? t("auth:resetPassword.strengthMedium")
+        : t("auth:resetPassword.strengthStrong");
 
   const resetMutation = useMutation({
     mutationFn: (data) => resetPassword(data),
@@ -153,9 +167,7 @@ export default function ResetPasswordPage() {
                 className="h-10 text-sm font-mono"
                 {...register("userId")}
               />
-              {errors.userId && (
-                <p className="text-xs text-destructive">{errors.userId.message}</p>
-              )}
+              {errors.userId && <p className="text-xs text-destructive">{errors.userId.message}</p>}
             </div>
           )}
 
@@ -174,9 +186,7 @@ export default function ResetPasswordPage() {
                 {...register("otp")}
               />
             </div>
-            {errors.otp && (
-              <p className="text-xs text-destructive">{errors.otp.message}</p>
-            )}
+            {errors.otp && <p className="text-xs text-destructive">{errors.otp.message}</p>}
           </div>
 
           {/* New Password */}
@@ -247,7 +257,8 @@ export default function ResetPasswordPage() {
           {/* Confirm Password */}
           <div className="space-y-1.5">
             <Label htmlFor="confirmPassword" className="text-xs font-semibold">
-              {t("auth:resetPassword.confirmNewPassword")} <span className="text-destructive">*</span>
+              {t("auth:resetPassword.confirmNewPassword")}{" "}
+              <span className="text-destructive">*</span>
             </Label>
             <div className="relative">
               <Lock className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -290,7 +301,9 @@ export default function ResetPasswordPage() {
           className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
           <DirectionalIcon icon={ArrowLeft} className="h-3.5 w-3.5" />
-          <span>{t("common:actions.cancel")} & {t("common:nav.signIn")}</span>
+          <span>
+            {t("common:actions.cancel")} & {t("common:nav.signIn")}
+          </span>
         </Link>
       </CardFooter>
     </Card>
