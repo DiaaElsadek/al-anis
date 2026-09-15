@@ -18,14 +18,12 @@ import ForbiddenPage from "@/features/errors/ForbiddenPage";
 // Placeholder (will be replaced in later phases)
 import PlaceholderPage from "@/features/placeholder/PlaceholderPage";
 
-// ============================================================
-// Auth Pages (placeholder for Phase 2)
-// ============================================================
-const LoginPage = () => <PlaceholderPage title="Login" description="Sign in to your account" />;
-const RegisterPage = () => <PlaceholderPage title="Register" description="Create a new account" />;
-const VerifyOtpPage = () => <PlaceholderPage title="Verify OTP" description="Enter the verification code sent to your email" />;
-const ForgotPasswordPage = () => <PlaceholderPage title="Forgot Password" description="Reset your password" />;
-const ResetPasswordPage = () => <PlaceholderPage title="Reset Password" description="Set your new password" />;
+// Auth pages
+import LoginPage from "@/features/auth/LoginPage";
+import RegisterPage from "@/features/auth/RegisterPage";
+import VerifyOtpPage from "@/features/auth/VerifyOtpPage";
+import ForgotPasswordPage from "@/features/auth/ForgotPasswordPage";
+import ResetPasswordPage from "@/features/auth/ResetPasswordPage";
 
 // ============================================================
 // Client Pages (placeholder for Phases 3-4)

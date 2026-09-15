@@ -32,3 +32,24 @@ export function truncate(str, maxLength = 100) {
   if (!str || str.length <= maxLength) return str;
   return str.slice(0, maxLength) + "...";
 }
+
+/**
+ * Convert relative media/file paths from backend into absolute URLs
+ */
+export function getMediaUrl(path) {
+  if (!path) return "";
+  if (
+    path.startsWith("http://") ||
+    path.startsWith("https://") ||
+    path.startsWith("blob:") ||
+    path.startsWith("data:")
+  ) {
+    return path;
+  }
+  const baseUrl = (
+    import.meta.env.VITE_BASE_URL || "https://elanis.runasp.net"
+  ).replace(/\/+$/, "");
+  const cleanPath = path.startsWith("/") ? path : `/${path}`;
+  return `${baseUrl}${cleanPath}`;
+}
+

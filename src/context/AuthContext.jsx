@@ -59,54 +59,141 @@ export function AuthProvider({ children }) {
   }, []);
 
   /**
-   * Login with email/password
+   * Helper to extract user profile and store tokens from login/registration response
    */
-  const login = useCallback(async (credentials) => {
-    const data = await accountApi.login(credentials);
-    // Expected data shape: { user: {..., role}, accessToken, refreshToken }
-    setAuthState({
-      user: data.user || data,
-      accessToken: data.accessToken || data.token,
-      refreshToken: data.refreshToken,
-    });
+  const handleAuthSuccess = useCallback((data) => {
+    if (!data) return null;
+
+    const { accessToken: newAccess, refreshToken: newRefresh, ...userData } = data;
+    
+    // Normalize role if needed
+    const normalizedUser = {
+      id: userData.id || userData.userId,
+      email: userData.email,
+      phoneNumber: userData.phoneNumber,
+      role: userData.role || UserRole.USER,
+      isEmailConfirmed: userData.isEmailConfirmed ?? false,
+      providerStatus: userData.providerStatus,
+      isAvailable: userData.isAvailable ?? true,
+      profilePicture: userData.profilePicture || null,
+      ...userData,
+    };
+
+    if (newAccess) {
+      setAuthState({
+        user: normalizedUser,
+        accessToken: newAccess,
+        refreshToken: newRefresh || null,
+      });
+      localStorage.setItem("accessToken", newAccess);
+      if (newRefresh) {
+        localStorage.setItem("refreshToken", newRefresh);
+      }
+      localStorage.setItem("user", JSON.stringify(normalizedUser));
+    }
+
+    return { user: normalizedUser, accessToken: newAccess, refreshToken: newRefresh };
+  }, []);
+
+  /**
+   * Login with email & password
+   */
+  const login = useCallback(
+    async (credentials) => {
+      const data = await accountApi.login(credentials);
+      return handleAuthSuccess(data);
+    },
+    [handleAuthSuccess]
+  );
+
+  /**
+   * Login with Google idToken
+   */
+  const loginWithGoogle = useCallback(
+    async (idToken) => {
+      const data = await accountApi.loginWithGoogle({ idToken });
+      return handleAuthSuccess(data);
+    },
+    [handleAuthSuccess]
+  );
+
+  /**
+   * Register a standard client user (multipart/form-data)
+   */
+  const registerUser = useCallback(
+    async (formData) => {
+      const data = await accountApi.registerUser(formData);
+      // If tokens are returned, establish auth session
+      if (data?.accessToken) {
+        return handleAuthSuccess(data);
+      }
+      return data;
+    },
+    [handleAuthSuccess]
+  );
+
+  /**
+   * Register a service provider application (multipart/form-data)
+   */
+  const registerServiceProvider = useCallback(async (formData) => {
+    const data = await accountApi.registerServiceProvider(formData);
     return data;
   }, []);
 
   /**
-   * Register a new user
+   * Logout — notify backend then clear local state
    */
-  const register = useCallback(async (userData) => {
-    const data = await accountApi.register(userData);
-    return data;
-  }, []);
+  const logout = useCallback(async () => {
+    try {
+      if (accessToken) {
+        await accountApi.logout();
+      }
+    } catch {
+      // Ignore network / token expiry errors during logout
+    } finally {
+      setAuthState({ user: null, accessToken: null, refreshToken: null });
+      localStorage.removeItem("user");
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+    }
+  }, [accessToken]);
 
   /**
-   * Register a new service provider (multipart form)
-   */
-  const registerProvider = useCallback(async (formData) => {
-    const data = await accountApi.registerProvider(formData);
-    return data;
-  }, []);
-
-  /**
-   * Logout — clear all auth state
-   */
-  const logout = useCallback(() => {
-    setAuthState({ user: null, accessToken: null, refreshToken: null });
-    localStorage.removeItem("user");
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-  }, []);
-
-  /**
-   * Update user data in context (e.g., after profile edit)
+   * Update user in context (e.g., after profile edit)
    */
   const updateUser = useCallback((updatedFields) => {
-    setAuthState((prev) => ({
-      ...prev,
-      user: { ...prev.user, ...updatedFields },
-    }));
+    setAuthState((prev) => {
+      if (!prev.user) return prev;
+      const updatedUser = { ...prev.user, ...updatedFields };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      return {
+        ...prev,
+        user: updatedUser,
+      };
+    });
   }, []);
+
+  /**
+   * Get default redirect URL based on role and status
+   */
+  const getHomeRoute = useCallback((userObj = user) => {
+    if (!userObj) return "/login";
+    const userRole = userObj.role;
+
+    if (userRole === UserRole.ADMIN || userRole?.toLowerCase() === "admin") {
+      return "/admin/dashboard";
+    }
+    if (
+      userRole === UserRole.SERVICE_PROVIDER ||
+      userRole?.toLowerCase() === "serviceprovider"
+    ) {
+      // providerStatus: 1 = approved/active, 0 = pending, 2 = rejected
+      return userObj.providerStatus === 1
+        ? "/provider/dashboard"
+        : "/provider/pending";
+    }
+    return "/app/providers";
+  }, [user]);
 
   // Role check helpers
   const isUser = role === UserRole.USER;
@@ -135,11 +222,13 @@ export function AuthProvider({ children }) {
       isAdmin,
       hasRole,
       login,
-      register,
-      registerProvider,
+      loginWithGoogle,
+      registerUser,
+      registerServiceProvider,
       logout,
       setAuth,
       updateUser,
+      getHomeRoute,
     }),
     [
       user,
@@ -152,11 +241,13 @@ export function AuthProvider({ children }) {
       isAdmin,
       hasRole,
       login,
-      register,
-      registerProvider,
+      loginWithGoogle,
+      registerUser,
+      registerServiceProvider,
       logout,
       setAuth,
       updateUser,
+      getHomeRoute,
     ]
   );
 
