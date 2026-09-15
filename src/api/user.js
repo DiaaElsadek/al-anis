@@ -1,18 +1,17 @@
 import axiosClient from "./axiosClient";
 
 /**
- * GET /api/User/profile — get current user profile
+ * GET /api/User/profile
  */
-export const getProfile = () => axiosClient.get("/User/profile");
+export const getUserProfile = () =>
+  axiosClient.get("/User/profile");
 
 /**
- * PUT /api/User/profile — update user profile
+ * PUT /api/User/profile-picture
+ * multipart/form-data containing ProfilePicture
+ * @param {FormData} formData
  */
-export const updateProfile = (data) =>
-  axiosClient.put("/User/profile", data);
-
-/**
- * PUT /api/User/change-password
- */
-export const changePassword = (data) =>
-  axiosClient.put("/User/change-password", data);
+export const updateProfilePicture = (formData) =>
+  axiosClient.put("/User/profile-picture", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });

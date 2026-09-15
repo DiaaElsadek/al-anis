@@ -1,48 +1,43 @@
 import axiosClient from "./axiosClient";
 
 /**
- * POST /api/ServiceRequest — create a new request
+ * POST /api/Requests
+ * @param {Object} data - { providerId, categoryId, shiftType, preferredDate, address, governorate, description }
  */
 export const createRequest = (data) =>
-  axiosClient.post("/ServiceRequest", data);
+  axiosClient.post("/Requests", data);
 
 /**
- * GET /api/ServiceRequest — list requests (client or provider side)
+ * GET /api/Requests/user — current client's requests
  */
-export const getRequests = (params) =>
-  axiosClient.get("/ServiceRequest", { params });
+export const getUserRequests = () =>
+  axiosClient.get("/Requests/user");
 
 /**
- * GET /api/ServiceRequest/:id — single request detail
+ * GET /api/Requests/provider/{providerId} — incoming requests for a provider
+ * @param {string} providerId
  */
-export const getRequest = (id) => axiosClient.get(`/ServiceRequest/${id}`);
+export const getProviderRequests = (providerId) =>
+  axiosClient.get(`/Requests/provider/${providerId}`);
 
 /**
- * PUT /api/ServiceRequest/:id/accept
+ * PUT /api/Requests/{requestId}/response — accept or reject request
+ * @param {string} requestId
+ * @param {Object} payload - { status: 1 for Accepted or 4 for Rejected, reason: string }
  */
-export const acceptRequest = (id) =>
-  axiosClient.put(`/ServiceRequest/${id}/accept`);
+export const respondToRequest = (requestId, { status, reason = "" }) =>
+  axiosClient.put(`/Requests/${requestId}/response`, { status, reason });
 
 /**
- * PUT /api/ServiceRequest/:id/reject
+ * POST /api/Requests/{requestId}/start — mark shift as started
+ * @param {string} requestId
  */
-export const rejectRequest = (id, reason) =>
-  axiosClient.put(`/ServiceRequest/${id}/reject`, { reason });
+export const startRequest = (requestId) =>
+  axiosClient.post(`/Requests/${requestId}/start`);
 
 /**
- * PUT /api/ServiceRequest/:id/start
+ * POST /api/Requests/{requestId}/complete — mark shift as completed
+ * @param {string} requestId
  */
-export const startRequest = (id) =>
-  axiosClient.put(`/ServiceRequest/${id}/start`);
-
-/**
- * PUT /api/ServiceRequest/:id/complete
- */
-export const completeRequest = (id) =>
-  axiosClient.put(`/ServiceRequest/${id}/complete`);
-
-/**
- * PUT /api/ServiceRequest/:id/cancel
- */
-export const cancelRequest = (id) =>
-  axiosClient.put(`/ServiceRequest/${id}/cancel`);
+export const completeRequest = (requestId) =>
+  axiosClient.post(`/Requests/${requestId}/complete`);

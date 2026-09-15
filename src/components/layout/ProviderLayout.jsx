@@ -9,15 +9,17 @@ import {
   CalendarDays,
   MapPin,
   FileText,
+  MessageSquare,
   Settings,
 } from "lucide-react";
 
 const providerNavItems = [
   { to: "/provider/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { to: "/provider/profile", label: "My Profile", icon: User },
+  { to: "/provider/requests", label: "Requests", icon: FileText },
+  { to: "/provider/chats", label: "Messages", icon: MessageSquare },
   { to: "/provider/availability", label: "Availability", icon: CalendarDays },
   { to: "/provider/working-areas", label: "Working Areas", icon: MapPin },
-  { to: "/provider/requests", label: "Requests", icon: FileText },
+  { to: "/provider/profile", label: "My Profile", icon: User },
 ];
 
 function SidebarContent() {

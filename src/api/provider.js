@@ -1,68 +1,106 @@
 import axiosClient from "./axiosClient";
 
 /**
- * GET /api/ServiceProvider — list providers with filters
+ * GET /api/Provider/application-status
  */
-export const getProviders = (params) =>
-  axiosClient.get("/ServiceProvider", { params });
+export const getApplicationStatus = () =>
+  axiosClient.get("/Provider/application-status");
 
 /**
- * GET /api/ServiceProvider/:id — single provider detail
+ * GET /api/Provider/dashboard
  */
-export const getProvider = (id) => axiosClient.get(`/ServiceProvider/${id}`);
+export const getProviderDashboard = () =>
+  axiosClient.get("/Provider/dashboard");
 
 /**
- * PUT /api/ServiceProvider/profile — update provider's own profile
+ * GET /api/Provider/profile
+ */
+export const getProviderProfile = () =>
+  axiosClient.get("/Provider/profile");
+
+/**
+ * PUT /api/Provider/profile
+ * multipart/form-data containing Bio, Experience, ProfilePicture
+ * @param {FormData} formData
  */
 export const updateProviderProfile = (formData) =>
-  axiosClient.put("/ServiceProvider/profile", formData, {
+  axiosClient.put("/Provider/profile", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
 
 /**
- * GET /api/ServiceProvider/dashboard — provider dashboard stats
+ * GET /api/Provider
+ * @param {Object} [params] - { Available, Governorate, City, CategoryId, Search, Page, PageSize }
  */
-export const getProviderDashboard = () =>
-  axiosClient.get("/ServiceProvider/dashboard");
+export const getProviders = (params) =>
+  axiosClient.get("/Provider", { params });
 
 /**
- * GET /api/ServiceProvider/availability — get availability calendar
+ * GET /api/Provider/{providerId}
+ * @param {string} providerId
  */
-export const getAvailability = (params) =>
-  axiosClient.get("/ServiceProvider/availability", { params });
+export const getProvider = (providerId) =>
+  axiosClient.get(`/Provider/${providerId}`);
 
 /**
- * POST /api/ServiceProvider/availability — set single-day availability
+ * PUT /api/Provider/profile/availability
+ * @param {boolean} isAvailable
  */
-export const setAvailability = (data) =>
-  axiosClient.post("/ServiceProvider/availability", data);
+export const updateAvailabilityStatus = (isAvailable) =>
+  axiosClient.put("/Provider/profile/availability", { isAvailable });
 
 /**
- * POST /api/ServiceProvider/availability/bulk — bulk set availability
- */
-export const setBulkAvailability = (data) =>
-  axiosClient.post("/ServiceProvider/availability/bulk", data);
-
-/**
- * GET /api/ServiceProvider/working-areas
+ * GET /api/Provider/working-areas
  */
 export const getWorkingAreas = () =>
-  axiosClient.get("/ServiceProvider/working-areas");
+  axiosClient.get("/Provider/working-areas");
 
 /**
- * POST /api/ServiceProvider/working-areas
+ * POST /api/Provider/working-areas
+ * @param {Object} data - { governorate, city, district }
  */
 export const addWorkingArea = (data) =>
-  axiosClient.post("/ServiceProvider/working-areas", data);
+  axiosClient.post("/Provider/working-areas", data);
 
 /**
- * DELETE /api/ServiceProvider/working-areas/:id
+ * DELETE /api/Provider/working-areas/{id}
+ * @param {string} id
  */
-export const removeWorkingArea = (id) =>
-  axiosClient.delete(`/ServiceProvider/working-areas/${id}`);
+export const deleteWorkingArea = (id) =>
+  axiosClient.delete(`/Provider/working-areas/${id}`);
 
 /**
- * GET /api/ServiceProvider/application-status
+ * GET /api/Provider/availability
+ * @param {Object} [params] - { startDate, endDate }
  */
-export const getApplicationStatus = () =>
-  axiosClient.get("/ServiceProvider/application-status");
+export const getAvailability = (params) =>
+  axiosClient.get("/Provider/availability", { params });
+
+/**
+ * POST /api/Provider/availability
+ * @param {Object} data - { date, isAvailable, availableShift, notes }
+ */
+export const setAvailability = (data) =>
+  axiosClient.post("/Provider/availability", data);
+
+/**
+ * PUT /api/Provider/availability/{id}
+ * @param {string} id
+ * @param {Object} data - { id, isAvailable, availableShift, notes }
+ */
+export const updateAvailability = (id, data) =>
+  axiosClient.put(`/Provider/availability/${id}`, data);
+
+/**
+ * DELETE /api/Provider/availability/{id}
+ * @param {string} id
+ */
+export const deleteAvailability = (id) =>
+  axiosClient.delete(`/Provider/availability/${id}`);
+
+/**
+ * POST /api/Provider/availability/bulk
+ * @param {Object} data - { startDate, endDate, isAvailable, availableShift, excludeDays }
+ */
+export const setBulkAvailability = (data) =>
+  axiosClient.post("/Provider/availability/bulk", data);

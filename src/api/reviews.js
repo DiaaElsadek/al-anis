@@ -1,18 +1,28 @@
 import axiosClient from "./axiosClient";
 
 /**
- * POST /api/Review — create a review
+ * POST /api/Reviews
+ * @param {Object} data - { serviceRequestId, rating, comment }
  */
-export const createReview = (data) => axiosClient.post("/Review", data);
+export const createReview = ({ serviceRequestId, rating, comment }) =>
+  axiosClient.post("/Reviews", { serviceRequestId, rating, comment });
 
 /**
- * GET /api/Review/provider/:id — get reviews for a provider
+ * GET /api/Reviews/provider/{providerId}
+ * @param {string} providerId
  */
-export const getProviderReviews = (providerId, params) =>
-  axiosClient.get(`/Review/provider/${providerId}`, { params });
+export const getProviderReviews = (providerId) =>
+  axiosClient.get(`/Reviews/provider/${providerId}`);
 
 /**
- * GET /api/Review/request/:id — get review for a specific request
+ * GET /api/Reviews/user — current user's submitted reviews
+ */
+export const getUserReviews = () =>
+  axiosClient.get("/Reviews/user");
+
+/**
+ * GET /api/Reviews/request/{requestId} — review for a specific request
+ * @param {string} requestId
  */
 export const getRequestReview = (requestId) =>
-  axiosClient.get(`/Review/request/${requestId}`);
+  axiosClient.get(`/Reviews/request/${requestId}`);
