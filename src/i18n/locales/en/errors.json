@@ -1,0 +1,19 @@
+{
+  "generic": "An unexpected error occurred. Please try again.",
+  "network": "Unable to connect to the server. Please check your internet connection.",
+  "unauthorized": "Your session has expired or you are unauthorized. Please sign in again.",
+  "forbidden": "You do not have permission to access this resource.",
+  "notFound": "The requested resource could not be found.",
+  "validationPrefix": "Please resolve the following issues:",
+  "fieldRequired": "This field is required.",
+  "invalidEmail": "Please enter a valid email address.",
+  "invalidPhone": "Please enter a valid 11-digit Egyptian phone number (e.g. 01012345678).",
+  "invalidNationalId": "National ID must be exactly 14 numeric digits.",
+  "passwordTooShort": "Password must be at least 8 characters.",
+  "passwordMismatch": "Passwords do not match.",
+  "pageNotFound": "Page Not Found",
+  "pageNotFoundDesc": "The page you're looking for doesn't exist or has been moved.",
+  "accessDenied": "Access Denied",
+  "accessDeniedDesc": "You don't have permission to access this page. If you believe this is an error, please contact support.",
+  "goBack": "Go Back"
+}

@@ -1,0 +1,122 @@
+{
+  "dashboard": {
+    "title": "Admin Operations Dashboard",
+    "subtitle": "Live analytics, transaction volume, and platform shift fulfilment",
+    "totalRevenue": "Total Revenue",
+    "revenueDesc": "Gross platform escrow volume",
+    "pendingApplications": "Pending Applications",
+    "applicationsDesc": "Providers awaiting compliance audit",
+    "totalProviders": "Total Service Providers",
+    "providersDesc": "Audited & active healthcare aides",
+    "completedShifts": "Completed Shifts",
+    "revenueChartTitle": "Revenue & Shift Volume Trend",
+    "revenueChartDesc": "Monthly platform booking growth (EGP)",
+    "shiftFulfilmentTitle": "Shift Fulfilment",
+    "shiftFulfilmentDesc": "Operational completion ratios",
+    "recentBookings": "Recent Platform Bookings",
+    "viewAllTransactions": "View All Transactions"
+  },
+  "applications": {
+    "title": "Provider Applications Queue",
+    "subtitle": "Audit compliance documents, national IDs, and verify professional credentials",
+    "tabs": {
+      "all": "All ({{count}})",
+      "pending": "Pending Audit ({{count}})",
+      "approved": "Approved ({{count}})",
+      "rejected": "Rejected ({{count}})"
+    },
+    "applicant": "Applicant",
+    "nationalId": "National ID",
+    "categories": "Specialties",
+    "status": "Audit Status",
+    "submitted": "Submitted",
+    "actions": "Actions",
+    "reviewButton": "Review Application",
+    "drawerTitle": "Application Compliance Review",
+    "drawerSubtitle": "Verify identity documents and professional background",
+    "experience": "Experience",
+    "hourlyRate": "Base Shift Rate",
+    "documentsTitle": "Submitted Compliance Documents",
+    "idDocument": "National ID Scan",
+    "certificate": "Professional Certificate",
+    "cv": "Resume / CV",
+    "openDocument": "View Document",
+    "approveButton": "Approve Application",
+    "rejectButton": "Reject Application",
+    "approving": "Approving...",
+    "rejectModal": {
+      "title": "Reject Provider Application",
+      "subtitle": "State the compliance or credential issue for the applicant",
+      "reasonLabel": "Rejection Reason",
+      "reasonPlaceholder": "e.g. National ID document illegible or expired license...",
+      "confirmButton": "Confirm Rejection"
+    }
+  },
+  "users": {
+    "title": "Platform User Management",
+    "subtitle": "Search, monitor, and regulate clients and service providers",
+    "searchPlaceholder": "Search users by name, email, or phone...",
+    "roleFilter": "Filter by Role",
+    "allRoles": "All Roles",
+    "statusFilter": "Filter by Status",
+    "allStatuses": "All Statuses",
+    "userCol": "User",
+    "roleCol": "Role",
+    "statusCol": "Account Status",
+    "joinedCol": "Registered",
+    "actionsCol": "Actions",
+    "suspendButton": "Suspend Account",
+    "activateButton": "Activate Account",
+    "suspendModal": {
+      "title": "Suspend User Account",
+      "description": "Are you sure you want to suspend this user? They will not be able to log in or book shifts.",
+      "confirmButton": "Yes, Suspend Account"
+    },
+    "activateModal": {
+      "title": "Reactivate User Account",
+      "description": "Are you sure you want to reactivate this user account?",
+      "confirmButton": "Yes, Activate Account"
+    }
+  },
+  "categories": {
+    "title": "Service Categories",
+    "subtitle": "Manage service specialties, bilingual titles, and active statuses",
+    "addCategory": "Create Category",
+    "nameAr": "Arabic Name",
+    "nameEn": "English Name",
+    "description": "Description",
+    "icon": "Icon Emoji",
+    "activeStatus": "Active Status",
+    "editModalTitle": "Edit Category",
+    "createModalTitle": "Create New Category",
+    "deleteConfirm": "Are you sure you want to delete this category?"
+  },
+  "pricing": {
+    "title": "Service Shift Pricing Matrix",
+    "subtitle": "Set and maintain fixed shift rates (Morning, Evening, Night) per category",
+    "addPricing": "Create Shift Price",
+    "bulkPricing": "Bulk Pricing Generator",
+    "category": "Category",
+    "shiftType": "Shift Type",
+    "price": "Base Price (EGP)",
+    "editModalTitle": "Edit Shift Rate",
+    "bulkModalTitle": "Create Bulk Shift Pricing Matrix"
+  },
+  "payments": {
+    "title": "Payments & Escrow Ledger",
+    "subtitle": "Monitor escrow transactions, audit logs, and platform shift earnings",
+    "totalVolume": "Total Escrow Volume",
+    "totalTransactions": "Total Transactions",
+    "avgShift": "Avg. Shift Value",
+    "escrowSecurity": "Escrow Security",
+    "searchPlaceholder": "Search transaction ID, client, or provider...",
+    "statusFilter": "Filter Status",
+    "transactionId": "Transaction ID",
+    "client": "Client",
+    "provider": "Service Provider",
+    "method": "Payment Method",
+    "date": "Date & Time",
+    "amount": "Amount",
+    "status": "Status"
+  }
+}

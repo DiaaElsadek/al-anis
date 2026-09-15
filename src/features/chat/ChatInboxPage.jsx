@@ -15,6 +15,9 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { useTranslation } from "react-i18next";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
+
 import {
   getMyChats,
   getChatMessages,
@@ -30,6 +33,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import EmptyState from "@/components/shared/EmptyState";
 
 export default function ChatInboxPage() {
+  const { t, i18n } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef(null);
@@ -96,8 +100,8 @@ export default function ChatInboxPage() {
       queryClient.invalidateQueries(["my-chats"]);
     },
     onError: (error) => {
-      toast.error("Failed to send message", {
-        description: error?.response?.data?.message || "Please check connection.",
+      toast.error(t("chat.sendFailed"), {
+        description: error?.response?.data?.message || t("chat.checkConnection"),
       });
     },
   });
@@ -122,16 +126,16 @@ export default function ChatInboxPage() {
         {/* Top search & title */}
         <div className="p-4 border-b border-border/60 space-y-3">
           <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold text-foreground">Direct Messages</h2>
+            <h2 className="text-base font-bold text-foreground">{t("chat.directMessages")}</h2>
             <Badge variant="outline" className="text-[11px] font-mono">
-              {chats.length} Threads
+              {t("chat.threads", { count: chats.length })}
             </Badge>
           </div>
 
           <div className="relative">
             <Search className="absolute start-3 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search conversations..."
+              placeholder={t("chat.searchConversations")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="ps-9 h-9 text-xs rounded-xl"
@@ -156,8 +160,8 @@ export default function ChatInboxPage() {
           ) : filteredChats.length === 0 ? (
             <div className="text-center py-12 px-4 text-xs text-muted-foreground space-y-1">
               <MessageSquare className="h-8 w-8 text-muted-foreground/40 mx-auto mb-2" />
-              <p className="font-semibold text-foreground">No conversations yet</p>
-              <p>When you book or receive a shift request, your chat thread will appear here.</p>
+              <p className="font-semibold text-foreground">{t("chat.noConversations")}</p>
+              <p>{t("chat.noConversationsDesc")}</p>
             </div>
           ) : (
             filteredChats.map((c) => {
@@ -181,18 +185,18 @@ export default function ChatInboxPage() {
                       </AvatarFallback>
                     </Avatar>
                     {c.isOtherPartyOnline && (
-                      <span className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full bg-emerald-500 border-2 border-background" />
+                      <span className="absolute -bottom-0.5 end-0 h-3 w-3 rounded-full bg-emerald-500 border-2 border-background" />
                     )}
                   </div>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
                       <h4 className="text-xs font-bold text-foreground truncate">
-                        {c.otherPartyName || "Participant"}
+                        {c.otherPartyName || t("chat.participant")}
                       </h4>
                       {c.lastMessageAt && (
                         <span className="text-[10px] text-muted-foreground">
-                          {new Date(c.lastMessageAt).toLocaleTimeString([], {
+                          {new Date(c.lastMessageAt).toLocaleTimeString(i18n.language === "ar" ? "ar-EG" : "en-US", {
                             hour: "2-digit",
                             minute: "2-digit",
                           })}
@@ -201,11 +205,11 @@ export default function ChatInboxPage() {
                     </div>
 
                     <p className="text-[11px] text-muted-foreground truncate mt-0.5">
-                      {c.lastMessage || c.serviceRequestDescription || "Shift chat initialized"}
+                      {c.lastMessage || c.serviceRequestDescription || t("chat.shiftChatInit")}
                     </p>
 
                     {c.serviceRequestDescription && (
-                      <span className="inline-block text-[10px] text-teal-700 bg-teal-500/10 px-1.5 py-0.5 rounded mt-1 font-medium truncate max-w-[170px]">
+                      <span className="inline-block text-[10px] text-teal-700 dark:text-teal-400 bg-teal-500/10 px-1.5 py-0.5 rounded mt-1 font-medium truncate max-w-[170px]">
                         {c.serviceRequestDescription}
                       </span>
                     )}
@@ -243,7 +247,7 @@ export default function ChatInboxPage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-bold text-foreground">
-                      {activeChat.otherPartyName || "Chat"}
+                      {activeChat.otherPartyName || t("nav.messages")}
                     </h3>
                     <span
                       className={`h-2 w-2 rounded-full ${
@@ -252,14 +256,14 @@ export default function ChatInboxPage() {
                     />
                   </div>
                   <p className="text-[11px] text-muted-foreground">
-                    {activeChat.isOtherPartyOnline ? "Active now" : "Offline"} • Linked to Service Request
+                    {activeChat.isOtherPartyOnline ? t("chat.activeNow") : t("chat.offline")} • {t("chat.linkedToRequest")}
                   </p>
                 </div>
               </div>
 
               {activeChat.serviceRequestId && (
                 <Badge variant="outline" className="text-xs bg-muted/30">
-                  Request #{activeChat.serviceRequestId.slice(0, 8)}
+                  {t("chat.requestNumber", { id: activeChat.serviceRequestId.slice(0, 8) })}
                 </Badge>
               )}
             </div>
@@ -275,8 +279,8 @@ export default function ChatInboxPage() {
               ) : messages.length === 0 ? (
                 <div className="text-center py-16 text-xs text-muted-foreground space-y-1">
                   <Sparkles className="h-6 w-6 text-primary mx-auto mb-1.5" />
-                  <p className="font-semibold text-foreground">Start the conversation</p>
-                  <p>Send a message to coordinate shift requirements, arrival time, or details.</p>
+                  <p className="font-semibold text-foreground">{t("chat.startConversation")}</p>
+                  <p>{t("chat.startConversationDesc")}</p>
                 </div>
               ) : (
                 messages.map((m) => {
@@ -290,8 +294,8 @@ export default function ChatInboxPage() {
                       <div
                         className={`max-w-[80%] sm:max-w-md p-3.5 rounded-2xl text-xs space-y-1 shadow-sm ${
                           isMine
-                            ? "bg-primary text-primary-foreground rounded-br-none"
-                            : "bg-card text-foreground border border-border/80 rounded-bl-none"
+                            ? "bg-primary text-primary-foreground rounded-ee-none"
+                            : "bg-card text-foreground border border-border/80 rounded-es-none"
                         }`}
                       >
                         {!isMine && m.senderName && (
@@ -308,7 +312,7 @@ export default function ChatInboxPage() {
                           }`}
                         >
                           <span>
-                            {new Date(m.sentAt).toLocaleTimeString([], {
+                            {new Date(m.sentAt).toLocaleTimeString(i18n.language === "ar" ? "ar-EG" : "en-US", {
                               hour: "2-digit",
                               minute: "2-digit",
                             })}
@@ -335,7 +339,7 @@ export default function ChatInboxPage() {
               className="p-3 sm:p-4 bg-card border-t border-border/70 flex items-center gap-2"
             >
               <Input
-                placeholder="Type your message here..."
+                placeholder={t("chat.typeMessage")}
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
                 className="h-10 text-xs rounded-xl"
@@ -346,7 +350,7 @@ export default function ChatInboxPage() {
                 className="h-10 w-10 rounded-xl shadow-sm flex-shrink-0"
                 disabled={!messageText.trim() || sendMutation.isPending}
               >
-                <Send className="h-4 w-4" />
+                <DirectionalIcon icon={Send} className="h-4 w-4" />
               </Button>
             </form>
           </>
@@ -354,8 +358,8 @@ export default function ChatInboxPage() {
           <div className="flex-1 flex items-center justify-center p-8">
             <EmptyState
               icon={MessageSquare}
-              title="No active chat selected"
-              description="Choose a conversation from the left to start messaging."
+              title={t("chat.noActiveChat")}
+              description={t("chat.chooseConversation")}
             />
           </div>
         )}

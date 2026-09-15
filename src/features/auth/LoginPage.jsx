@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -25,8 +26,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 
 export default function LoginPage() {
+  const { t } = useTranslation(["auth", "common"]);
   const navigate = useNavigate();
   const location = useLocation();
   const { login, loginWithGoogle, getHomeRoute } = useAuth();
@@ -53,17 +56,16 @@ export default function LoginPage() {
   const loginMutation = useMutation({
     mutationFn: (credentials) => login(credentials),
     onSuccess: (result) => {
-      toast.success("Welcome back!", {
+      toast.success(t("auth:login.successToast"), {
         description: `Signed in as ${result?.user?.email || "user"}.`,
       });
-      // Redirect to original requested route or role home
       const destination = from || getHomeRoute(result?.user);
       navigate(destination, { replace: true });
     },
     onError: (error) => {
-      const msg = error?.response?.data?.message || error?.message || "Invalid email or password.";
+      const msg = error?.response?.data?.message || error?.message || t("auth:login.invalidCredentials", { defaultValue: "Invalid email or password." });
       setAuthError(msg);
-      toast.error("Sign in failed", {
+      toast.error(t("common:toasts.somethingWentWrong"), {
         id: "login-error",
         description: msg,
       });
@@ -74,13 +76,13 @@ export default function LoginPage() {
   const googleMutation = useMutation({
     mutationFn: (idToken) => loginWithGoogle(idToken),
     onSuccess: (result) => {
-      toast.success("Signed in with Google!");
+      toast.success(t("auth:login.signInWithGoogle"));
       const destination = from || getHomeRoute(result?.user);
       navigate(destination, { replace: true });
     },
     onError: (error) => {
       const msg = error?.response?.data?.message || error?.message || "Google sign-in failed.";
-      toast.error("Google authentication error", {
+      toast.error(t("common:toasts.somethingWentWrong"), {
         id: "google-login-error",
         description: msg,
       });
@@ -100,31 +102,25 @@ export default function LoginPage() {
   const fillDemoAccount = (email, password) => {
     setValue("email", email, { shouldValidate: true });
     setValue("password", password, { shouldValidate: true });
-    setAuthError("");
   };
 
   const handleGoogleMockLogin = () => {
-    // In production, integrate with Google OAuth SDK (e.g. google.accounts.id)
-    toast.info("Connecting to Google...", {
-      description: "Triggering OAuth login token",
-    });
-    // Call google login endpoint with mock/sample token
-    googleMutation.mutate("sample_google_id_token");
+    googleMutation.mutate("mock-google-id-token");
   };
 
   return (
-    <Card className="border-border/60 shadow-xl shadow-teal-950/5 backdrop-blur-sm bg-card/95">
-      <CardHeader className="space-y-1 pb-6">
+    <Card className="border-border/80 shadow-xl shadow-primary/5 backdrop-blur-sm">
+      <CardHeader className="space-y-1 pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl font-bold tracking-tight">
-            Sign in to your account
+          <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight">
+            {t("auth:login.title")}
           </CardTitle>
           <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
             <LogIn className="h-4 w-4" />
           </div>
         </div>
         <CardDescription className="text-muted-foreground text-sm">
-          Enter your credentials to access your Alanis dashboard
+          {t("auth:login.subtitle")}
         </CardDescription>
       </CardHeader>
 
@@ -133,7 +129,7 @@ export default function LoginPage() {
         <div className="p-3 rounded-xl bg-muted/40 border border-muted-foreground/15 space-y-2">
           <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <span>Quick Demo Accounts</span>
+            <span>{t("auth:login.demoAccounts")}</span>
           </div>
           <div className="grid grid-cols-3 gap-2">
             <Button
@@ -144,7 +140,7 @@ export default function LoginPage() {
               onClick={() => fillDemoAccount("client@alanis.com", "ClientPass123!")}
             >
               <User className="h-3 w-3 me-1 text-teal-600" />
-              Client
+              {t("auth:login.demoClient")}
             </Button>
             <Button
               type="button"
@@ -154,7 +150,7 @@ export default function LoginPage() {
               onClick={() => fillDemoAccount("provider@alanis.com", "ProviderPass123!")}
             >
               <Briefcase className="h-3 w-3 me-1 text-emerald-600" />
-              Provider
+              {t("auth:login.demoProvider")}
             </Button>
             <Button
               type="button"
@@ -164,7 +160,7 @@ export default function LoginPage() {
               onClick={() => fillDemoAccount("admin@alanis.com", "AdminPass123!")}
             >
               <Shield className="h-3 w-3 me-1 text-amber-600" />
-              Admin
+              {t("auth:login.demoAdmin")}
             </Button>
           </div>
         </div>
@@ -172,9 +168,9 @@ export default function LoginPage() {
         {/* Error Alert */}
         {authError && (
           <div className="flex items-start gap-3 p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-            <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
             <div className="flex-1">
-              <p className="font-medium">Authentication Failed</p>
+              <p className="font-medium">{t("common:toasts.somethingWentWrong")}</p>
               <p className="text-xs opacity-90 mt-0.5">{authError}</p>
             </div>
           </div>
@@ -185,7 +181,7 @@ export default function LoginPage() {
           {/* Email field */}
           <div className="space-y-2">
             <Label htmlFor="email" className="text-xs font-semibold">
-              Email Address
+              {t("auth:login.emailOrPhone")}
             </Label>
             <div className="relative">
               <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none text-muted-foreground">
@@ -193,8 +189,8 @@ export default function LoginPage() {
               </div>
               <Input
                 id="email"
-                type="email"
-                placeholder="name@example.com"
+                type="text"
+                placeholder={t("auth:login.emailOrPhonePlaceholder")}
                 className="ps-10 h-10 transition-colors focus-visible:ring-primary"
                 {...register("email")}
               />
@@ -208,13 +204,13 @@ export default function LoginPage() {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <Label htmlFor="password" className="text-xs font-semibold">
-                Password
+                {t("auth:login.password")}
               </Label>
               <Link
                 to="/forgot-password"
                 className="text-xs text-primary hover:underline font-medium"
               >
-                Forgot password?
+                {t("auth:login.forgotPassword")}
               </Link>
             </div>
             <div className="relative">
@@ -243,13 +239,13 @@ export default function LoginPage() {
           </div>
 
           {/* Remember me option */}
-          <div className="flex items-center space-x-2 pt-1">
+          <div className="flex items-center gap-2 pt-1">
             <Checkbox id="remember" defaultChecked />
             <label
               htmlFor="remember"
               className="text-xs text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
             >
-              Remember this device for 30 days
+              {t("auth:login.rememberMe")}
             </label>
           </div>
 
@@ -262,12 +258,12 @@ export default function LoginPage() {
             {loginMutation.isPending ? (
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                <span>Signing in...</span>
+                <span>{t("auth:login.signingIn")}</span>
               </div>
             ) : (
               <div className="flex items-center justify-center gap-2">
-                <span>Sign In</span>
-                <ArrowRight className="h-4 w-4" />
+                <span>{t("auth:login.signInButton")}</span>
+                <DirectionalIcon icon={ArrowRight} className="h-4 w-4" />
               </div>
             )}
           </Button>
@@ -280,7 +276,7 @@ export default function LoginPage() {
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-card px-2 text-muted-foreground font-medium">
-              Or continue with
+              {t("auth:login.orContinueWith", { defaultValue: "Or continue with" })}
             </span>
           </div>
         </div>
@@ -311,18 +307,18 @@ export default function LoginPage() {
               fill="#EA4335"
             />
           </svg>
-          Sign in with Google
+          {t("auth:login.signInWithGoogle")}
         </Button>
       </CardContent>
 
       <CardFooter className="pt-2 pb-6 flex justify-center border-t border-border/40">
         <p className="text-sm text-muted-foreground text-center">
-          Don't have an account yet?{" "}
+          {t("auth:login.noAccount")}{" "}
           <Link
             to="/register"
             className="text-primary font-semibold hover:underline transition-colors"
           >
-            Create an account
+            {t("auth:login.registerNow")}
           </Link>
         </p>
       </CardFooter>

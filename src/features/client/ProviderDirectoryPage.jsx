@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   Search,
   MapPin,
@@ -11,13 +12,13 @@ import {
   CheckCircle2,
   Clock,
   Sparkles,
-  ArrowRight,
 } from "lucide-react";
 
 import { getProviders } from "@/api/provider";
 import { getActiveCategories } from "@/api/category";
 import { useDebounce } from "@/hooks/useDebounce";
-import { getMediaUrl, getInitials, formatPrice } from "@/lib/utils";
+import { getMediaUrl, getInitials, formatPrice, getLocalizedCategoryName } from "@/lib/utils";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -39,6 +40,7 @@ const GOVERNORATES = [
 ];
 
 export default function ProviderDirectoryPage() {
+  const { t, i18n } = useTranslation(["client", "common"]);
   const navigate = useNavigate();
 
   // Filter States
@@ -97,14 +99,13 @@ export default function ProviderDirectoryPage() {
         <div className="relative z-10 max-w-2xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 border border-teal-500/30 text-teal-200 text-xs font-semibold mb-4">
             <Sparkles className="h-3.5 w-3.5 text-teal-300" />
-            Verified Shift Specialists
+            <span>{t("client:directory.verified")}</span>
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
-            Find Trusted Professionals on Your Schedule
+            {t("client:directory.title")}
           </h1>
           <p className="text-teal-100/80 text-sm sm:text-base mt-2">
-            Book nursing, elderly care, childcare, and assistance per morning,
-            evening, or night shift.
+            {t("client:directory.subtitle")}
           </p>
 
           {/* Search Input Bar */}
@@ -112,7 +113,7 @@ export default function ProviderDirectoryPage() {
             <div className="relative flex-1">
               <Search className="absolute start-3.5 top-3.5 h-5 w-5 text-muted-foreground" />
               <Input
-                placeholder="Search by provider name or specialty..."
+                placeholder={t("client:directory.searchPlaceholder")}
                 value={searchTerm}
                 onChange={(e) => {
                   setSearchTerm(e.target.value);
@@ -138,7 +139,7 @@ export default function ProviderDirectoryPage() {
               setPage(1);
             }}
           >
-            All Categories
+            {t("client:directory.allCategories")}
           </Button>
           {categories.map((cat) => (
             <Button
@@ -152,7 +153,7 @@ export default function ProviderDirectoryPage() {
               }}
             >
               {cat.icon && <span className="me-1.5">{cat.icon}</span>}
-              {cat.name}
+              {getLocalizedCategoryName(cat, i18n.language)}
             </Button>
           ))}
         </div>
@@ -171,7 +172,7 @@ export default function ProviderDirectoryPage() {
                 }}
                 className="h-8 rounded-lg border border-input bg-background px-2.5 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
               >
-                <option value="all">All Governorates</option>
+                <option value="all">{t("client:directory.allGovernorates")}</option>
                 {GOVERNORATES.map((gov) => (
                   <option key={gov} value={gov}>
                     {gov}
@@ -198,13 +199,16 @@ export default function ProviderDirectoryPage() {
                   onlyAvailable ? "text-emerald-600" : "text-muted-foreground"
                 }`}
               />
-              Available Now
+              {t("client:directory.availableOnly")}
             </button>
           </div>
 
           <div className="text-xs text-muted-foreground">
-            Showing <strong className="text-foreground">{providers.length}</strong> of{" "}
-            <strong className="text-foreground">{totalCount}</strong> providers
+            {t("common:pagination.showing", {
+              from: providers.length > 0 ? 1 : 0,
+              to: providers.length,
+              total: totalCount,
+            })}
           </div>
         </div>
       </div>
@@ -229,9 +233,9 @@ export default function ProviderDirectoryPage() {
       ) : providers.length === 0 ? (
         <EmptyState
           icon={Search}
-          title="No service providers found"
-          description="Try adjusting your filters, location, or search keywords."
-          actionLabel="Clear all filters"
+          title={t("client:directory.noProvidersTitle")}
+          description={t("client:directory.noProvidersDesc")}
+          actionLabel={t("common:clear")}
           onAction={() => {
             setSearchTerm("");
             setSelectedCategory("all");
@@ -243,7 +247,7 @@ export default function ProviderDirectoryPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {providers.map((p) => {
-            const providerName = p.fullName || `${p.firstName || ""} ${p.lastName || ""}`.trim() || "Specialist";
+            const providerName = p.fullName || `${p.firstName || ""} ${p.lastName || ""}`.trim() || t("common:roles.provider");
             const locationStr = p.location
               ? `${p.location.city ? p.location.city + ", " : ""}${p.location.governorate || "Egypt"}`
               : p.governorate || "Egypt";
@@ -268,7 +272,7 @@ export default function ProviderDirectoryPage() {
                         <h3 className="font-bold text-base text-foreground truncate group-hover:text-primary transition-colors">
                           {providerName}
                         </h3>
-                        <ShieldCheck className="h-4 w-4 text-teal-600 flex-shrink-0" title="Verified Provider" />
+                        <ShieldCheck className="h-4 w-4 text-teal-600 flex-shrink-0" title={t("client:directory.verified")} />
                       </div>
 
                       <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
@@ -280,11 +284,11 @@ export default function ProviderDirectoryPage() {
                       <div className="flex items-center gap-1.5 mt-1.5">
                         <div className="flex items-center text-amber-500 text-xs font-bold">
                           <Star className="h-3.5 w-3.5 fill-current me-1" />
-                          {p.averageRating ? p.averageRating.toFixed(1) : "New"}
+                          {p.averageRating ? p.averageRating.toFixed(1) : t("common:new")}
                         </div>
                         {p.totalReviews > 0 && (
                           <span className="text-[11px] text-muted-foreground">
-                            ({p.totalReviews} reviews)
+                            {t("client:directory.reviewsCount", { count: p.totalReviews })}
                           </span>
                         )}
                       </div>
@@ -299,12 +303,12 @@ export default function ProviderDirectoryPage() {
                         variant="secondary"
                         className="text-[11px] font-medium bg-primary/5 text-primary border-primary/10"
                       >
-                        {c.name}
+                        {getLocalizedCategoryName(c, i18n.language)}
                       </Badge>
                     ))}
                     {p.categories?.length > 2 && (
                       <span className="text-[11px] text-muted-foreground self-center">
-                        +{p.categories.length - 2} more
+                        +{p.categories.length - 2}
                       </span>
                     )}
                   </div>
@@ -318,14 +322,14 @@ export default function ProviderDirectoryPage() {
                         }`}
                       />
                       <span className={p.isAvailable ? "text-emerald-700 font-semibold" : "text-muted-foreground"}>
-                        {p.isAvailable ? "Available for booking" : "Unavailable today"}
+                        {p.isAvailable ? t("common:status.available") : t("common:status.busy")}
                       </span>
                     </div>
 
                     <div className="text-end">
-                      <span className="text-[10px] text-muted-foreground block">Shift rate from</span>
+                      <span className="text-[10px] text-muted-foreground block">{t("client:directory.baseRate")}</span>
                       <span className="font-bold text-sm text-foreground">
-                        {p.hourlyRate ? formatPrice(p.hourlyRate * 8) : "Standard rate"}
+                        {p.hourlyRate ? formatPrice(p.hourlyRate * 8) : "-"}
                       </span>
                     </div>
                   </div>
@@ -340,7 +344,7 @@ export default function ProviderDirectoryPage() {
                     asChild
                   >
                     <Link to={`/app/providers/${p.id}`}>
-                      View Profile
+                      {t("client:directory.viewProfile")}
                     </Link>
                   </Button>
                   <Button
@@ -349,8 +353,8 @@ export default function ProviderDirectoryPage() {
                     asChild
                   >
                     <Link to={`/app/providers/${p.id}?book=true`}>
-                      Book Shift
-                      <ArrowRight className="h-3.5 w-3.5 ms-1" />
+                      <span>{t("client:directory.bookShift")}</span>
+                      <DirectionalIcon className="h-3.5 w-3.5 ms-1" />
                     </Link>
                   </Button>
                 </CardFooter>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -12,8 +13,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 
 export default function ForgotPasswordPage() {
+  const { t } = useTranslation(["auth", "common"]);
   const navigate = useNavigate();
   const [serverError, setServerError] = useState("");
 
@@ -33,10 +36,7 @@ export default function ForgotPasswordPage() {
     mutationFn: (data) => forgetPassword(data),
     onSuccess: (result, variables) => {
       const returnedUserId = result?.userId || result?.data?.userId;
-      toast.success("Security verification matched!", {
-        description: "A password reset code has been dispatched.",
-      });
-      // Store userId and navigate to reset-password
+      toast.success(t("auth:otp.codeResent", { defaultValue: "A password reset code has been dispatched." }));
       if (returnedUserId) {
         localStorage.setItem("pendingUserId", returnedUserId);
       }
@@ -54,7 +54,7 @@ export default function ForgotPasswordPage() {
         error?.message ||
         "No matching account found with this email and phone number.";
       setServerError(msg);
-      toast.error("Recovery request failed", {
+      toast.error(t("common:toasts.somethingWentWrong"), {
         id: "forgot-password-error",
         description: msg,
       });
@@ -71,21 +71,21 @@ export default function ForgotPasswordPage() {
       <CardHeader className="space-y-1 pb-6">
         <div className="flex items-center justify-between">
           <CardTitle className="text-2xl font-bold tracking-tight">
-            Forgot Password?
+            {t("auth:forgotPassword.title")}
           </CardTitle>
           <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
             <KeyRound className="h-4 w-4" />
           </div>
         </div>
         <CardDescription className="text-muted-foreground text-sm">
-          Provide your registered account email and mobile number to receive a reset code
+          {t("auth:forgotPassword.subtitle")}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
         {serverError && (
           <div className="flex items-start gap-3 p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-            <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
             <p className="text-xs font-medium">{serverError}</p>
           </div>
         )}
@@ -94,43 +94,43 @@ export default function ForgotPasswordPage() {
           {/* Email */}
           <div className="space-y-1.5">
             <Label htmlFor="email" className="text-xs font-semibold">
-              Registered Email Address
+              {t("auth:register.email")}
             </Label>
             <div className="relative">
               <Mail className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="email"
                 type="email"
-                placeholder="name@example.com"
-                className="ps-9 h-10"
+                placeholder={t("auth:register.emailPlaceholder")}
+                className="ps-9 h-10 text-sm"
                 {...register("email")}
               />
             </div>
             {errors.email && (
-              <p className="text-xs text-destructive">{errors.email.message}</p>
+              <p className="text-xs text-destructive font-medium">{errors.email.message}</p>
             )}
           </div>
 
-          {/* Phone Number */}
+          {/* Phone */}
           <div className="space-y-1.5">
             <Label htmlFor="phoneNumber" className="text-xs font-semibold">
-              Registered Phone Number
+              {t("auth:register.phoneNumber")}
             </Label>
             <div className="relative">
               <Phone className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
               <Input
                 id="phoneNumber"
-                placeholder="01012345678"
-                className="ps-9 h-10"
+                type="tel"
+                placeholder={t("auth:register.phoneNumberPlaceholder")}
+                className="ps-9 h-10 text-sm"
                 {...register("phoneNumber")}
               />
             </div>
             {errors.phoneNumber && (
-              <p className="text-xs text-destructive">{errors.phoneNumber.message}</p>
+              <p className="text-xs text-destructive font-medium">{errors.phoneNumber.message}</p>
             )}
           </div>
 
-          {/* Submit */}
           <Button
             type="submit"
             className="w-full h-11 text-sm font-semibold shadow-md shadow-primary/20 hover:shadow-lg transition-all mt-2"
@@ -139,12 +139,12 @@ export default function ForgotPasswordPage() {
             {forgotMutation.isPending ? (
               <div className="flex items-center gap-2">
                 <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                <span>Checking account...</span>
+                <span>{t("auth:forgotPassword.sending")}</span>
               </div>
             ) : (
               <div className="flex items-center justify-center gap-2">
-                <span>Send Reset Code</span>
-                <ArrowRight className="h-4 w-4" />
+                <span>{t("auth:forgotPassword.sendOtpButton")}</span>
+                <DirectionalIcon icon={ArrowRight} className="h-4 w-4" />
               </div>
             )}
           </Button>
@@ -154,10 +154,10 @@ export default function ForgotPasswordPage() {
       <CardFooter className="pt-2 pb-6 flex justify-center border-t border-border/40">
         <Link
           to="/login"
-          className="inline-flex items-center text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs text-muted-foreground hover:text-foreground transition-colors"
         >
-          <ArrowLeft className="h-3.5 w-3.5 me-1.5" />
-          Back to Sign In
+          <DirectionalIcon icon={ArrowLeft} className="h-3.5 w-3.5" />
+          <span>{t("common:actions.cancel")} & {t("common:nav.signIn")}</span>
         </Link>
       </CardFooter>
     </Card>

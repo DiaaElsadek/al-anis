@@ -1,8 +1,9 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 
 /**
- * Pagination — page navigation controls
+ * Pagination — page navigation controls with automatic RTL chevron flipping
  */
 export default function Pagination({
   page,
@@ -39,7 +40,7 @@ export default function Pagination({
         disabled={!hasPreviousPage}
         onClick={() => onPageChange(page - 1)}
       >
-        <ChevronLeft className="h-4 w-4" />
+        <DirectionalIcon icon={ChevronLeft} className="h-4 w-4" />
       </Button>
 
       {getPageNumbers().map((pageNum) => (
@@ -47,7 +48,7 @@ export default function Pagination({
           key={pageNum}
           variant={pageNum === page ? "default" : "outline"}
           size="icon"
-          className="h-8 w-8 text-xs"
+          className="h-8 w-8 text-xs font-mono"
           onClick={() => onPageChange(pageNum)}
         >
           {pageNum}
@@ -61,7 +62,7 @@ export default function Pagination({
         disabled={!hasNextPage}
         onClick={() => onPageChange(page + 1)}
       >
-        <ChevronRight className="h-4 w-4" />
+        <DirectionalIcon icon={ChevronRight} className="h-4 w-4" />
       </Button>
     </div>
   );

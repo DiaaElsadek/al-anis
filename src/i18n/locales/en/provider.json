@@ -1,0 +1,101 @@
+{
+  "pending": {
+    "title": "Application Under Review",
+    "subtitle": "Our compliance and safety audit team is reviewing your credentials",
+    "status": "Application Status:",
+    "submittedAt": "Submitted on:",
+    "step1": "Document Submission",
+    "step1Desc": "National ID, professional license, and resume uploaded",
+    "step2": "Compliance & Background Audit",
+    "step2Desc": "Checking criminal record and verifying certificates",
+    "step3": "Approval & Provider Access",
+    "step3Desc": "Activate your calendar and start receiving shift requests",
+    "refreshButton": "Refresh Application Status",
+    "upgradeAccess": "Activate Full Provider Access",
+    "rejectedNotice": "Application Decision Notice",
+    "rejectedReason": "Reason provided by audit team:",
+    "supportContact": "Contact Support Team"
+  },
+  "dashboard": {
+    "title": "Provider Dashboard",
+    "subtitle": "Overview of your shift bookings, earnings, and availability",
+    "availabilityStatus": "Accepting New Shifts",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "completedShifts": "Completed Shifts",
+    "pendingRequests": "Pending Requests",
+    "upcomingShifts": "Upcoming Shifts",
+    "totalEarnings": "Total Earnings",
+    "rating": "Avg. Client Rating",
+    "urgentRequests": "Urgent Incoming Requests",
+    "noUrgentRequests": "No new shift requests pending at the moment.",
+    "upcomingSchedule": "Upcoming Shift Schedule",
+    "noUpcomingShifts": "No upcoming shifts scheduled for this week.",
+    "viewAll": "View All",
+    "manageCalendar": "Manage Calendar"
+  },
+  "availability": {
+    "title": "Shift Availability Schedule",
+    "subtitle": "Define which dates and shifts you are open to receive bookings",
+    "addShift": "Add Single Shift",
+    "bulkGenerate": "Bulk Schedule Generator",
+    "dateRange": "Date Range",
+    "excludeDays": "Exclude Days of the Week",
+    "shiftsOffered": "Select Shifts to Open",
+    "modalTitle": "Set Availability for Date",
+    "selectDate": "Select Date",
+    "selectShift": "Shift Type",
+    "saveShift": "Save Availability",
+    "deleteShift": "Delete Shift Slot",
+    "openSlots": "Open Available Shifts",
+    "noSlots": "No open shifts configured. Use the buttons above to set your availability."
+  },
+  "workingAreas": {
+    "title": "Coverage & Service Areas",
+    "subtitle": "Specify the governorates and cities you can travel to for shifts",
+    "addArea": "Add Working Area",
+    "governorate": "Governorate",
+    "city": "City / Municipality",
+    "district": "District / Neighborhood",
+    "deleteArea": "Remove Area",
+    "noAreas": "No working areas added yet. Add areas so nearby clients can find you.",
+    "addedToast": "Working area added successfully.",
+    "deletedToast": "Working area removed."
+  },
+  "requests": {
+    "title": "Incoming Shift Bookings",
+    "subtitle": "Accept bookings, coordinate with clients, and manage shift progress",
+    "tabs": {
+      "all": "All Requests",
+      "pending": "Pending Actions",
+      "active": "Active Shifts",
+      "completed": "Completed"
+    },
+    "client": "Client",
+    "shift": "Shift & Date",
+    "location": "Address",
+    "actions": "Actions",
+    "acceptButton": "Accept Booking",
+    "rejectButton": "Decline",
+    "startButton": "Start Shift",
+    "completeButton": "Complete Shift",
+    "chatButton": "Message Client",
+    "rejectModal": {
+      "title": "Decline Shift Request",
+      "subtitle": "Please provide a reason to inform the client",
+      "reasonLabel": "Decline Reason",
+      "reasonPlaceholder": "e.g. Schedule conflict or outside travel boundary...",
+      "confirmButton": "Confirm Decline"
+    }
+  },
+  "editProfile": {
+    "title": "Edit Provider Profile",
+    "subtitle": "Update your public profile, bio, experience, and hourly rate",
+    "bioLabel": "Professional Bio",
+    "experienceLabel": "Years of Experience",
+    "rateLabel": "Base Rate per Shift (EGP)",
+    "saveButton": "Save Profile",
+    "saving": "Saving changes...",
+    "successToast": "Profile updated successfully."
+  }
+}

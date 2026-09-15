@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   User,
   Mail,
@@ -22,6 +23,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import ChangePasswordDialog from "@/features/auth/ChangePasswordDialog";
 
 export default function ClientSettingsPage() {
+  const { t } = useTranslation(["client", "common"]);
   const queryClient = useQueryClient();
   const { user, updateUser } = useAuth();
   const fileInputRef = useRef(null);
@@ -41,14 +43,14 @@ export default function ClientSettingsPage() {
       return updateProfilePicture(formData);
     },
     onSuccess: (newUrl) => {
-      toast.success("Profile photo updated!");
+      toast.success(t("client:settings.photoUpdatedToast"));
       queryClient.invalidateQueries(["user-profile"]);
       if (typeof newUrl === "string") {
         updateUser({ profilePicture: newUrl });
       }
     },
     onError: (error) => {
-      toast.error("Failed to upload photo", {
+      toast.error(t("common:error"), {
         description: error?.response?.data?.message || "Please select a valid image.",
       });
     },
@@ -74,23 +76,23 @@ export default function ClientSettingsPage() {
     activeUser?.name ||
     `${activeUser?.firstName || ""} ${activeUser?.lastName || ""}`.trim() ||
     activeUser?.email?.split("@")[0] ||
-    "User";
+    t("common:roles.client");
 
   return (
     <div className="space-y-6 max-w-2xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Account Settings</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("client:settings.title")}</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Manage your personal profile, photo, and security preferences.
+          {t("client:settings.subtitle")}
         </p>
       </div>
 
       {/* Profile Card */}
       <Card className="border-border/70 shadow-sm bg-card">
         <CardHeader className="pb-4">
-          <CardTitle className="text-base font-bold">Personal Profile</CardTitle>
+          <CardTitle className="text-base font-bold">{t("client:settings.personalDetails")}</CardTitle>
           <CardDescription className="text-xs">
-            Your identity visible across Alanis platform bookings.
+            {t("client:settings.subtitle")}
           </CardDescription>
         </CardHeader>
 
@@ -113,7 +115,7 @@ export default function ClientSettingsPage() {
                 title="Change Photo"
               >
                 <Camera className="h-5 w-5" />
-                <span className="text-[10px] font-medium mt-0.5">Edit</span>
+                <span className="text-[10px] font-medium mt-0.5">{t("common:edit")}</span>
               </button>
 
               <input
@@ -135,7 +137,7 @@ export default function ClientSettingsPage() {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={avatarMutation.isPending}
               >
-                {avatarMutation.isPending ? "Uploading..." : "Upload New Photo"}
+                {avatarMutation.isPending ? t("common:loading") : t("client:settings.uploadPhoto")}
               </Button>
             </div>
           </div>
@@ -145,7 +147,7 @@ export default function ClientSettingsPage() {
             <div className="p-3 rounded-xl bg-muted/20 border border-border/40 space-y-1">
               <span className="text-muted-foreground flex items-center gap-1.5">
                 <Mail className="h-3.5 w-3.5 text-primary" />
-                Email Address
+                {t("client:settings.email")}
               </span>
               <span className="font-semibold text-foreground block">{activeUser?.email}</span>
             </div>
@@ -153,29 +155,29 @@ export default function ClientSettingsPage() {
             <div className="p-3 rounded-xl bg-muted/20 border border-border/40 space-y-1">
               <span className="text-muted-foreground flex items-center gap-1.5">
                 <Phone className="h-3.5 w-3.5 text-primary" />
-                Mobile Phone
+                {t("client:settings.phone")}
               </span>
               <span className="font-semibold text-foreground block">
-                {activeUser?.phoneNumber || activeUser?.phone || "Not specified"}
+                {activeUser?.phoneNumber || activeUser?.phone || "-"}
               </span>
             </div>
 
             <div className="p-3 rounded-xl bg-muted/20 border border-border/40 space-y-1">
               <span className="text-muted-foreground flex items-center gap-1.5">
                 <Shield className="h-3.5 w-3.5 text-primary" />
-                Account Role
+                {t("common:roles.client")}
               </span>
               <span className="font-semibold text-foreground block capitalize">
-                {activeUser?.role || "Client"}
+                {activeUser?.role || t("common:roles.client")}
               </span>
             </div>
 
             <div className="p-3 rounded-xl bg-muted/20 border border-border/40 space-y-1">
               <span className="text-muted-foreground flex items-center gap-1.5">
                 <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-                Email Verification
+                {t("client:profile.nationalIdVerified")}
               </span>
-              <span className="font-semibold text-emerald-600 block">Verified Account</span>
+              <span className="font-semibold text-emerald-600 block">{t("client:directory.verified")}</span>
             </div>
           </div>
         </CardContent>
@@ -184,16 +186,16 @@ export default function ClientSettingsPage() {
       {/* Security & Password Card */}
       <Card className="border-border/70 shadow-sm bg-card">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold">Security & Authentication</CardTitle>
+          <CardTitle className="text-base font-bold">{t("client:settings.security")}</CardTitle>
           <CardDescription className="text-xs">
-            Update your account password and security credentials.
+            {t("client:settings.changePasswordDesc")}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold text-foreground">Password</p>
+            <p className="text-xs font-semibold text-foreground">{t("client:settings.changePassword")}</p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Ensure your password is at least 8 characters with numbers and symbols.
+              {t("client:settings.changePasswordDesc")}
             </p>
           </div>
           <ChangePasswordDialog />

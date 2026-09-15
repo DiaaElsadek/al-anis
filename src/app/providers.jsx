@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/context/AuthContext";
 import { ThemeProvider, useTheme } from "@/context/ThemeContext";
+import { useTranslation } from "react-i18next";
 import { Toaster } from "sonner";
 
 const queryClient = new QueryClient({
@@ -18,10 +19,14 @@ const queryClient = new QueryClient({
 
 function ThemedToaster() {
   const { resolvedTheme } = useTheme();
+  const { i18n } = useTranslation();
+  const isRtl = i18n.language?.startsWith("ar");
+
   return (
     <Toaster
       theme={resolvedTheme}
-      position="top-right"
+      position={isRtl ? "top-left" : "top-right"}
+      dir={isRtl ? "rtl" : "ltr"}
       richColors
       closeButton
       duration={4000}
@@ -39,7 +44,7 @@ function ThemedToaster() {
  * 1. QueryClientProvider (react-query)
  * 2. ThemeProvider (dark / light / system theme context)
  * 3. AuthProvider (auth context)
- * 4. ThemedToaster (sonner with dynamic theme syncing)
+ * 4. ThemedToaster (sonner with dynamic theme syncing & RTL position mirroring)
  */
 export default function AppProviders({ children }) {
   return (

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   Calendar as CalendarIcon,
   Plus,
@@ -18,6 +19,7 @@ import {
   setBulkAvailability,
 } from "@/api/provider";
 import { ShiftType, ShiftTypeLabels } from "@/lib/constants";
+import { formatLocalizedDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,17 +28,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 
-const DAYS_OF_WEEK = [
-  { day: 0, label: "Sunday" },
-  { day: 1, label: "Monday" },
-  { day: 2, label: "Tuesday" },
-  { day: 3, label: "Wednesday" },
-  { day: 4, label: "Thursday" },
-  { day: 5, label: "Friday" },
-  { day: 6, label: "Saturday" },
-];
-
 export default function ProviderAvailabilityPage() {
+  const { t, i18n } = useTranslation(["provider", "common"]);
   const queryClient = useQueryClient();
   const [singleModalOpen, setSingleModalOpen] = useState(false);
   const [bulkModalOpen, setBulkModalOpen] = useState(false);
@@ -120,22 +113,24 @@ export default function ProviderAvailabilityPage() {
     },
   });
 
-  const toggleExcludeDay = (dayNum) => {
-    if (excludedDays.includes(dayNum)) {
-      setExcludedDays(excludedDays.filter((d) => d !== dayNum));
-    } else {
-      setExcludedDays([...excludedDays, dayNum]);
-    }
-  };
+  const DAYS_OF_WEEK = [
+    { day: 0, label: t("common:days.sunday") },
+    { day: 1, label: t("common:days.monday") },
+    { day: 2, label: t("common:days.tuesday") },
+    { day: 3, label: t("common:days.wednesday") },
+    { day: 4, label: t("common:days.thursday") },
+    { day: 5, label: t("common:days.friday") },
+    { day: 6, label: t("common:days.saturday") },
+  ];
 
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Shift Availability Calendar</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("provider:availability.title")}</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Configure when you are open to take morning, evening, or night shifts.
+            {t("provider:availability.subtitle")}
           </p>
         </div>
 
@@ -145,7 +140,7 @@ export default function ProviderAvailabilityPage() {
             <DialogTrigger asChild>
               <Button variant="outline" size="sm" className="text-xs font-semibold">
                 <CalendarRange className="h-4 w-4 me-1.5 text-primary" />
-                Bulk Schedule
+                {t("provider:availability.bulkGenerate")}
               </Button>
             </DialogTrigger>
 
@@ -156,9 +151,9 @@ export default function ProviderAvailabilityPage() {
                     <Sparkles className="h-5 w-5" />
                   </div>
                   <div>
-                    <DialogTitle>Bulk Shift Availability Setup</DialogTitle>
+                    <DialogTitle>{t("provider:availability.bulkGenerate")}</DialogTitle>
                     <DialogDescription className="text-xs mt-0.5">
-                      Generate open shifts across a multi-week date range.
+                      {t("provider:availability.subtitle")}
                     </DialogDescription>
                   </div>
                 </div>
@@ -167,7 +162,7 @@ export default function ProviderAvailabilityPage() {
               <div className="space-y-4 pt-2">
                 <div className="grid grid-cols-2 gap-3">
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">Start Date</Label>
+                    <Label className="text-xs font-semibold">{t("common:dates.from")}</Label>
                     <Input
                       type="date"
                       value={bulkStartDate}
@@ -177,7 +172,7 @@ export default function ProviderAvailabilityPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label className="text-xs font-semibold">End Date</Label>
+                    <Label className="text-xs font-semibold">{t("common:dates.to")}</Label>
                     <Input
                       type="date"
                       value={bulkEndDate}
@@ -188,21 +183,21 @@ export default function ProviderAvailabilityPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">Available Shift</Label>
+                  <Label className="text-xs font-semibold">{t("provider:availability.shiftsOffered")}</Label>
                   <select
                     value={bulkShift}
                     onChange={(e) => setBulkShift(e.target.value)}
                     className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
                   >
-                    <option value={ShiftType.MORNING}>Morning Shift (8 AM - 4 PM)</option>
-                    <option value={ShiftType.EVENING}>Evening Shift (4 PM - 12 AM)</option>
-                    <option value={ShiftType.NIGHT}>Night Shift (12 AM - 8 AM)</option>
+                    <option value={ShiftType.MORNING}>{t("common:shifts.morning")}</option>
+                    <option value={ShiftType.EVENING}>{t("common:shifts.evening")}</option>
+                    <option value={ShiftType.NIGHT}>{t("common:shifts.night")}</option>
                   </select>
                 </div>
 
                 {/* Exclude days */}
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">Days Off / Excluded Days</Label>
+                  <Label className="text-xs font-semibold">{t("provider:availability.excludeDays")}</Label>
                   <div className="grid grid-cols-2 gap-2 p-3 bg-muted/20 rounded-lg border border-border/50">
                     {DAYS_OF_WEEK.map((d) => (
                       <label
@@ -224,13 +219,13 @@ export default function ProviderAvailabilityPage() {
                     variant="outline"
                     onClick={() => setBulkModalOpen(false)}
                   >
-                    Cancel
+                    {t("common:cancel")}
                   </Button>
                   <Button
                     onClick={() => bulkMutation.mutate()}
                     disabled={bulkMutation.isPending}
                   >
-                    {bulkMutation.isPending ? "Generating..." : "Apply Bulk Schedule"}
+                    {bulkMutation.isPending ? t("common:loading") : t("common:save")}
                   </Button>
                 </div>
               </div>
@@ -242,21 +237,21 @@ export default function ProviderAvailabilityPage() {
             <DialogTrigger asChild>
               <Button size="sm" className="text-xs font-semibold shadow-sm">
                 <Plus className="h-4 w-4 me-1.5" />
-                Add Single Shift
+                {t("provider:availability.addShift")}
               </Button>
             </DialogTrigger>
 
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Add Single Day Shift</DialogTitle>
+                <DialogTitle>{t("provider:availability.modalTitle")}</DialogTitle>
                 <DialogDescription className="text-xs mt-0.5">
-                  Specify an individual shift you want to mark available.
+                  {t("provider:availability.subtitle")}
                 </DialogDescription>
               </DialogHeader>
 
               <div className="space-y-4 pt-2">
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">Date</Label>
+                  <Label className="text-xs font-semibold">{t("provider:availability.selectDate")}</Label>
                   <Input
                     type="date"
                     value={singleDate}
@@ -266,22 +261,22 @@ export default function ProviderAvailabilityPage() {
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">Shift Schedule</Label>
+                  <Label className="text-xs font-semibold">{t("provider:availability.selectShift")}</Label>
                   <select
                     value={singleShift}
                     onChange={(e) => setSingleShift(e.target.value)}
                     className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
                   >
-                    <option value={ShiftType.MORNING}>Morning (8 AM - 4 PM)</option>
-                    <option value={ShiftType.EVENING}>Evening (4 PM - 12 AM)</option>
-                    <option value={ShiftType.NIGHT}>Night (12 AM - 8 AM)</option>
+                    <option value={ShiftType.MORNING}>{t("common:shifts.morning")}</option>
+                    <option value={ShiftType.EVENING}>{t("common:shifts.evening")}</option>
+                    <option value={ShiftType.NIGHT}>{t("common:shifts.night")}</option>
                   </select>
                 </div>
 
                 <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold">Notes (Optional)</Label>
+                  <Label className="text-xs font-semibold">{t("common:edit")}</Label>
                   <Input
-                    placeholder="e.g. Can do pediatric care"
+                    placeholder="Notes..."
                     value={singleNotes}
                     onChange={(e) => setSingleNotes(e.target.value)}
                   />
@@ -292,13 +287,13 @@ export default function ProviderAvailabilityPage() {
                     variant="outline"
                     onClick={() => setSingleModalOpen(false)}
                   >
-                    Cancel
+                    {t("common:cancel")}
                   </Button>
                   <Button
                     onClick={() => singleMutation.mutate()}
                     disabled={singleMutation.isPending}
                   >
-                    {singleMutation.isPending ? "Adding..." : "Save Shift"}
+                    {singleMutation.isPending ? t("common:loading") : t("provider:availability.saveShift")}
                   </Button>
                 </div>
               </div>
@@ -310,9 +305,9 @@ export default function ProviderAvailabilityPage() {
       {/* Availability List Table / Grid */}
       <Card className="border-border/70 shadow-sm bg-card">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold">Configured Open Shifts ({availabilityList.length})</CardTitle>
+          <CardTitle className="text-base font-bold">{t("provider:availability.openSlots")} ({availabilityList.length})</CardTitle>
           <CardDescription className="text-xs">
-            Clients can immediately book you for these confirmed shifts.
+            {t("provider:availability.subtitle")}
           </CardDescription>
         </CardHeader>
 
@@ -326,14 +321,14 @@ export default function ProviderAvailabilityPage() {
           ) : availabilityList.length === 0 ? (
             <div className="text-center py-12 text-xs text-muted-foreground space-y-3">
               <CalendarIcon className="h-10 w-10 text-muted-foreground/40 mx-auto" />
-              <p>No availability dates configured on your calendar yet.</p>
+              <p>{t("provider:availability.noSlots")}</p>
               <Button
                 variant="outline"
                 size="sm"
                 className="text-xs"
                 onClick={() => setBulkModalOpen(true)}
               >
-                Schedule Next 2 Weeks
+                {t("provider:availability.bulkGenerate")}
               </Button>
             </div>
           ) : (
@@ -353,16 +348,11 @@ export default function ProviderAvailabilityPage() {
                       </div>
                       <div>
                         <span className="font-bold text-foreground">
-                          {new Date(entry.date).toLocaleDateString("en-US", {
-                            weekday: "short",
-                            month: "short",
-                            day: "numeric",
-                            year: "numeric",
-                          })}
+                          {formatLocalizedDate(entry.date, "EEEE, dd/MM/yyyy", i18n.language)}
                         </span>
                         <div className="flex items-center gap-2 text-muted-foreground mt-0.5">
                           <span className="capitalize font-semibold text-teal-700">
-                            {shiftName} Shift
+                            {shiftName}
                           </span>
                           {entry.notes && (
                             <>
@@ -376,7 +366,7 @@ export default function ProviderAvailabilityPage() {
 
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="text-[10px] bg-emerald-500/10 text-emerald-700 border-emerald-500/20">
-                        Open for Booking
+                        {t("provider:dashboard.available")}
                       </Badge>
                       <Button
                         variant="ghost"
@@ -384,7 +374,7 @@ export default function ProviderAvailabilityPage() {
                         className="h-7 w-7 text-muted-foreground hover:text-destructive"
                         onClick={() => deleteMutation.mutate(entry.id)}
                         disabled={deleteMutation.isPending}
-                        title="Remove Shift"
+                        title={t("provider:availability.deleteShift")}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>

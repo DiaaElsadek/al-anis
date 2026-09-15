@@ -4,6 +4,7 @@ import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   User,
   Briefcase,
@@ -17,7 +18,6 @@ import {
   Upload,
   Check,
   AlertCircle,
-  ArrowRight,
   ShieldCheck,
   Sparkles,
   Eye,
@@ -27,6 +27,8 @@ import {
 import { registerUserSchema, registerProviderSchema } from "@/lib/validators";
 import { useAuth } from "@/hooks/useAuth";
 import { getCategories } from "@/api/category";
+import { getLocalizedCategoryName } from "@/lib/utils";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -45,6 +47,7 @@ const DEFAULT_CATEGORIES = [
 ];
 
 export default function RegisterPage() {
+  const { t, i18n } = useTranslation(["auth", "common"]);
   const navigate = useNavigate();
   const { registerUser, registerServiceProvider } = useAuth();
   const [activeTab, setActiveTab] = useState("client");
@@ -96,8 +99,8 @@ export default function RegisterPage() {
       return registerUser(formData);
     },
     onSuccess: (result, variables) => {
-      toast.success("Account created successfully!", {
-        description: "Please enter the verification code sent to your email.",
+      toast.success(t("auth:register.successClient"), {
+        description: t("auth:otp.subtitle"),
       });
       const userId = result?.data?.id || result?.id || result?.userId;
       navigate("/verify-otp", {
@@ -109,8 +112,8 @@ export default function RegisterPage() {
         error?.response?.data?.message ||
         error?.response?.data?.errors?.join(", ") ||
         error?.message ||
-        "Registration failed. Please check your data.";
-      toast.error("Registration error", {
+        t("common:error");
+      toast.error(t("common:error"), {
         id: "register-client-error",
         description: msg,
       });
@@ -187,17 +190,15 @@ export default function RegisterPage() {
         userId: appData?.userId,
         email: variables.email,
       });
-      toast.success("Application submitted successfully!", {
-        description: "Our review team will verify your credentials within 24-48 hours.",
-      });
+      toast.success(t("auth:register.successProvider"));
     },
     onError: (error) => {
       const msg =
         error?.response?.data?.message ||
         error?.response?.data?.errors?.join(", ") ||
         error?.message ||
-        "Provider application failed.";
-      toast.error("Application error", {
+        t("common:error");
+      toast.error(t("common:error"), {
         id: "register-provider-error",
         description: msg,
       });
@@ -216,35 +217,34 @@ export default function RegisterPage() {
           <FileCheck className="h-8 w-8" />
         </div>
         <CardTitle className="text-2xl font-bold text-foreground">
-          Application Received!
+          {t("auth:register.applicationReceivedTitle")}
         </CardTitle>
         <CardDescription className="text-base text-muted-foreground mt-2 max-w-md mx-auto">
-          Thank you for joining the Alanis network of verified professionals.
+          {t("auth:register.applicationReceivedDesc")}
         </CardDescription>
 
         <div className="my-6 p-4 rounded-xl bg-muted/50 border border-border text-start space-y-2 max-w-md mx-auto">
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Application Reference</span>
+            <span>{t("auth:register.applicationRef")}</span>
             <span className="font-mono font-bold text-foreground">
               {applicationSubmitted.applicationId}
             </span>
           </div>
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Email</span>
+            <span>{t("auth:register.email")}</span>
             <span className="font-medium text-foreground">{applicationSubmitted.email}</span>
           </div>
           <div className="flex justify-between text-xs text-muted-foreground">
-            <span>Initial Status</span>
+            <span>{t("auth:register.initialStatus")}</span>
             <span className="inline-flex items-center gap-1 font-semibold text-amber-600">
               <span className="h-2 w-2 rounded-full bg-amber-500" />
-              Pending Admin Review
+              {t("auth:register.pendingAdminReview")}
             </span>
           </div>
         </div>
 
         <p className="text-xs text-muted-foreground max-w-md mx-auto mb-6">
-          You will receive an email once our compliance team has verified your National ID and credentials.
-          In the meantime, you can verify your email OTP.
+          {t("auth:register.auditNotice")}
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
@@ -260,8 +260,8 @@ export default function RegisterPage() {
                 })
               }
             >
-              Verify Email with OTP
-              <ArrowRight className="h-4 w-4 ms-2" />
+              <span>{t("auth:register.verifyEmailOtp")}</span>
+              <DirectionalIcon className="h-4 w-4 ms-2" />
             </Button>
           )}
           <Button
@@ -269,7 +269,7 @@ export default function RegisterPage() {
             className="w-full sm:w-auto"
             onClick={() => navigate("/login")}
           >
-            Back to Sign In
+            {t("auth:register.backToSignIn")}
           </Button>
         </div>
       </Card>
@@ -281,14 +281,14 @@ export default function RegisterPage() {
       <CardHeader className="space-y-2 pb-5">
         <div className="flex items-center justify-between">
           <CardTitle className="text-2xl font-bold tracking-tight">
-            Create an Account
+            {t("auth:register.title")}
           </CardTitle>
           <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
             <Sparkles className="h-4 w-4" />
           </div>
         </div>
         <CardDescription className="text-muted-foreground text-sm">
-          Select your account type to get started with Alanis
+          {t("auth:register.subtitle")}
         </CardDescription>
 
         {/* Tab Selection */}
@@ -299,14 +299,14 @@ export default function RegisterPage() {
               className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm font-semibold text-xs sm:text-sm"
             >
               <User className="h-4 w-4 text-primary" />
-              <span>I Need Services</span>
+              <span>{t("auth:register.clientTab")}</span>
             </TabsTrigger>
             <TabsTrigger
               value="provider"
               className="flex items-center gap-2 data-[state=active]:bg-background data-[state=active]:shadow-sm font-semibold text-xs sm:text-sm"
             >
               <Briefcase className="h-4 w-4 text-emerald-600" />
-              <span>I Am a Service Provider</span>
+              <span>{t("auth:register.providerTab")}</span>
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -325,11 +325,11 @@ export default function RegisterPage() {
               {/* First Name */}
               <div className="space-y-1.5">
                 <Label htmlFor="firstName" className="text-xs font-semibold">
-                  First Name <span className="text-destructive">*</span>
+                  {t("auth:register.firstName")} <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="firstName"
-                  placeholder="e.g. Ahmed"
+                  placeholder={t("auth:register.firstNamePlaceholder")}
                   className="h-10"
                   {...clientForm.register("firstName")}
                 />
@@ -343,11 +343,11 @@ export default function RegisterPage() {
               {/* Last Name */}
               <div className="space-y-1.5">
                 <Label htmlFor="lastName" className="text-xs font-semibold">
-                  Last Name <span className="text-destructive">*</span>
+                  {t("auth:register.lastName")} <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="lastName"
-                  placeholder="e.g. Hassan"
+                  placeholder={t("auth:register.lastNamePlaceholder")}
                   className="h-10"
                   {...clientForm.register("lastName")}
                 />
@@ -363,14 +363,14 @@ export default function RegisterPage() {
               {/* Email */}
               <div className="space-y-1.5">
                 <Label htmlFor="clientEmail" className="text-xs font-semibold">
-                  Email Address <span className="text-destructive">*</span>
+                  {t("auth:register.email")} <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative">
                   <Mail className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="clientEmail"
                     type="email"
-                    placeholder="ahmed@example.com"
+                    placeholder={t("auth:register.emailPlaceholder")}
                     className="ps-9 h-10"
                     {...clientForm.register("email")}
                   />
@@ -385,13 +385,13 @@ export default function RegisterPage() {
               {/* Phone */}
               <div className="space-y-1.5">
                 <Label htmlFor="clientPhone" className="text-xs font-semibold">
-                  Egyptian Mobile Phone <span className="text-destructive">*</span>
+                  {t("auth:register.phoneNumber")} <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative">
                   <Phone className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="clientPhone"
-                    placeholder="01012345678"
+                    placeholder={t("auth:register.phoneNumberPlaceholder")}
                     className="ps-9 h-10"
                     {...clientForm.register("phoneNumber")}
                   />
@@ -408,13 +408,13 @@ export default function RegisterPage() {
               {/* Address */}
               <div className="space-y-1.5">
                 <Label htmlFor="clientAddress" className="text-xs font-semibold">
-                  Residential Address <span className="text-destructive">*</span>
+                  {t("auth:register.address")} <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative">
                   <MapPin className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="clientAddress"
-                    placeholder="Nasr City, Cairo"
+                    placeholder={t("auth:register.addressPlaceholder")}
                     className="ps-9 h-10"
                     {...clientForm.register("address")}
                   />
@@ -429,7 +429,7 @@ export default function RegisterPage() {
               {/* Date of Birth */}
               <div className="space-y-1.5">
                 <Label htmlFor="clientDob" className="text-xs font-semibold">
-                  Date of Birth <span className="text-destructive">*</span>
+                  {t("auth:register.dateOfBirth")} <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative">
                   <Calendar className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -452,7 +452,7 @@ export default function RegisterPage() {
               {/* Password */}
               <div className="space-y-1.5">
                 <Label htmlFor="clientPass" className="text-xs font-semibold">
-                  Password <span className="text-destructive">*</span>
+                  {t("auth:register.password")} <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative">
                   <Lock className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -482,7 +482,7 @@ export default function RegisterPage() {
               {/* Confirm Password */}
               <div className="space-y-1.5">
                 <Label htmlFor="clientConfirmPass" className="text-xs font-semibold">
-                  Confirm Password <span className="text-destructive">*</span>
+                  {t("auth:register.confirmPassword")} <span className="text-destructive">*</span>
                 </Label>
                 <div className="relative">
                   <Lock className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -510,7 +510,7 @@ export default function RegisterPage() {
                 render={({ field, fieldState }) => (
                   <FileUploadField
                     name="profilePicture"
-                    label="Profile Photo (Optional)"
+                    label={t("auth:register.profilePicture")}
                     accept="image/*"
                     value={field.value}
                     onChange={field.onChange}
@@ -529,12 +529,12 @@ export default function RegisterPage() {
               {clientMutation.isPending ? (
                 <div className="flex items-center gap-2">
                   <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
-                  <span>Creating your account...</span>
+                  <span>{t("auth:register.creatingAccount")}</span>
                 </div>
               ) : (
                 <div className="flex items-center justify-center gap-2">
-                  <span>Register as Client</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <span>{t("auth:register.submitClient")}</span>
+                  <DirectionalIcon className="h-4 w-4" />
                 </div>
               )}
             </Button>
@@ -554,18 +554,18 @@ export default function RegisterPage() {
               <div className="flex items-center gap-2 pb-1 border-b border-border/60">
                 <User className="h-4 w-4 text-primary" />
                 <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                  1. Personal & Contact Details
+                  {t("auth:register.section1")}
                 </h3>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="pFirstName" className="text-xs font-semibold">
-                    First Name <span className="text-destructive">*</span>
+                    {t("auth:register.firstName")} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="pFirstName"
-                    placeholder="e.g. Mahmoud"
+                    placeholder={t("auth:register.firstNamePlaceholder")}
                     className="h-10"
                     {...providerForm.register("firstName")}
                   />
@@ -578,11 +578,11 @@ export default function RegisterPage() {
 
                 <div className="space-y-1.5">
                   <Label htmlFor="pLastName" className="text-xs font-semibold">
-                    Last Name <span className="text-destructive">*</span>
+                    {t("auth:register.lastName")} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="pLastName"
-                    placeholder="e.g. El-Sayed"
+                    placeholder={t("auth:register.lastNamePlaceholder")}
                     className="h-10"
                     {...providerForm.register("lastName")}
                   />
@@ -597,14 +597,14 @@ export default function RegisterPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="pEmail" className="text-xs font-semibold">
-                    Email Address <span className="text-destructive">*</span>
+                    {t("auth:register.email")} <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <Mail className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="pEmail"
                       type="email"
-                      placeholder="mahmoud@example.com"
+                      placeholder={t("auth:register.emailPlaceholder")}
                       className="ps-9 h-10"
                       {...providerForm.register("email")}
                     />
@@ -618,13 +618,13 @@ export default function RegisterPage() {
 
                 <div className="space-y-1.5">
                   <Label htmlFor="pPhone" className="text-xs font-semibold">
-                    Mobile Phone <span className="text-destructive">*</span>
+                    {t("auth:register.phoneNumber")} <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <Phone className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="pPhone"
-                      placeholder="01112345678"
+                      placeholder={t("auth:register.phoneNumberPlaceholder")}
                       className="ps-9 h-10"
                       {...providerForm.register("phoneNumber")}
                     />
@@ -640,13 +640,13 @@ export default function RegisterPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="pAddress" className="text-xs font-semibold">
-                    Service Area / Address <span className="text-destructive">*</span>
+                    {t("auth:register.address")} <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <MapPin className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="pAddress"
-                      placeholder="Maadi, Cairo"
+                      placeholder={t("auth:register.addressPlaceholder")}
                       className="ps-9 h-10"
                       {...providerForm.register("address")}
                     />
@@ -660,7 +660,7 @@ export default function RegisterPage() {
 
                 <div className="space-y-1.5">
                   <Label htmlFor="pDob" className="text-xs font-semibold">
-                    Date of Birth <span className="text-destructive">*</span>
+                    {t("auth:register.dateOfBirth")} <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <Calendar className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -682,7 +682,7 @@ export default function RegisterPage() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1.5">
                   <Label htmlFor="pPass" className="text-xs font-semibold">
-                    Password <span className="text-destructive">*</span>
+                    {t("auth:register.password")} <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <Lock className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -711,7 +711,7 @@ export default function RegisterPage() {
 
                 <div className="space-y-1.5">
                   <Label htmlFor="pConfirmPass" className="text-xs font-semibold">
-                    Confirm Password <span className="text-destructive">*</span>
+                    {t("auth:register.confirmPassword")} <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <Lock className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -737,7 +737,7 @@ export default function RegisterPage() {
               <div className="flex items-center gap-2 pb-1 border-b border-border/60">
                 <Briefcase className="h-4 w-4 text-emerald-600" />
                 <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                  2. Professional Background & Rates
+                  {t("auth:register.section2")}
                 </h3>
               </div>
 
@@ -745,13 +745,13 @@ export default function RegisterPage() {
                 {/* National ID */}
                 <div className="space-y-1.5">
                   <Label htmlFor="pNationalId" className="text-xs font-semibold">
-                    14-Digit Egyptian National ID <span className="text-destructive">*</span>
+                    {t("auth:register.nationalId")} <span className="text-destructive">*</span>
                   </Label>
                   <div className="relative">
                     <CreditCard className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
                     <Input
                       id="pNationalId"
-                      placeholder="29801011234567"
+                      placeholder={t("auth:register.nationalIdPlaceholder")}
                       maxLength={14}
                       className="ps-9 h-10 font-mono"
                       {...providerForm.register("nationalId")}
@@ -767,7 +767,7 @@ export default function RegisterPage() {
                 {/* Hourly / Base Rate */}
                 <div className="space-y-1.5">
                   <Label htmlFor="pHourlyRate" className="text-xs font-semibold">
-                    Base Shift Hourly Rate (EGP) <span className="text-destructive">*</span>
+                    {t("auth:register.hourlyRate")} <span className="text-destructive">*</span>
                   </Label>
                   <Input
                     id="pHourlyRate"
@@ -789,7 +789,7 @@ export default function RegisterPage() {
               {/* Service Categories Multi-select */}
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">
-                  Select Your Specialties / Categories <span className="text-destructive">*</span>
+                  {t("auth:register.categories")} <span className="text-destructive">*</span>
                 </Label>
                 <Controller
                   control={providerForm.control}
@@ -828,7 +828,7 @@ export default function RegisterPage() {
                               >
                                 {isChecked && <Check className="h-3 w-3" />}
                               </div>
-                              <span className="flex-1">{cat.nameEn || cat.name}</span>
+                              <span className="flex-1">{getLocalizedCategoryName(cat, i18n.language)}</span>
                             </button>
                           );
                         })}
@@ -846,7 +846,7 @@ export default function RegisterPage() {
               {/* Experience */}
               <div className="space-y-1.5">
                 <Label htmlFor="pExperience" className="text-xs font-semibold">
-                  Years & Summary of Experience <span className="text-destructive">*</span>
+                  {t("auth:register.experienceYears")} <span className="text-destructive">*</span>
                 </Label>
                 <Input
                   id="pExperience"
@@ -864,12 +864,12 @@ export default function RegisterPage() {
               {/* Bio */}
               <div className="space-y-1.5">
                 <Label htmlFor="pBio" className="text-xs font-semibold">
-                  Professional Bio (Visible to clients) <span className="text-destructive">*</span>
+                  {t("auth:register.bio")} <span className="text-destructive">*</span>
                 </Label>
                 <Textarea
                   id="pBio"
                   rows={3}
-                  placeholder="Introduce yourself, your care philosophy, and specific skills..."
+                  placeholder={t("auth:register.bioPlaceholder")}
                   className="resize-none"
                   {...providerForm.register("bio")}
                 />
@@ -886,7 +886,7 @@ export default function RegisterPage() {
               <div className="flex items-center gap-2 pb-1 border-b border-border/60">
                 <ShieldCheck className="h-4 w-4 text-cyan-600" />
                 <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-                  3. Verification Documents (Audit & Safety)
+                  {t("auth:register.section3")}
                 </h3>
               </div>
 
@@ -898,7 +898,7 @@ export default function RegisterPage() {
                   render={({ field, fieldState }) => (
                     <FileUploadField
                       name="idDocument"
-                      label="National ID Card"
+                      label={t("auth:register.documents.idDocument")}
                       required
                       accept=".pdf,.jpg,.jpeg,.png"
                       value={field.value}
@@ -915,7 +915,7 @@ export default function RegisterPage() {
                   render={({ field, fieldState }) => (
                     <FileUploadField
                       name="certificate"
-                      label="Diploma / Certificate"
+                      label={t("auth:register.documents.certificate")}
                       accept=".pdf,.jpg,.jpeg,.png"
                       value={field.value}
                       onChange={field.onChange}
@@ -931,7 +931,7 @@ export default function RegisterPage() {
                   render={({ field, fieldState }) => (
                     <FileUploadField
                       name="cv"
-                      label="Curriculum Vitae (CV)"
+                      label={t("auth:register.documents.cv")}
                       accept=".pdf,.doc,.docx"
                       value={field.value}
                       onChange={field.onChange}
@@ -951,12 +951,12 @@ export default function RegisterPage() {
               {providerMutation.isPending ? (
                 <div className="flex items-center gap-2">
                   <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                  <span>Submitting provider application...</span>
+                  <span>{t("auth:register.submitting")}</span>
                 </div>
               ) : (
                 <div className="flex items-center justify-center gap-2">
-                  <span>Submit Provider Application</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <span>{t("auth:register.submitProvider")}</span>
+                  <DirectionalIcon className="h-4 w-4" />
                 </div>
               )}
             </Button>
@@ -966,12 +966,12 @@ export default function RegisterPage() {
 
       <CardFooter className="pt-2 pb-6 flex justify-center border-t border-border/40">
         <p className="text-sm text-muted-foreground text-center">
-          Already have an account?{" "}
+          {t("auth:register.alreadyHaveAccount")}{" "}
           <Link
             to="/login"
             className="text-primary font-semibold hover:underline transition-colors"
           >
-            Sign in
+            {t("auth:register.signIn")}
           </Link>
         </p>
       </CardFooter>

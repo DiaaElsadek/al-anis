@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   Clock,
   CheckCircle2,
@@ -9,18 +10,19 @@ import {
   RefreshCw,
   FileCheck,
   ShieldAlert,
-  ArrowRight,
   LogOut,
 } from "lucide-react";
 
 import { getApplicationStatus } from "@/api/provider";
 import { refreshToken as apiRefreshToken } from "@/api/account";
 import { useAuth } from "@/hooks/useAuth";
+import { formatLocalizedDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export default function ProviderPendingPage() {
+  const { t, i18n } = useTranslation(["provider", "common"]);
   const navigate = useNavigate();
   const { logout, user, refreshToken, setAuth } = useAuth();
 
@@ -43,16 +45,14 @@ export default function ProviderPendingPage() {
       return res?.data || res;
     },
     onSuccess: (tokens) => {
-      toast.success("Role privileges updated!", {
-        description: "Welcome to your Provider Dashboard.",
-      });
+      toast.success(t("common:success"));
       if (tokens?.accessToken) {
         setAuth({ ...user, role: "ServiceProvider", providerStatus: 1 }, tokens);
         navigate("/provider/dashboard", { replace: true });
       }
     },
     onError: (error) => {
-      toast.error("Session refresh failed", {
+      toast.error(t("common:error"), {
         description: "Please log out and sign back in to activate your provider access.",
       });
     },
@@ -111,18 +111,18 @@ export default function ProviderPendingPage() {
 
           <CardTitle className="text-2xl font-bold">
             {isApproved
-              ? "Application Approved!"
+              ? t("common:status.approved")
               : isRejected
-              ? "Application Not Approved"
-              : "Application Under Review"}
+              ? t("provider:pending.rejectedNotice")
+              : t("provider:pending.title")}
           </CardTitle>
 
           <CardDescription className="text-xs text-muted-foreground mt-1 max-w-sm mx-auto">
             {isApproved
-              ? "Congratulations! Your background credentials have been verified by Alanis compliance."
+              ? t("provider:pending.step3Desc")
               : isRejected
-              ? "Our compliance team could not approve your application at this time."
-              : "Our compliance team is auditing your National ID, certificates, and background."}
+              ? t("provider:pending.rejectedNotice")
+              : t("provider:pending.subtitle")}
           </CardDescription>
         </CardHeader>
 
@@ -131,14 +131,14 @@ export default function ProviderPendingPage() {
           <div className="p-4 rounded-xl bg-muted/30 border border-border/60 text-start text-xs space-y-2">
             {appStatus?.applicationId && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Application ID</span>
+                <span className="text-muted-foreground">ID</span>
                 <span className="font-mono font-semibold text-foreground">
                   {appStatus.applicationId}
                 </span>
               </div>
             )}
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Current Status</span>
+              <span className="text-muted-foreground">{t("provider:pending.status")}</span>
               <span
                 className={`font-semibold capitalize ${
                   isApproved
@@ -148,15 +148,15 @@ export default function ProviderPendingPage() {
                     : "text-amber-600"
                 }`}
               >
-                {appStatus?.statusText || (isApproved ? "Approved" : isRejected ? "Rejected" : "Pending Audit")}
+                {appStatus?.statusText || (isApproved ? t("common:status.approved") : isRejected ? t("common:status.rejected") : t("common:status.pending"))}
               </span>
             </div>
 
             {appStatus?.reviewedAt && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Reviewed On</span>
+                <span className="text-muted-foreground">{t("provider:pending.submittedAt")}</span>
                 <span className="text-foreground">
-                  {new Date(appStatus.reviewedAt).toLocaleDateString()}
+                  {formatLocalizedDate(appStatus.reviewedAt, "dd/MM/yyyy", i18n.language)}
                 </span>
               </div>
             )}
@@ -164,7 +164,7 @@ export default function ProviderPendingPage() {
             {isRejected && appStatus?.rejectionReason && (
               <div className="pt-2 border-t border-border/40">
                 <span className="font-semibold text-destructive block mb-0.5">
-                  Reason provided:
+                  {t("provider:pending.rejectedReason")}
                 </span>
                 <p className="text-foreground/90 bg-destructive/5 p-2 rounded border border-destructive/20">
                   {appStatus.rejectionReason}
@@ -176,16 +176,13 @@ export default function ProviderPendingPage() {
           {/* Action guidance */}
           {isApproved && (
             <div className="p-3 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-xs text-emerald-800 text-start space-y-1">
-              <p className="font-semibold">Action Required:</p>
-              <p>
-                Click below to refresh your account session with active service provider privileges and access your dashboard.
-              </p>
+              <p className="font-semibold">{t("provider:pending.upgradeAccess")}</p>
             </div>
           )}
 
           {isPending && (
             <p className="text-[11px] text-muted-foreground">
-              Reviews typically take between 24 to 48 business hours. This page will automatically update once our team finishes your audit.
+              {t("provider:pending.step2Desc")}
             </p>
           )}
         </CardContent>
@@ -198,7 +195,7 @@ export default function ProviderPendingPage() {
               disabled={refreshMutation.isPending}
             >
               <CheckCircle2 className="h-4 w-4 me-2" />
-              {refreshMutation.isPending ? "Activating..." : "Access Provider Dashboard"}
+              {refreshMutation.isPending ? t("common:loading") : t("provider:pending.upgradeAccess")}
             </Button>
           ) : (
             <Button
@@ -211,7 +208,7 @@ export default function ProviderPendingPage() {
               <RefreshCw
                 className={`h-3.5 w-3.5 me-1.5 ${isFetching ? "animate-spin" : ""}`}
               />
-              Check Status Now
+              {t("provider:pending.refreshButton")}
             </Button>
           )}
 
@@ -222,7 +219,7 @@ export default function ProviderPendingPage() {
             onClick={logout}
           >
             <LogOut className="h-3.5 w-3.5 me-1.5" />
-            Sign Out
+            {t("common:nav.logout")}
           </Button>
         </CardFooter>
       </Card>

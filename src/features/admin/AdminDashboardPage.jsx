@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router-dom";
 import {
@@ -25,13 +26,14 @@ import {
 } from "recharts";
 
 import { getDashboardStats, getRecentBookings } from "@/api/admin";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatLocalizedDate } from "@/lib/utils";
 import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import StatusBadge from "@/components/shared/StatusBadge";
+import DirectionalIcon from "@/components/shared/DirectionalIcon";
 
 // Sample monthly trend data for visual richness
 const REVENUE_DATA = [
@@ -44,6 +46,7 @@ const REVENUE_DATA = [
 ];
 
 export default function AdminDashboardPage() {
+  const { t, i18n } = useTranslation(["admin", "common"]);
   const { resolvedTheme } = useTheme();
   const isDark = resolvedTheme === "dark";
 
@@ -73,32 +76,32 @@ export default function AdminDashboardPage() {
 
   const statItems = [
     {
-      title: "Total Revenue",
-      value: formatPrice(stats?.totalEarnings || 0),
-      desc: "Gross platform escrow volume",
+      title: t("admin:dashboard.totalRevenue"),
+      value: formatPrice(stats?.totalEarnings || 0, i18n.language),
+      desc: t("admin:dashboard.revenueDesc"),
       icon: DollarSign,
       color: "text-emerald-600",
       bg: "bg-emerald-500/10",
     },
     {
-      title: "Pending Applications",
+      title: t("admin:dashboard.pendingApplications"),
       value: stats?.pendingApplications || 0,
-      desc: "Providers awaiting compliance audit",
+      desc: t("admin:dashboard.applicationsDesc"),
       icon: FileCheck,
       color: "text-amber-600",
       bg: "bg-amber-500/10",
       link: "/admin/applications",
     },
     {
-      title: "Total Service Providers",
+      title: t("admin:dashboard.totalProviders"),
       value: stats?.totalServiceProviders || 0,
-      desc: "Audited & active healthcare/care aides",
+      desc: t("admin:dashboard.providersDesc"),
       icon: Briefcase,
       color: "text-primary",
       bg: "bg-primary/10",
     },
     {
-      title: "Completed Shifts",
+      title: t("admin:dashboard.completedShifts"),
       value: `${stats?.completedServiceRequests || 0} / ${stats?.totalServiceRequests || 0}`,
       desc: `Avg. Client Rating: ${stats?.averageRating?.toFixed(1) || "4.9"} / 5`,
       icon: CheckCircle2,
@@ -112,9 +115,9 @@ export default function AdminDashboardPage() {
       {/* Top Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Platform Administration</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("admin:dashboard.title")}</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Operational dashboard, compliance queue, shift bookings, and platform revenue.
+            {t("admin:dashboard.subtitle")}
           </p>
         </div>
 
@@ -122,7 +125,7 @@ export default function AdminDashboardPage() {
           <Button asChild className="bg-amber-600 hover:bg-amber-700 text-white font-semibold text-xs">
             <Link to="/admin/applications">
               <Clock className="h-4 w-4 me-1.5" />
-              Review {stats.pendingApplications} Pending Applications
+              {t("admin:applications.tabs.pending", { count: stats.pendingApplications })}
             </Link>
           </Button>
         )}
@@ -152,7 +155,7 @@ export default function AdminDashboardPage() {
                   to={item.link}
                   className="inline-flex items-center text-[11px] font-semibold text-primary hover:underline mt-2"
                 >
-                  Process Queue <ArrowRight className="h-3 w-3 ms-1" />
+                  {t("admin:applications.reviewButton")} <DirectionalIcon icon={ArrowRight} className="h-3 w-3 ms-1" />
                 </Link>
               )}
             </CardContent>
@@ -167,9 +170,9 @@ export default function AdminDashboardPage() {
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-base font-bold">Revenue & Shift Volume Trend</CardTitle>
+                <CardTitle className="text-base font-bold">{t("admin:dashboard.revenueChartTitle")}</CardTitle>
                 <CardDescription className="text-xs">
-                  Monthly platform booking growth (EGP).
+                  {t("admin:dashboard.revenueChartDesc")}
                 </CardDescription>
               </div>
               <Badge variant="outline" className="text-xs text-emerald-600 bg-emerald-500/10 border-emerald-500/20">
@@ -203,7 +206,7 @@ export default function AdminDashboardPage() {
                     stroke={isDark ? "#94a3b8" : "#64748b"}
                   />
                   <Tooltip
-                    formatter={(val) => [`${val.toLocaleString()} EGP`, "Volume"]}
+                    formatter={(val) => [formatPrice(val, i18n.language), t("admin:dashboard.totalRevenue")]}
                     contentStyle={{
                       backgroundColor: isDark ? "#0f172a" : "#ffffff",
                       borderColor: isDark ? "rgba(255, 255, 255, 0.15)" : "#e2e8f0",
@@ -232,9 +235,9 @@ export default function AdminDashboardPage() {
         {/* Requests Status Bar Chart */}
         <Card className="border-border/70 shadow-sm">
           <CardHeader className="pb-2">
-            <CardTitle className="text-base font-bold">Shift Fulfilment</CardTitle>
+            <CardTitle className="text-base font-bold">{t("admin:dashboard.shiftFulfilmentTitle")}</CardTitle>
             <CardDescription className="text-xs">
-              Operational completion ratios.
+              {t("admin:dashboard.shiftFulfilmentDesc")}
             </CardDescription>
           </CardHeader>
 
@@ -243,9 +246,9 @@ export default function AdminDashboardPage() {
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={[
-                    { name: "Total", count: stats?.totalServiceRequests || 15 },
-                    { name: "Done", count: stats?.completedServiceRequests || 12 },
-                    { name: "Pending", count: stats?.pendingApplications || 3 },
+                    { name: t("common:actions.filter"), count: stats?.totalServiceRequests || 15 },
+                    { name: t("common:status.completed"), count: stats?.completedServiceRequests || 12 },
+                    { name: t("common:status.pending"), count: stats?.pendingApplications || 3 },
                   ]}
                 >
                   <CartesianGrid
@@ -290,13 +293,13 @@ export default function AdminDashboardPage() {
       <Card className="border-border/70 shadow-sm">
         <CardHeader className="pb-3 flex flex-row items-center justify-between">
           <div>
-            <CardTitle className="text-base font-bold">Recent Platform Bookings</CardTitle>
+            <CardTitle className="text-base font-bold">{t("admin:dashboard.recentBookings")}</CardTitle>
             <CardDescription className="text-xs">
-              Real-time activity across clients and providers.
+              {t("admin:payments.subtitle")}
             </CardDescription>
           </div>
           <Button variant="outline" size="sm" className="text-xs" asChild>
-            <Link to="/admin/payments">View All Transactions</Link>
+            <Link to="/admin/payments">{t("admin:dashboard.viewAllTransactions")}</Link>
           </Button>
         </CardHeader>
 
@@ -309,19 +312,19 @@ export default function AdminDashboardPage() {
             </div>
           ) : recentBookings.length === 0 ? (
             <div className="text-center py-8 text-xs text-muted-foreground">
-              No shift bookings recorded yet.
+              {t("common:empty.noResults")}
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-xs text-start">
                 <thead>
                   <tr className="border-b border-border text-muted-foreground">
-                    <th className="py-2.5 font-semibold">Service</th>
-                    <th className="py-2.5 font-semibold">Client</th>
-                    <th className="py-2.5 font-semibold">Provider</th>
-                    <th className="py-2.5 font-semibold">Shift Date</th>
-                    <th className="py-2.5 font-semibold text-end">Amount</th>
-                    <th className="py-2.5 font-semibold text-end">Status</th>
+                    <th className="py-2.5 font-semibold text-start">{t("admin:pricing.category")}</th>
+                    <th className="py-2.5 font-semibold text-start">{t("admin:payments.client")}</th>
+                    <th className="py-2.5 font-semibold text-start">{t("admin:payments.provider")}</th>
+                    <th className="py-2.5 font-semibold text-start">{t("admin:payments.date")}</th>
+                    <th className="py-2.5 font-semibold text-end">{t("admin:payments.amount")}</th>
+                    <th className="py-2.5 font-semibold text-end">{t("admin:payments.status")}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/50">
@@ -333,13 +336,13 @@ export default function AdminDashboardPage() {
                       <td className="py-3 text-muted-foreground">{b.userName}</td>
                       <td className="py-3 text-foreground font-medium">{b.providerName}</td>
                       <td className="py-3 text-muted-foreground">
-                        {new Date(b.date).toLocaleDateString()}
+                        {formatLocalizedDate(b.date, "PP", i18n.language)}
                       </td>
                       <td className="py-3 text-end font-bold text-foreground">
-                        {formatPrice(b.amount)}
+                        {formatPrice(b.amount, i18n.language)}
                       </td>
                       <td className="py-3 text-end">
-                        <StatusBadge status={b.status} label={b.status} />
+                        <StatusBadge status={b.status} />
                       </td>
                     </tr>
                   ))}

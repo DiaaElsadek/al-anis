@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import { MapPin, Plus, Trash2, Building, AlertCircle } from "lucide-react";
 
 import { getWorkingAreas, addWorkingArea, deleteWorkingArea } from "@/api/provider";
@@ -22,6 +23,7 @@ const COMMON_GOVERNORATES = [
 ];
 
 export default function ProviderWorkingAreasPage() {
+  const { t } = useTranslation(["provider", "common"]);
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [governorate, setGovernorate] = useState("Cairo");
@@ -36,14 +38,14 @@ export default function ProviderWorkingAreasPage() {
   const addMutation = useMutation({
     mutationFn: () => addWorkingArea({ governorate, city, district }),
     onSuccess: () => {
-      toast.success("Service area added!");
+      toast.success(t("provider:workingAreas.addedToast"));
       queryClient.invalidateQueries(["provider-working-areas"]);
       setModalOpen(false);
       setCity("");
       setDistrict("");
     },
     onError: (error) => {
-      toast.error("Failed to add area", {
+      toast.error(t("common:error"), {
         description: error?.response?.data?.message || "Please check details.",
       });
     },
@@ -52,18 +54,18 @@ export default function ProviderWorkingAreasPage() {
   const deleteMutation = useMutation({
     mutationFn: (id) => deleteWorkingArea(id),
     onSuccess: () => {
-      toast.success("Service area removed.");
+      toast.success(t("provider:workingAreas.deletedToast"));
       queryClient.invalidateQueries(["provider-working-areas"]);
     },
     onError: () => {
-      toast.error("Could not remove service area.");
+      toast.error(t("common:error"));
     },
   });
 
   const handleAdd = (e) => {
     e.preventDefault();
     if (!city.trim()) {
-      toast.error("City or neighborhood name is required.");
+      toast.error(t("common:error"));
       return;
     }
     addMutation.mutate();
@@ -73,9 +75,9 @@ export default function ProviderWorkingAreasPage() {
     <div className="space-y-6 max-w-4xl mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Service Working Areas</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t("provider:workingAreas.title")}</h1>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Define the governorates, cities, and neighborhoods where you accept shifts.
+            {t("provider:workingAreas.subtitle")}
           </p>
         </div>
 
@@ -83,21 +85,21 @@ export default function ProviderWorkingAreasPage() {
           <DialogTrigger asChild>
             <Button size="sm" className="text-xs font-semibold shadow-sm">
               <Plus className="h-4 w-4 me-1.5" />
-              Add Working Area
+              {t("provider:workingAreas.addArea")}
             </Button>
           </DialogTrigger>
 
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Add Service Location</DialogTitle>
+              <DialogTitle>{t("provider:workingAreas.addArea")}</DialogTitle>
               <DialogDescription className="text-xs mt-0.5">
-                Add a new territory to your coverage network.
+                {t("provider:workingAreas.subtitle")}
               </DialogDescription>
             </DialogHeader>
 
             <form onSubmit={handleAdd} className="space-y-4 pt-2">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Governorate</Label>
+                <Label className="text-xs font-semibold">{t("provider:workingAreas.governorate")}</Label>
                 <select
                   value={governorate}
                   onChange={(e) => setGovernorate(e.target.value)}
@@ -112,7 +114,7 @@ export default function ProviderWorkingAreasPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">City / Municipal Area *</Label>
+                <Label className="text-xs font-semibold">{t("provider:workingAreas.city")} *</Label>
                 <Input
                   placeholder="e.g. New Cairo / Maadi / Dokki"
                   value={city}
@@ -121,7 +123,7 @@ export default function ProviderWorkingAreasPage() {
               </div>
 
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">District / Zone (Optional)</Label>
+                <Label className="text-xs font-semibold">{t("provider:workingAreas.district")}</Label>
                 <Input
                   placeholder="e.g. 5th Settlement / Degla"
                   value={district}
@@ -135,10 +137,10 @@ export default function ProviderWorkingAreasPage() {
                   variant="outline"
                   onClick={() => setModalOpen(false)}
                 >
-                  Cancel
+                  {t("common:cancel")}
                 </Button>
                 <Button type="submit" disabled={addMutation.isPending}>
-                  {addMutation.isPending ? "Adding..." : "Add Location"}
+                  {addMutation.isPending ? t("common:loading") : t("common:save")}
                 </Button>
               </div>
             </form>
@@ -148,9 +150,9 @@ export default function ProviderWorkingAreasPage() {
 
       <Card className="border-border/70 shadow-sm bg-card">
         <CardHeader className="pb-3">
-          <CardTitle className="text-base font-bold">Active Service Locations ({areas.length})</CardTitle>
+          <CardTitle className="text-base font-bold">{t("provider:workingAreas.title")} ({areas.length})</CardTitle>
           <CardDescription className="text-xs">
-            Clients searching in these locations will discover your profile.
+            {t("provider:workingAreas.subtitle")}
           </CardDescription>
         </CardHeader>
 
@@ -164,14 +166,14 @@ export default function ProviderWorkingAreasPage() {
           ) : areas.length === 0 ? (
             <div className="text-center py-12 text-xs text-muted-foreground space-y-2">
               <MapPin className="h-10 w-10 text-muted-foreground/40 mx-auto" />
-              <p>No working areas added yet. Clients in your city need your care!</p>
+              <p>{t("provider:workingAreas.noAreas")}</p>
               <Button
                 variant="outline"
                 size="sm"
                 className="text-xs mt-2"
                 onClick={() => setModalOpen(true)}
               >
-                Add Your First Service Area
+                {t("provider:workingAreas.addArea")}
               </Button>
             </div>
           ) : (
@@ -187,7 +189,7 @@ export default function ProviderWorkingAreasPage() {
                     </div>
                     <div>
                       <span className="font-bold text-foreground">
-                        {area.city || "Urban Area"}
+                        {area.city || "-"}
                       </span>
                       <span className="text-muted-foreground block text-[11px]">
                         {area.governorate}
@@ -202,7 +204,7 @@ export default function ProviderWorkingAreasPage() {
                     className="h-7 w-7 text-muted-foreground hover:text-destructive"
                     onClick={() => deleteMutation.mutate(area.id)}
                     disabled={deleteMutation.isPending}
-                    title="Delete Area"
+                    title={t("provider:workingAreas.deleteArea")}
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>

@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 import {
   FileText,
   Calendar,
@@ -24,7 +25,7 @@ import {
 import { createOrGetChat } from "@/api/chat";
 import { useAuth } from "@/hooks/useAuth";
 import { ShiftTypeLabels } from "@/lib/constants";
-import { formatPrice } from "@/lib/utils";
+import { formatPrice, formatLocalizedDate } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,6 +37,7 @@ import EmptyState from "@/components/shared/EmptyState";
 import StatusBadge from "@/components/shared/StatusBadge";
 
 export default function ProviderRequestsPage() {
+  const { t, i18n } = useTranslation(["provider", "common"]);
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -59,14 +61,14 @@ export default function ProviderRequestsPage() {
       respondToRequest(requestId, { status, reason }),
     onSuccess: (_, vars) => {
       toast.success(
-        vars.status === 1 ? "Shift accepted!" : "Shift declined."
+        vars.status === 1 ? t("common:success") : t("provider:requests.rejectButton")
       );
       setRejectDialogReq(null);
       setRejectReason("");
       queryClient.invalidateQueries(["provider-requests"]);
     },
     onError: (error) => {
-      toast.error("Action error", {
+      toast.error(t("common:error"), {
         description: error?.response?.data?.message || "Could not update request.",
       });
     },
@@ -76,11 +78,11 @@ export default function ProviderRequestsPage() {
   const startMutation = useMutation({
     mutationFn: (requestId) => startRequest(requestId),
     onSuccess: () => {
-      toast.success("Shift marked as started!");
+      toast.success(t("common:success"));
       queryClient.invalidateQueries(["provider-requests"]);
     },
     onError: (error) => {
-      toast.error("Error starting shift", {
+      toast.error(t("common:error"), {
         description: error?.response?.data?.message || "Please check request status.",
       });
     },
@@ -90,11 +92,11 @@ export default function ProviderRequestsPage() {
   const completeMutation = useMutation({
     mutationFn: (requestId) => completeRequest(requestId),
     onSuccess: () => {
-      toast.success("Shift completed! Great job.");
+      toast.success(t("common:success"));
       queryClient.invalidateQueries(["provider-requests"]);
     },
     onError: (error) => {
-      toast.error("Error completing shift", {
+      toast.error(t("common:error"), {
         description: error?.response?.data?.message || "Could not complete shift.",
       });
     },
@@ -108,7 +110,7 @@ export default function ProviderRequestsPage() {
       navigate(`/provider/chats?active=${chatId}`);
     },
     onError: () => {
-      toast.error("Failed to open chat with client.");
+      toast.error(t("common:error"));
     },
   });
 
@@ -125,25 +127,25 @@ export default function ProviderRequestsPage() {
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Incoming Shift Requests</h1>
+        <h1 className="text-2xl font-bold text-foreground">{t("provider:requests.title")}</h1>
         <p className="text-xs text-muted-foreground mt-0.5">
-          Accept new bookings, coordinate with clients, and mark shift start & completion.
+          {t("provider:requests.subtitle")}
         </p>
       </div>
 
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid grid-cols-4 w-full sm:w-auto h-10 p-1 bg-muted/60">
           <TabsTrigger value="all" className="text-xs font-semibold">
-            All ({requests.length})
+            {t("provider:requests.tabs.all")} ({requests.length})
           </TabsTrigger>
           <TabsTrigger value="pending" className="text-xs font-semibold">
-            Pending
+            {t("provider:requests.tabs.pending")}
           </TabsTrigger>
           <TabsTrigger value="active" className="text-xs font-semibold">
-            Active / Shifts
+            {t("provider:requests.tabs.active")}
           </TabsTrigger>
           <TabsTrigger value="completed" className="text-xs font-semibold">
-            Completed
+            {t("provider:requests.tabs.completed")}
           </TabsTrigger>
         </TabsList>
       </Tabs>
@@ -161,8 +163,8 @@ export default function ProviderRequestsPage() {
       ) : filteredRequests.length === 0 ? (
         <EmptyState
           icon={FileText}
-          title="No requests found"
-          description="Your incoming client requests will appear here."
+          title={t("provider:requests.title")}
+          description={t("provider:requests.subtitle")}
         />
       ) : (
         <div className="space-y-4">
@@ -182,13 +184,13 @@ export default function ProviderRequestsPage() {
                         {req.categoryName}
                       </h3>
                       <p className="text-xs text-muted-foreground">
-                        Client: <strong className="text-foreground">{req.providerName || "Client"}</strong>
+                        {t("provider:requests.client")}: <strong className="text-foreground">{req.providerName || t("common:roles.client")}</strong>
                       </p>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-sm font-bold text-primary">
-                        {req.totalPrice ? formatPrice(req.totalPrice) : "Standard rate"}
+                        {req.totalPrice ? formatPrice(req.totalPrice) : "-"}
                       </span>
                       <StatusBadge status={req.status} label={req.statusName} />
                     </div>
@@ -197,12 +199,12 @@ export default function ProviderRequestsPage() {
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-muted-foreground">
                     <div className="flex items-center gap-2">
                       <Calendar className="h-4 w-4 text-primary" />
-                      <span>{new Date(req.preferredDate).toLocaleDateString()}</span>
+                      <span>{formatLocalizedDate(req.preferredDate, "dd/MM/yyyy", i18n.language)}</span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <Clock className="h-4 w-4 text-teal-600" />
-                      <span className="capitalize">{shiftName} Shift</span>
+                      <span className="capitalize">{shiftName}</span>
                     </div>
 
                     <div className="flex items-center gap-2 truncate">
@@ -213,7 +215,7 @@ export default function ProviderRequestsPage() {
 
                   {req.description && (
                     <p className="text-xs text-foreground/80 bg-muted/20 p-2.5 rounded-lg border border-border/40">
-                      <strong>Client Note:</strong> {req.description}
+                      <strong>{t("common:description")}:</strong> {req.description}
                     </p>
                   )}
 
@@ -227,7 +229,7 @@ export default function ProviderRequestsPage() {
                       disabled={chatMutation.isPending}
                     >
                       <MessageSquare className="h-3.5 w-3.5 me-1.5" />
-                      Chat with Client
+                      {t("provider:requests.chatButton")}
                     </Button>
 
                     {/* Pending state: Accept or Reject */}
@@ -240,7 +242,7 @@ export default function ProviderRequestsPage() {
                           onClick={() => setRejectDialogReq(req)}
                         >
                           <XCircle className="h-3.5 w-3.5 me-1.5" />
-                          Decline
+                          {t("provider:requests.rejectButton")}
                         </Button>
 
                         <Button
@@ -255,7 +257,7 @@ export default function ProviderRequestsPage() {
                           disabled={respondMutation.isPending}
                         >
                           <CheckCircle2 className="h-3.5 w-3.5 me-1.5" />
-                          Accept Shift
+                          {t("provider:requests.acceptButton")}
                         </Button>
                       </>
                     )}
@@ -269,7 +271,7 @@ export default function ProviderRequestsPage() {
                         disabled={startMutation.isPending}
                       >
                         <Play className="h-3.5 w-3.5 me-1.5" />
-                        Start Shift
+                        {t("provider:requests.startButton")}
                       </Button>
                     )}
 
@@ -282,7 +284,7 @@ export default function ProviderRequestsPage() {
                         disabled={completeMutation.isPending}
                       >
                         <CheckCircle2 className="h-3.5 w-3.5 me-1.5" />
-                        Mark Completed
+                        {t("provider:requests.completeButton")}
                       </Button>
                     )}
                   </div>
@@ -301,17 +303,17 @@ export default function ProviderRequestsPage() {
         >
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Decline Shift Request</DialogTitle>
+              <DialogTitle>{t("provider:requests.rejectModal.title")}</DialogTitle>
               <DialogDescription className="text-xs mt-0.5">
-                Provide a short reason to notify the client.
+                {t("provider:requests.rejectModal.subtitle")}
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4 pt-2">
               <div className="space-y-1.5">
-                <Label className="text-xs font-semibold">Reason for declining</Label>
+                <Label className="text-xs font-semibold">{t("provider:requests.rejectModal.reasonLabel")}</Label>
                 <Textarea
-                  placeholder="e.g. Prior commitment on this date / outside travel range..."
+                  placeholder={t("provider:requests.rejectModal.reasonPlaceholder")}
                   value={rejectReason}
                   onChange={(e) => setRejectReason(e.target.value)}
                   className="text-xs resize-none"
@@ -324,7 +326,7 @@ export default function ProviderRequestsPage() {
                   variant="outline"
                   onClick={() => setRejectDialogReq(null)}
                 >
-                  Cancel
+                  {t("common:cancel")}
                 </Button>
                 <Button
                   variant="destructive"
@@ -337,7 +339,7 @@ export default function ProviderRequestsPage() {
                   }
                   disabled={respondMutation.isPending}
                 >
-                  Confirm Decline
+                  {t("provider:requests.rejectModal.confirmButton")}
                 </Button>
               </div>
             </div>
