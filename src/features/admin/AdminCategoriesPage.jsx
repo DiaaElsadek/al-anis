@@ -20,6 +20,7 @@ import {
   deleteCategory,
 } from "@/api/category";
 import { getLocalizedCategoryName } from "@/lib/utils";
+import CategoryIcon from "@/components/shared/CategoryIcon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -54,7 +55,7 @@ export default function AdminCategoriesPage() {
       name: "",
       nameEn: "",
       description: "",
-      icon: "🩺",
+      icon: "Stethoscope",
       isActive: true,
     },
   });
@@ -68,7 +69,7 @@ export default function AdminCategoriesPage() {
       name: cat.name || "",
       nameEn: cat.nameEn || "",
       description: cat.description || "",
-      icon: cat.icon || "🩺",
+      icon: cat.icon || "Stethoscope",
       isActive: cat.isActive ?? true,
     });
     setModalOpen(true);
@@ -81,7 +82,7 @@ export default function AdminCategoriesPage() {
       name: "",
       nameEn: "",
       description: "",
-      icon: "🩺",
+      icon: "Stethoscope",
       isActive: true,
     });
     setModalOpen(true);
@@ -177,7 +178,11 @@ export default function AdminCategoriesPage() {
                 <tbody className="divide-y divide-border/40">
                   {categories.map((c) => (
                     <tr key={c.id} className="hover:bg-muted/25 transition-colors">
-                      <td className="py-3 px-4 text-base">{c.icon || "🩺"}</td>
+                      <td className="py-3 px-4">
+                        <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                          <CategoryIcon icon={c.icon} name={c.name} className="h-4 w-4" />
+                        </div>
+                      </td>
                       <td className="py-3 px-4 font-bold text-foreground">{c.name}</td>
                       <td className="py-3 px-4 text-muted-foreground">{c.nameEn || "—"}</td>
                       <td className="py-3 px-4 text-muted-foreground max-w-[240px] truncate">
@@ -254,12 +259,16 @@ export default function AdminCategoriesPage() {
 
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">{t("admin:categories.icon")}</Label>
-                <Input
-                  placeholder="🩺"
-                  className="text-center text-lg"
-                  maxLength={4}
-                  {...register("icon")}
-                />
+                <div className="flex items-center gap-2">
+                  <div className="h-9 w-9 rounded-md bg-muted flex items-center justify-center text-primary shrink-0 border border-input">
+                    <CategoryIcon icon={watch("icon")} className="h-4 w-4" />
+                  </div>
+                  <Input
+                    placeholder="Stethoscope"
+                    className="text-xs"
+                    {...register("icon")}
+                  />
+                </div>
               </div>
             </div>
 
