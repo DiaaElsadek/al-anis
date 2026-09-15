@@ -1,5 +1,6 @@
 import { Outlet, Link } from "react-router-dom";
 import { ShieldCheck, Clock, CheckCircle2, ArrowLeft, Star, Users } from "lucide-react";
+import ThemeToggle from "@/components/shared/ThemeToggle";
 
 export default function AuthLayout() {
   return (
@@ -112,12 +113,16 @@ export default function AuthLayout() {
             <span>Back to Home</span>
           </Link>
 
-          {/* Mobile brand header */}
-          <div className="lg:hidden flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
-              A
+          <div className="flex items-center gap-3">
+            {/* Mobile brand header */}
+            <div className="lg:hidden flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center text-primary-foreground font-bold text-sm">
+                A
+              </div>
+              <span className="font-bold text-foreground">Alanis</span>
             </div>
-            <span className="font-bold text-foreground">Alanis</span>
+
+            <ThemeToggle />
           </div>
         </div>
 

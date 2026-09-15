@@ -26,6 +26,7 @@ import {
 
 import { getDashboardStats, getRecentBookings } from "@/api/admin";
 import { formatPrice } from "@/lib/utils";
+import { useTheme } from "@/context/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -43,6 +44,9 @@ const REVENUE_DATA = [
 ];
 
 export default function AdminDashboardPage() {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["admin-dashboard-stats"],
     queryFn: getDashboardStats,
@@ -180,21 +184,41 @@ export default function AdminDashboardPage() {
                 <AreaChart data={REVENUE_DATA}>
                   <defs>
                     <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0d9488" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#0d9488" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor={isDark ? "#2dd4bf" : "#0d9488"} stopOpacity={0.4} />
+                      <stop offset="95%" stopColor={isDark ? "#2dd4bf" : "#0d9488"} stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
-                  <XAxis dataKey="month" fontSize={11} stroke="#6b7280" />
-                  <YAxis fontSize={11} stroke="#6b7280" />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={isDark ? "rgba(255, 255, 255, 0.08)" : "#e5e7eb"}
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="month"
+                    fontSize={11}
+                    stroke={isDark ? "#94a3b8" : "#64748b"}
+                  />
+                  <YAxis
+                    fontSize={11}
+                    stroke={isDark ? "#94a3b8" : "#64748b"}
+                  />
                   <Tooltip
                     formatter={(val) => [`${val.toLocaleString()} EGP`, "Volume"]}
-                    contentStyle={{ borderRadius: "8px", fontSize: "12px" }}
+                    contentStyle={{
+                      backgroundColor: isDark ? "#0f172a" : "#ffffff",
+                      borderColor: isDark ? "rgba(255, 255, 255, 0.15)" : "#e2e8f0",
+                      color: isDark ? "#f8fafc" : "#0f172a",
+                      borderRadius: "8px",
+                      fontSize: "12px",
+                      boxShadow: isDark
+                        ? "0 10px 15px -3px rgba(0, 0, 0, 0.5)"
+                        : "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                    }}
                   />
                   <Area
                     type="monotone"
                     dataKey="revenue"
-                    stroke="#0d9488"
+                    stroke={isDark ? "#2dd4bf" : "#0d9488"}
                     strokeWidth={2.5}
                     fillOpacity={1}
                     fill="url(#colorRev)"
@@ -224,11 +248,37 @@ export default function AdminDashboardPage() {
                     { name: "Pending", count: stats?.pendingApplications || 3 },
                   ]}
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" vertical={false} />
-                  <XAxis dataKey="name" fontSize={11} stroke="#6b7280" />
-                  <YAxis fontSize={11} stroke="#6b7280" />
-                  <Tooltip contentStyle={{ borderRadius: "8px", fontSize: "12px" }} />
-                  <Bar dataKey="count" fill="#0f766e" radius={[4, 4, 0, 0]} />
+                  <CartesianGrid
+                    strokeDasharray="3 3"
+                    stroke={isDark ? "rgba(255, 255, 255, 0.08)" : "#e5e7eb"}
+                    vertical={false}
+                  />
+                  <XAxis
+                    dataKey="name"
+                    fontSize={11}
+                    stroke={isDark ? "#94a3b8" : "#64748b"}
+                  />
+                  <YAxis
+                    fontSize={11}
+                    stroke={isDark ? "#94a3b8" : "#64748b"}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: isDark ? "#0f172a" : "#ffffff",
+                      borderColor: isDark ? "rgba(255, 255, 255, 0.15)" : "#e2e8f0",
+                      color: isDark ? "#f8fafc" : "#0f172a",
+                      borderRadius: "8px",
+                      fontSize: "12px",
+                      boxShadow: isDark
+                        ? "0 10px 15px -3px rgba(0, 0, 0, 0.5)"
+                        : "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+                    }}
+                  />
+                  <Bar
+                    dataKey="count"
+                    fill={isDark ? "#2dd4bf" : "#0f766e"}
+                    radius={[4, 4, 0, 0]}
+                  />
                 </BarChart>
               </ResponsiveContainer>
             </div>

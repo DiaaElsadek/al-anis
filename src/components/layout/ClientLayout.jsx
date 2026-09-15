@@ -15,8 +15,8 @@ export default function ClientLayout() {
     <div className="min-h-screen bg-background">
       <Navbar />
       {/* Secondary nav */}
-      <nav className="border-b bg-background">
-        <div className="container flex items-center gap-1 overflow-x-auto py-1">
+      <nav className="border-b border-border/70 bg-card/60 backdrop-blur-sm sticky top-16 z-40 transition-colors">
+        <div className="container flex items-center gap-1 overflow-x-auto py-1.5">
           {clientNavItems.map((item) => (
             <NavLink
               key={item.to}

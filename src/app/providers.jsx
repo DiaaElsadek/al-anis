@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/context/AuthContext";
+import { ThemeProvider, useTheme } from "@/context/ThemeContext";
 import { Toaster } from "sonner";
 
 const queryClient = new QueryClient({
@@ -15,29 +16,40 @@ const queryClient = new QueryClient({
   },
 });
 
+function ThemedToaster() {
+  const { resolvedTheme } = useTheme();
+  return (
+    <Toaster
+      theme={resolvedTheme}
+      position="top-right"
+      richColors
+      closeButton
+      duration={4000}
+      toastOptions={{
+        style: {
+          fontFamily: "inherit",
+        },
+      }}
+    />
+  );
+}
+
 /**
  * AppProviders — wraps the entire app with:
  * 1. QueryClientProvider (react-query)
- * 2. AuthProvider (auth context)
- * 3. Toaster (sonner)
+ * 2. ThemeProvider (dark / light / system theme context)
+ * 3. AuthProvider (auth context)
+ * 4. ThemedToaster (sonner with dynamic theme syncing)
  */
 export default function AppProviders({ children }) {
   return (
     <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        {children}
-        <Toaster
-          position="top-right"
-          richColors
-          closeButton
-          duration={4000}
-          toastOptions={{
-            style: {
-              fontFamily: "inherit",
-            },
-          }}
-        />
-      </AuthProvider>
+      <ThemeProvider defaultTheme="system">
+        <AuthProvider>
+          {children}
+          <ThemedToaster />
+        </AuthProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
