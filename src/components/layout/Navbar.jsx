@@ -31,6 +31,13 @@ export default function Navbar({ onMobileMenuToggle }) {
   const { user, isAuthenticated, role, logout } = useAuth();
   const navigate = useNavigate();
 
+  const displayName =
+    user?.fullName ||
+    user?.name ||
+    (user?.firstName && user?.lastName
+      ? `${user.firstName} ${user.lastName}`.trim()
+      : user?.firstName || user?.email?.split("@")[0] || t("roles.user"));
+
   const handleLogout = () => {
     logout();
     navigate("/login");
@@ -43,7 +50,7 @@ export default function Navbar({ onMobileMenuToggle }) {
       case UserRole.SERVICE_PROVIDER:
         return "/provider/dashboard";
       default:
-        return "/app/providers";
+        return "/app/dashboard";
     }
   };
 
@@ -118,15 +125,15 @@ export default function Navbar({ onMobileMenuToggle }) {
                   className="relative h-9 w-9 rounded-full ring-2 ring-primary/20 hover:ring-primary/40 transition-all p-0 overflow-hidden"
                 >
                   <Avatar className="h-9 w-9">
-                    {user?.profilePictureUrl ? (
+                    {user?.profilePictureUrl || user?.profilePicture ? (
                       <AvatarImage
-                        src={getMediaUrl(user.profilePictureUrl)}
-                        alt={user?.firstName || "User"}
+                        src={getMediaUrl(user.profilePictureUrl || user.profilePicture)}
+                        alt={displayName}
                         className="object-cover"
                       />
                     ) : null}
                     <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
-                      {getInitials(`${user?.firstName || ""} ${user?.lastName || ""}`)}
+                      {getInitials(displayName)}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -134,9 +141,7 @@ export default function Navbar({ onMobileMenuToggle }) {
               <DropdownMenuContent className="w-56" align="end" forceMount>
                 <div className="flex flex-col space-y-1 p-2 border-b">
                   <div className="flex items-center justify-between">
-                    <p className="font-semibold text-sm truncate">
-                      {user?.firstName} {user?.lastName}
-                    </p>
+                    <p className="font-semibold text-sm truncate">{displayName}</p>
                     {getRoleBadge()}
                   </div>
                   <p className="text-xs text-muted-foreground truncate">{user?.email}</p>

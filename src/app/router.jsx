@@ -17,6 +17,7 @@ import RegisterPage from "@/features/auth/RegisterPage";
 import ResetPasswordPage from "@/features/auth/ResetPasswordPage";
 import VerifyOtpPage from "@/features/auth/VerifyOtpPage";
 import ChatInboxPage from "@/features/chat/ChatInboxPage";
+import ClientDashboardPage from "@/features/client/ClientDashboardPage";
 import ClientRequestsPage from "@/features/client/ClientRequestsPage";
 import ClientSettingsPage from "@/features/client/ClientSettingsPage";
 import ProviderDirectoryPage from "@/features/client/ProviderDirectoryPage";
@@ -61,7 +62,8 @@ export default function AppRouter() {
             </ProtectedRoute>
           }
         >
-          <Route index element={<Navigate to="providers" replace />} />
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<ClientDashboardPage />} />
           <Route path="providers" element={<ProviderDirectoryPage />} />
           <Route path="providers/:id" element={<ProviderProfilePage />} />
           <Route path="requests" element={<ClientRequestsPage />} />

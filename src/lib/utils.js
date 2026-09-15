@@ -162,3 +162,28 @@ export function getShiftLabel(shift, t, backendName) {
   const labels = { 0: "Morning", 1: "Evening", 2: "Night" };
   return labels[Number(shift)] || "Shift";
 }
+
+/**
+ * Safely decodes a JSON Web Token payload without external dependencies
+ *
+ * @param {string} token - Raw JWT string
+ * @returns {Object|null} Decoded JSON claims or null if invalid
+ */
+export function parseJwt(token) {
+  if (!token || typeof token !== "string") return null;
+  try {
+    const parts = token.split(".");
+    if (parts.length < 2) return null;
+    const base64Url = parts[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
+        .join("")
+    );
+    return JSON.parse(jsonPayload);
+  } catch {
+    return null;
+  }
+}
