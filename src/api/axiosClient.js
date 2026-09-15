@@ -1,8 +1,14 @@
 import axios from "axios";
 import { toast } from "sonner";
 
+export const BASE_URL =
+  import.meta.env.VITE_BASE_URL || "https://elanis.runasp.net";
+
+export const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || `${BASE_URL.replace(/\/+$/, "")}/api`;
+
 const axiosClient = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  baseURL: API_BASE_URL,
   headers: {
     "Content-Type": "application/json",
   },
@@ -49,12 +55,11 @@ axiosClient.interceptors.response.use(
 
     if (envelope && typeof envelope.succeeded !== "undefined") {
       if (!envelope.succeeded) {
-        // API returned a failure envelope
+        // API returned a failure envelope — reject so caller's onError handles it
         const errorMessage =
           envelope.errors?.length > 0
             ? envelope.errors.join(", ")
             : envelope.message || "An error occurred";
-        toast.error(errorMessage);
         return Promise.reject(new Error(errorMessage));
       }
       // Return unwrapped data
@@ -92,8 +97,13 @@ axiosClient.interceptors.response.use(
         }
 
         const response = await axios.post(
-          `${import.meta.env.VITE_API_BASE_URL}/Account/refresh-token`,
-          { refreshToken }
+          `${API_BASE_URL}/Account/refresh-token`,
+          JSON.stringify(refreshToken),
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
 
         const envelope = response.data;
@@ -134,9 +144,15 @@ axiosClient.interceptors.response.use(
       error.message ||
       "An unexpected error occurred";
 
-    // Don't toast for cancelled requests
-    if (!axios.isCancel(error)) {
-      toast.error(message);
+    // Only toast globally for 5xx server errors or network disconnects.
+    // 4xx client errors (400 Bad Request, 404 Not Found, 422) are handled
+    // by the calling form/mutation to prevent duplicate notifications.
+    const status = error.response?.status;
+    if (!axios.isCancel(error) && (!status || status >= 500)) {
+      toast.error("Server error", {
+        id: "global-server-error",
+        description: message,
+      });
     }
 
     return Promise.reject(error);
