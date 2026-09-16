@@ -32,10 +32,10 @@ export default function FAQSection({ isArabic }) {
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, idx) => (
               <AccordionItem key={idx} value={`faq-${idx}`}>
-                <AccordionTrigger className="text-sm font-bold text-foreground">
+                <AccordionTrigger className="text-sm sm:text-base font-semibold text-foreground text-start">
                   {faq.q}
                 </AccordionTrigger>
-                <AccordionContent className="text-xs leading-relaxed text-muted-foreground">
+                <AccordionContent className="text-sm leading-relaxed text-muted-foreground">
                   {faq.a}
                 </AccordionContent>
               </AccordionItem>

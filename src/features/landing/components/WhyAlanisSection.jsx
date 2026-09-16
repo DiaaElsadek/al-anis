@@ -34,8 +34,8 @@ export default function WhyAlanisSection({ isArabic }) {
           </p>
         </div>
 
-        <Card className="border border-border/80 shadow-md bg-card overflow-hidden">
-          <Table className="text-xs text-start">
+        <Card className="border border-border/80 shadow-md bg-card overflow-hidden rounded-2xl">
+          <Table className="text-sm text-start">
             <TableHeader className="bg-muted/40 text-foreground">
               <TableRow className="border-b border-border/70">
                 <TableHead className="py-4 px-5 font-bold text-start w-1/3 text-foreground">
@@ -60,7 +60,7 @@ export default function WhyAlanisSection({ isArabic }) {
                   </TableCell>
                   <TableCell className="py-4 px-5 bg-primary/5 border-x border-primary/15 text-foreground font-medium">
                     <div className="flex items-start gap-2">
-                      <Check className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
+                      <Check className="h-4 w-4 text-success shrink-0 mt-0.5" />
                       <span>{row.alanis}</span>
                     </div>
                   </TableCell>
