@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import {
   Activity,
   ArrowRight,
@@ -27,6 +28,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { getLocalizedCategoryName } from "@/lib/utils";
 
 export default function HeroSection({
@@ -41,54 +43,64 @@ export default function HeroSection({
   handleConsoleSearch,
 }) {
   return (
-    <section className="relative overflow-hidden pt-12 pb-20 md:pt-16 md:pb-28">
-      {/* Ambient Lighting Mesh */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[720px] h-[400px] bg-gradient-to-tr from-primary/20 via-teal-500/10 to-emerald-400/5 blur-[140px] rounded-full pointer-events-none -z-10" />
+    <section className="relative overflow-hidden pt-12 pb-16 md:pt-20 md:pb-24">
+      {/* Ambient Lighting Mesh - Subdued institutional warmth */}
+      <div
+        className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[350px] bg-gradient-to-b from-primary/8 via-primary/3 to-transparent blur-[140px] rounded-full pointer-events-none -z-10"
+        aria-hidden="true"
+      />
 
-      <div className="container max-w-6xl mx-auto space-y-10">
+      <motion.div
+        className="container max-w-6xl mx-auto space-y-10"
+        initial="hidden"
+        animate="visible"
+        variants={staggerContainer(0.12, 0.05)}
+      >
         {/* Top Eyebrow Pill */}
-        <div className="text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/25 text-primary text-xs font-semibold shadow-xs">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span>
+        <motion.div className="text-center" variants={fadeInUp}>
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/20 text-xs text-foreground/90 font-medium">
+            <span className="h-2 w-2 rounded-full bg-success" />
+            <span className="font-semibold text-primary">
               {isArabic
                 ? "المنصة الأولى المعتمدة لحجز الورديات في مصر"
                 : "Egypt's #1 Verified Shift-Based Marketplace"}
             </span>
             <span className="text-muted-foreground/60">•</span>
-            <span className="text-muted-foreground font-normal">
+            <span className="text-muted-foreground">
               {isArabic ? "حماية كاملة بالدفع الضامن" : "100% Escrow Protected"}
             </span>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Headline & Subhead */}
-        <div className="text-center max-w-4xl mx-auto space-y-5">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground leading-[1.12] text-balance">
-            {isArabic ? "رعاية وتمريض منزلي موثوق، " : "Verified Care & Healthcare Aides, "}
-            <span className="bg-gradient-to-r from-primary via-teal-500 to-emerald-400 bg-clip-text text-transparent">
+        {/* Headline & Subhead with mixed-weight typography */}
+        <motion.div className="text-center max-w-4xl mx-auto space-y-5" variants={fadeInUp}>
+          <h1 className="text-4xl sm:text-5xl md:text-6xl tracking-tight text-foreground leading-[1.18] text-balance">
+            <span className="font-normal opacity-90">
+              {isArabic ? "رعاية وتمريض منزلي موثوق، " : "Verified Care & Healthcare Aides, "}
+            </span>
+            <span className="font-bold text-primary">
               {isArabic ? "محجوز بنظام الوردية." : "Booked by Shift."}
             </span>
           </h1>
-          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
+          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
             {isArabic
               ? "تواصل مع ممرضين، وجليسات مسنين وأطفال، وأخصائيي علاج طبيعي معتمدين برقم قومي مدقق. أسعار ثابتة لكل وردية 8 ساعات دون مفاجآت مع حماية كاملة لأموالك بالدفع الضامن."
               : "Connect with certified nurses, elderly companions, babysitters, and rehab therapists. Fixed 8-hour shift rates, zero hidden overtime, and 100% digital escrow safety."}
           </p>
-        </div>
+        </motion.div>
 
         {/* Interactive Shift Explorer & Booking Console */}
-        <div className="max-w-4xl mx-auto">
-          <Card className="border border-border/80 shadow-xl shadow-primary/5 bg-card/95 backdrop-blur-md rounded-3xl p-3 sm:p-5">
+        <motion.div className="max-w-4xl mx-auto" variants={fadeInUp}>
+          <Card className="border border-border/80 shadow-lg bg-card rounded-2xl p-4 sm:p-6">
             <form onSubmit={handleConsoleSearch} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Category Select */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">
+                  <label className="text-xs font-medium text-muted-foreground block">
                     {isArabic ? "التخصص المطلوب" : "Specialty"}
                   </label>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="h-11 rounded-xl text-xs bg-background">
+                    <SelectTrigger className="h-11 rounded-xl text-sm bg-background">
                       <SelectValue
                         placeholder={isArabic ? "اختر التخصص..." : "Select specialty..."}
                       />
@@ -115,11 +127,11 @@ export default function HeroSection({
 
                 {/* Shift Select */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">
+                  <label className="text-xs font-medium text-muted-foreground block">
                     {isArabic ? "موعد الوردية" : "Shift Time"}
                   </label>
                   <Select value={selectedShift} onValueChange={setSelectedShift}>
-                    <SelectTrigger className="h-11 rounded-xl text-xs bg-background">
+                    <SelectTrigger className="h-11 rounded-xl text-sm bg-background">
                       <SelectValue
                         placeholder={isArabic ? "اختر موعد الوردية..." : "Select shift..."}
                       />
@@ -152,7 +164,7 @@ export default function HeroSection({
 
                 {/* Area / Location */}
                 <div className="space-y-1.5">
-                  <label className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider block">
+                  <label className="text-xs font-medium text-muted-foreground block">
                     {isArabic ? "المنطقة / المحافظة" : "Location"}
                   </label>
                   <div className="relative">
@@ -163,7 +175,7 @@ export default function HeroSection({
                       }
                       value={locationQuery}
                       onChange={(e) => setLocationQuery(e.target.value)}
-                      className="ps-9 h-11 rounded-xl text-xs bg-background"
+                      className="ps-9 h-11 rounded-xl text-sm bg-background"
                     />
                   </div>
                 </div>
@@ -172,7 +184,7 @@ export default function HeroSection({
                 <div className="flex flex-col justify-end">
                   <Button
                     type="submit"
-                    className="h-11 rounded-xl text-xs font-bold gap-2 shadow-md shadow-primary/20 w-full"
+                    className="h-11 rounded-xl text-sm font-semibold gap-2 w-full shadow-sm"
                   >
                     <Search className="h-4 w-4" />
                     <span>{isArabic ? "ابحث عن مزود معتمد" : "Search Providers"}</span>
@@ -181,7 +193,7 @@ export default function HeroSection({
               </div>
 
               {/* Trust Micro-Row */}
-              <div className="pt-2 border-t border-border/50 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
+              <div className="pt-3 border-t border-border/50 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
                 <div className="flex items-center gap-4">
                   <span className="flex items-center gap-1.5">
                     <ShieldCheck className="h-4 w-4 text-primary" />
@@ -189,14 +201,14 @@ export default function HeroSection({
                   </span>
                   <span>•</span>
                   <span className="flex items-center gap-1.5">
-                    <Lock className="h-3.5 w-3.5 text-emerald-600" />
+                    <Lock className="h-3.5 w-3.5 text-success" />
                     <span>{isArabic ? "دفع ضامن إلكتروني" : "Escrow Safeguard"}</span>
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2 font-medium text-foreground">
-                  <span className="text-amber-500 font-bold flex items-center gap-1">
-                    <Star className="h-3.5 w-3.5 fill-amber-500" /> 4.95 / 5
+                  <span className="text-warm-accent font-bold flex items-center gap-1">
+                    <Star className="h-3.5 w-3.5 fill-warm-accent text-warm-accent" /> 4.95 / 5
                   </span>
                   <span className="text-muted-foreground">
                     {isArabic ? "(من أكثر من 3,800 تقييم موثق)" : "(From 3,800+ Verified Reviews)"}
@@ -205,27 +217,30 @@ export default function HeroSection({
               </div>
             </form>
           </Card>
-        </div>
+        </motion.div>
 
-        {/* Floating Live Simulation Card Preview */}
-        <div className="max-w-3xl mx-auto pt-4">
-          <div className="p-4 sm:p-6 rounded-3xl bg-gradient-to-r from-card via-card/90 to-primary/5 border border-border/80 shadow-md flex flex-col sm:flex-row items-center justify-between gap-6">
+        {/* Live Simulation Card Preview */}
+        <motion.div className="max-w-3xl mx-auto pt-2" variants={fadeInUp}>
+          <div className="p-4 sm:p-5 rounded-2xl bg-card border border-border/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-5">
             <div className="flex items-center gap-4">
               <div className="relative">
-                <Avatar className="h-14 w-14 rounded-2xl border-2 border-primary/30">
+                <Avatar className="h-13 w-13 rounded-xl border border-primary/20">
                   <AvatarImage src="https://images.unsplash.com/photo-1594824813576-809d43501a30?w=200&auto=format&fit=crop&q=80" />
-                  <AvatarFallback className="rounded-2xl font-bold bg-primary/10 text-primary">
+                  <AvatarFallback className="rounded-xl font-bold bg-primary/10 text-primary">
                     MS
                   </AvatarFallback>
                 </Avatar>
-                <span className="absolute -bottom-1 -right-1 h-4 w-4 rounded-full bg-emerald-500 border-2 border-background" />
+                <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-success border-2 border-background" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h4 className="font-bold text-sm text-foreground">
+                  <h4 className="font-semibold text-sm text-foreground">
                     {isArabic ? "أخصائية مريم سمير • تمريض منزلي" : "Mariam Samir, RN • Home Care"}
                   </h4>
-                  <Badge className="bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 text-[10px] border-emerald-500/20">
+                  <Badge
+                    variant="outline"
+                    className="bg-success/10 text-success text-[11px] border-success/30 font-medium"
+                  >
                     {isArabic ? "متاحة اليوم" : "Available Today"}
                   </Badge>
                 </div>
@@ -235,78 +250,81 @@ export default function HeroSection({
                     : "Next Shift: Morning (8:00 AM – 4:00 PM)"}
                 </p>
                 <div className="flex items-center gap-3 text-xs mt-1 text-muted-foreground">
-                  <span className="flex items-center gap-1 text-amber-500 font-semibold">
-                    <Star className="h-3 w-3 fill-amber-500" /> 5.0 (148{" "}
+                  <span className="flex items-center gap-1 text-warm-accent font-semibold">
+                    <Star className="h-3 w-3 fill-warm-accent text-warm-accent" /> 5.0 (148{" "}
                     {isArabic ? "تقييم" : "reviews"})
                   </span>
                   <span>•</span>
-                  <span className="text-primary font-bold">
+                  <span className="text-primary font-semibold">
                     450 {isArabic ? "ج.م / وردية 8 ساعات" : "EGP / 8-hr Shift"}
                   </span>
                 </div>
               </div>
             </div>
 
-            <Button size="sm" asChild className="font-semibold shadow-sm w-full sm:w-auto shrink-0">
+            <Button size="sm" asChild className="font-medium w-full sm:w-auto shrink-0 shadow-xs">
               <Link to="/register">
                 <span>{isArabic ? "احجز هذه الوردية" : "Book This Shift"}</span>
                 <DirectionalIcon icon={ArrowRight} className="h-3.5 w-3.5 ms-1.5" />
               </Link>
             </Button>
           </div>
-        </div>
+        </motion.div>
 
-        {/* 4 Pillar Platform Metrics Counters */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-6">
-          <Card className="border-border/70 shadow-xs text-center p-5">
-            <div className="w-10 h-10 rounded-xl bg-primary/10 text-primary flex items-center justify-center mx-auto mb-2">
-              <Activity className="h-5 w-5" />
+        {/* Inline Stat Row (Flattened metrics - no 4-card grid) */}
+        <motion.div
+          className="border-y border-border/60 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center"
+          variants={fadeInUp}
+        >
+          <div className="space-y-1">
+            <div className="flex items-center justify-center gap-1.5 text-primary mb-1">
+              <Activity className="h-4 w-4" />
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+            <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               15,000+
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
               {isArabic ? "وردية نُفذت باحترافية" : "Shifts Fulfilled"}
-            </p>
-          </Card>
-
-          <Card className="border-border/70 shadow-xs text-center p-5">
-            <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center mx-auto mb-2">
-              <UserCheck className="h-5 w-5" />
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+          </div>
+
+          <div className="space-y-1 border-s border-border/40 sm:border-s-0 md:border-s">
+            <div className="flex items-center justify-center gap-1.5 text-primary mb-1">
+              <UserCheck className="h-4 w-4" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               1,250+
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
               {isArabic ? "مزود خدمة معتمد ومدقق" : "Vetted Healthcare Aides"}
-            </p>
-          </Card>
-
-          <Card className="border-border/70 shadow-xs text-center p-5">
-            <div className="w-10 h-10 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center mx-auto mb-2">
-              <Star className="h-5 w-5 fill-amber-500" />
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+          </div>
+
+          <div className="space-y-1 border-t sm:border-t-0 md:border-s border-border/40 pt-4 sm:pt-0">
+            <div className="flex items-center justify-center gap-1.5 text-warm-accent mb-1">
+              <Star className="h-4 w-4 fill-warm-accent text-warm-accent" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               4.95 / 5
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              {isArabic ? "متوسط تقييمات العائلات" : "Client Satisfaction Score"}
-            </p>
-          </Card>
-
-          <Card className="border-border/70 shadow-xs text-center p-5">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-600 flex items-center justify-center mx-auto mb-2">
-              <Lock className="h-5 w-5" />
             </div>
-            <h3 className="text-2xl sm:text-3xl font-extrabold text-foreground tracking-tight">
+            <div className="text-xs sm:text-sm text-muted-foreground">
+              {isArabic ? "متوسط تقييمات العائلات" : "Client Satisfaction Score"}
+            </div>
+          </div>
+
+          <div className="space-y-1 border-t sm:border-t-0 md:border-s border-border/40 pt-4 sm:pt-0">
+            <div className="flex items-center justify-center gap-1.5 text-success mb-1">
+              <Lock className="h-4 w-4" />
+            </div>
+            <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               100%
-            </h3>
-            <p className="text-xs text-muted-foreground mt-0.5">
+            </div>
+            <div className="text-xs sm:text-sm text-muted-foreground">
               {isArabic ? "حماية المدفوعات بالضمان" : "Escrow Payment Safety"}
-            </p>
-          </Card>
-        </div>
-      </div>
+            </div>
+          </div>
+        </motion.div>
+      </motion.div>
     </section>
   );
 }

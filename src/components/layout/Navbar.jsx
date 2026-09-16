@@ -95,14 +95,14 @@ export default function Navbar({ onMobileMenuToggle }) {
           )}
 
           <Link to="/" className="flex items-center gap-2.5 group">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-tr from-primary via-primary/90 to-emerald-400 flex items-center justify-center text-primary-foreground shadow-sm shadow-primary/20 group-hover:scale-105 transition-transform">
-              <ShieldCheck className="h-5 w-5 text-white" />
+            <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-xs group-hover:scale-105 transition-transform">
+              <ShieldCheck className="h-5 w-5 text-primary-foreground" />
             </div>
             <div className="flex flex-col">
-              <span className="text-xl font-extrabold tracking-tight bg-gradient-to-r from-foreground via-foreground to-primary bg-clip-text text-transparent">
+              <span className="text-xl font-bold tracking-tight text-foreground">
                 {t("brand.name")}
               </span>
-              <span className="text-[10px] font-medium text-muted-foreground tracking-wider -mt-1 uppercase hidden sm:block">
+              <span className="text-[10px] font-medium text-muted-foreground tracking-wider uppercase hidden sm:block">
                 {t("brand.subtitle")}
               </span>
             </div>
