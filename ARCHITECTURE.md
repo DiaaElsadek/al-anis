@@ -49,8 +49,9 @@ src/
 │   │   └── ProviderLayout.jsx
 │   ├── shared/             # Cross-cutting reusable domain components
 │   │   ├── CategoryIcon.jsx        # Universal Lucide icon resolver for categories
-│   │   ├── ConfirmDialog.jsx       # Modal confirmation dialog
+│   │   ├── ConfirmDialog.jsx       # Modal confirmation dialog (wraps AlertDialog)
 │   │   ├── DashboardSkeleton.jsx   # Standardized dashboard loading skeleton
+│   │   ├── DatePicker.jsx          # Accessible popover date picker (wraps Calendar)
 │   │   ├── DirectionalIcon.jsx     # RTL-aware chevron/arrow icon
 │   │   ├── EmptyState.jsx          # Standardized empty/error state with CTA/retry
 │   │   ├── ErrorBoundary.jsx       # React error boundary fallback
@@ -153,6 +154,17 @@ All data-fetching views conform to a consistent 3-stage lifecycle:
 - **Currency**: Handled exclusively via `formatPrice(amount, currency = "EGP", locale = i18n.language)`.
 - **Dates**: Handled via `formatLocalizedDate(date, formatStr, locale = i18n.language)`.
 - **Directionality**: RTL-aware icons and layouts utilize `DirectionalIcon` and logical CSS classes (`start-*`, `end-*`, `ps-*`, `pe-*`, `ms-*`, `me-*`).
+
+### F. UI Component Library Conventions (shadcn/ui & Shared Primitives)
+Every UI element across features must consume the design system tokens and primitives:
+1. **Modal Confirmation**: Replaces browser `confirm()` with `<ConfirmDialog />` backed by `@radix-ui/react-alert-dialog`.
+2. **Tables**: Features must consume `@/components/ui/table` primitives (`Table`, `TableHeader`, `TableRow`, `TableHead`, `TableBody`, `TableCell`).
+3. **Dropdowns & Selects**: Use `@/components/ui/select` for single-select dropdowns, synchronized with react-hook-form via `setValue(name, val, { shouldValidate: true })`.
+4. **Date Pickers**: Replace native `<input type="date">` with `<DatePicker />` from `@/components/shared/DatePicker`.
+5. **State Toggles**: Use `@/components/ui/switch` for boolean form options and `@/components/ui/toggle` for filter/option toggles.
+6. **Alerts & Banners**: Use `@/components/ui/alert` for error and notice boxes.
+7. **Loading Spinners**: Use `<Loader2 className="animate-spin ..." />` from `lucide-react` across buttons and overlays.
+8. **Pagination**: Use `@/components/shared/Pagination` wrapping shadcn `Pagination` with RTL chevron flip and ellipsis.
 
 ---
 

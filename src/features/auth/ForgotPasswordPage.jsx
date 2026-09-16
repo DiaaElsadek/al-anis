@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { KeyRound, Mail, Phone, ArrowRight, ArrowLeft, AlertCircle } from "lucide-react";
+import { KeyRound, Mail, Phone, ArrowRight, ArrowLeft, AlertCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -9,6 +9,7 @@ import { toast } from "sonner";
 
 import { forgetPassword } from "@/api/account";
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -93,10 +94,10 @@ export default function ForgotPasswordPage() {
 
       <CardContent className="space-y-6">
         {serverError && (
-          <div className="flex items-start gap-3 p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-            <p className="text-xs font-medium">{serverError}</p>
-          </div>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-xs font-medium">{serverError}</AlertDescription>
+          </Alert>
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -147,7 +148,7 @@ export default function ForgotPasswordPage() {
           >
             {forgotMutation.isPending ? (
               <div className="flex items-center gap-2">
-                <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
                 <span>{t("auth:forgotPassword.sending")}</span>
               </div>
             ) : (

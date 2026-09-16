@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 
 import CategoryIcon from "@/components/shared/CategoryIcon";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 
 export default function CategoryFormDialog({
@@ -77,17 +77,17 @@ export default function CategoryFormDialog({
           </div>
 
           <div className="flex items-center gap-2 pt-1">
-            <Checkbox
+            <Switch
               id="catActive"
               checked={isActiveValue}
               onCheckedChange={(val) => setValue("isActive", !!val)}
             />
-            <label
+            <Label
               htmlFor="catActive"
               className="text-xs font-medium text-foreground cursor-pointer select-none"
             >
               {t("admin:categories.activeStatus")}
-            </label>
+            </Label>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">

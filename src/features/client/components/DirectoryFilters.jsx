@@ -4,8 +4,16 @@ import { useTranslation } from "react-i18next";
 
 import CategoryIcon from "@/components/shared/CategoryIcon";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Toggle } from "@/components/ui/toggle";
 import { GOVERNORATES } from "@/lib/constants";
-import { getLocalizedCategoryName } from "@/lib/utils";
+import { cn, getLocalizedCategoryName } from "@/lib/utils";
 
 export default function DirectoryFilters({
   categories,
@@ -57,37 +65,39 @@ export default function DirectoryFilters({
           {/* Governorate Select */}
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <MapPin className="h-4 w-4 text-primary" />
-            <select
-              value={selectedGovernorate}
-              onChange={(e) => onSelectGovernorate(e.target.value)}
-              className="h-8 rounded-lg border border-input bg-background px-2.5 text-xs font-medium text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-            >
-              <option value="all">{t("client:directory.allGovernorates")}</option>
-              {GOVERNORATES.map((gov) => (
-                <option key={gov} value={gov}>
-                  {gov}
-                </option>
-              ))}
-            </select>
+            <Select value={selectedGovernorate} onValueChange={onSelectGovernorate}>
+              <SelectTrigger className="h-8 text-xs font-medium w-[160px]">
+                <SelectValue placeholder={t("client:directory.allGovernorates")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all" className="text-xs">
+                  {t("client:directory.allGovernorates")}
+                </SelectItem>
+                {GOVERNORATES.map((gov) => (
+                  <SelectItem key={gov} value={gov} className="text-xs">
+                    {gov}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Availability Toggle */}
-          <button
-            type="button"
-            onClick={onToggleAvailable}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium transition-colors ${
-              onlyAvailable
-                ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-700 font-semibold"
-                : "border-border text-muted-foreground hover:bg-muted"
-            }`}
+          <Toggle
+            pressed={onlyAvailable}
+            onPressedChange={onToggleAvailable}
+            variant="outline"
+            size="sm"
+            className="h-8 gap-1.5 px-3 text-xs data-[state=on]:bg-emerald-500/10 data-[state=on]:border-emerald-500/30 data-[state=on]:text-emerald-700 data-[state=on]:font-semibold"
           >
             <CheckCircle2
-              className={`h-3.5 w-3.5 ${
+              className={cn(
+                "h-3.5 w-3.5",
                 onlyAvailable ? "text-emerald-600" : "text-muted-foreground"
-              }`}
+              )}
             />
             {t("client:directory.availableOnly")}
-          </button>
+          </Toggle>
         </div>
 
         <div className="text-xs text-muted-foreground">

@@ -2,6 +2,7 @@ import { Upload, X, FileText } from "lucide-react";
 import { useRef } from "react";
 
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
@@ -56,7 +57,7 @@ export default function FileUploadField({
       )}
 
       {value ? (
-        <div className="flex items-center gap-2 p-3 border rounded-lg bg-muted/50">
+        <Card className="flex items-center gap-2 p-3 bg-muted/50 shadow-none border">
           <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0" />
           <span className="text-sm truncate flex-1">{value.name}</span>
           <Button
@@ -68,7 +69,7 @@ export default function FileUploadField({
           >
             <X className="h-3 w-3" />
           </Button>
-        </div>
+        </Card>
       ) : (
         <div
           className={cn(

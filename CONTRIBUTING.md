@@ -52,6 +52,18 @@ Separate each group with a blank line.
 - Every mutation's `onError` should use the shared `handleMutationError()` utility.
 - Never manually extract `error?.response?.data?.message` inline.
 
+### UI Component Guidelines (shadcn/ui & Shared Primitives)
+
+To maintain consistent design tokens, accessibility, and RTL compatibility:
+- **Never use browser dialogs**: Never use native `confirm()` or `alert()`. Use `<ConfirmDialog />` from `@/components/shared/ConfirmDialog` (wrapping shadcn `AlertDialog`).
+- **Never use raw HTML tables**: Always use shadcn `Table`, `TableHeader`, `TableBody`, `TableRow`, `TableHead`, `TableCell` from `@/components/ui/table`.
+- **Never use raw `<select>`**: Always use shadcn `Select`, `SelectTrigger`, `SelectValue`, `SelectContent`, `SelectItem` from `@/components/ui/select`.
+- **Never use native `<input type="date">`**: Always use `<DatePicker />` from `@/components/shared/DatePicker` (built with shadcn `Calendar` + `Popover` with RTL localization).
+- **Never build custom CSS spinners**: Use `<Loader2 className="animate-spin ..." />` from `lucide-react`.
+- **Use standard banners**: Use `Alert`, `AlertTitle`, `AlertDescription` from `@/components/ui/alert` for alerts and error boxes.
+- **Use Switch & Toggle**: Use `Switch` for boolean form toggles and `Toggle` for button filters.
+- **Pagination**: Use `<Pagination />` from `@/components/shared/Pagination` (wraps shadcn `Pagination`).
+
 ### Formatting
 
 - **Prettier** handles all formatting — don't override with manual style.

@@ -6,6 +6,14 @@ import StatusBadge from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { formatPrice, formatLocalizedDate } from "@/lib/utils";
 
 export default function RecentBookingsList({ recentBookings, bookingsLoading, language }) {
@@ -37,42 +45,52 @@ export default function RecentBookingsList({ recentBookings, bookingsLoading, la
             {t("common:empty.noResults")}
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-xs text-start">
-              <thead>
-                <tr className="border-b border-border text-muted-foreground">
-                  <th className="py-2.5 font-semibold text-start">{t("admin:pricing.category")}</th>
-                  <th className="py-2.5 font-semibold text-start">{t("admin:payments.client")}</th>
-                  <th className="py-2.5 font-semibold text-start">
-                    {t("admin:payments.provider")}
-                  </th>
-                  <th className="py-2.5 font-semibold text-start">{t("admin:payments.date")}</th>
-                  <th className="py-2.5 font-semibold text-end">{t("admin:payments.amount")}</th>
-                  <th className="py-2.5 font-semibold text-end">{t("admin:payments.status")}</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/50">
-                {recentBookings.map((b) => (
-                  <tr key={b.id} className="hover:bg-muted/30 transition-colors">
-                    <td className="py-3 font-semibold text-foreground">
-                      {b.categoryName || "Healthcare Shift"}
-                    </td>
-                    <td className="py-3 text-muted-foreground">{b.userName}</td>
-                    <td className="py-3 text-foreground font-medium">{b.providerName}</td>
-                    <td className="py-3 text-muted-foreground">
-                      {formatLocalizedDate(b.date, "PP", language)}
-                    </td>
-                    <td className="py-3 text-end font-bold text-foreground">
-                      {formatPrice(b.amount, "EGP", language)}
-                    </td>
-                    <td className="py-3 text-end">
-                      <StatusBadge status={b.status} />
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table className="text-xs text-start">
+            <TableHeader>
+              <TableRow className="border-b border-border text-muted-foreground">
+                <TableHead className="py-2.5 font-semibold text-start">
+                  {t("admin:pricing.category")}
+                </TableHead>
+                <TableHead className="py-2.5 font-semibold text-start">
+                  {t("admin:payments.client")}
+                </TableHead>
+                <TableHead className="py-2.5 font-semibold text-start">
+                  {t("admin:payments.provider")}
+                </TableHead>
+                <TableHead className="py-2.5 font-semibold text-start">
+                  {t("admin:payments.date")}
+                </TableHead>
+                <TableHead className="py-2.5 font-semibold text-end">
+                  {t("admin:payments.amount")}
+                </TableHead>
+                <TableHead className="py-2.5 font-semibold text-end">
+                  {t("admin:payments.status")}
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="divide-y divide-border/50">
+              {recentBookings.map((b) => (
+                <TableRow key={b.id} className="hover:bg-muted/30 transition-colors">
+                  <TableCell className="py-3 font-semibold text-foreground">
+                    {b.categoryName || "Healthcare Shift"}
+                  </TableCell>
+                  <TableCell className="py-3 text-muted-foreground">{b.userName}</TableCell>
+                  <TableCell className="py-3 text-foreground font-medium">
+                    {b.providerName}
+                  </TableCell>
+                  <TableCell className="py-3 text-muted-foreground">
+                    {formatLocalizedDate(b.date, "PP", language)}
+                  </TableCell>
+                  <TableCell className="py-3 text-end font-bold text-foreground">
+                    {formatPrice(b.amount, "EGP", language)}
+                  </TableCell>
+                  <TableCell className="py-3 text-end">
+                    <StatusBadge status={b.status} />
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         )}
       </CardContent>
     </Card>

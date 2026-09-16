@@ -1,9 +1,10 @@
-import { ShieldCheck, Clock, CheckCircle2, ArrowLeft, Star, Users } from "lucide-react";
+import { ShieldCheck, Clock, CheckCircle2, ArrowLeft, Users } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Outlet, Link } from "react-router-dom";
 
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
+import RatingStars from "@/components/shared/RatingStars";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 
 export default function AuthLayout() {
@@ -92,11 +93,7 @@ export default function AuthLayout() {
             </span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="flex text-amber-400">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-3.5 w-3.5 fill-current" />
-              ))}
-            </div>
+            <RatingStars rating={5} size="h-3.5 w-3.5" />
             <span>
               <strong className="text-white font-semibold">{t("auth:hero.trustMetric")}</strong>
             </span>

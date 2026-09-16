@@ -18,6 +18,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { GOVERNORATES } from "@/lib/constants";
 import { handleMutationError } from "@/lib/utils";
 
@@ -98,17 +105,18 @@ export default function ProviderWorkingAreasPage() {
             <form onSubmit={handleAdd} className="space-y-4 pt-2">
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold">{t("client:profile.governorate")} *</Label>
-                <select
-                  value={governorate}
-                  onChange={(e) => setGovernorate(e.target.value)}
-                  className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
-                >
-                  {GOVERNORATES.map((gov) => (
-                    <option key={gov} value={gov}>
-                      {gov}
-                    </option>
-                  ))}
-                </select>
+                <Select value={governorate} onValueChange={setGovernorate}>
+                  <SelectTrigger className="w-full h-10 text-xs">
+                    <SelectValue placeholder={t("client:profile.governorate")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {GOVERNORATES.map((gov) => (
+                      <SelectItem key={gov} value={gov} className="text-xs">
+                        {gov}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
 
               <div className="space-y-1.5">

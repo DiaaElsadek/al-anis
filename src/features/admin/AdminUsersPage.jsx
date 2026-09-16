@@ -13,12 +13,28 @@ import {
 } from "@/api/admin";
 import EmptyState from "@/components/shared/EmptyState";
 import Pagination from "@/components/shared/Pagination";
+import StatusBadge from "@/components/shared/StatusBadge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useDebounce } from "@/hooks/useDebounce";
 import { formatLocalizedDate, getInitials, getMediaUrl, handleMutationError } from "@/lib/utils";
 
@@ -107,33 +123,41 @@ export default function AdminUsersPage() {
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
           {/* Role Filter */}
-          <select
+          <Select
             value={roleFilter}
-            onChange={(e) => {
-              setRoleFilter(e.target.value);
+            onValueChange={(val) => {
+              setRoleFilter(val);
               setPage(1);
             }}
-            className="h-9 rounded-lg border border-input bg-background px-3 text-xs text-foreground focus:ring-1 focus:ring-primary"
           >
-            <option value="all">{t("admin:users.allRoles")}</option>
-            <option value="User">{t("common:roles.user")}</option>
-            <option value="ServiceProvider">{t("common:roles.serviceProvider")}</option>
-            <option value="Admin">{t("common:roles.admin")}</option>
-          </select>
+            <SelectTrigger className="w-[140px] h-9 text-xs">
+              <SelectValue placeholder={t("admin:users.allRoles")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("admin:users.allRoles")}</SelectItem>
+              <SelectItem value="User">{t("common:roles.user")}</SelectItem>
+              <SelectItem value="ServiceProvider">{t("common:roles.serviceProvider")}</SelectItem>
+              <SelectItem value="Admin">{t("common:roles.admin")}</SelectItem>
+            </SelectContent>
+          </Select>
 
           {/* Status Filter */}
-          <select
+          <Select
             value={statusFilter}
-            onChange={(e) => {
-              setStatusFilter(e.target.value);
+            onValueChange={(val) => {
+              setStatusFilter(val);
               setPage(1);
             }}
-            className="h-9 rounded-lg border border-input bg-background px-3 text-xs text-foreground focus:ring-1 focus:ring-primary"
           >
-            <option value="all">{t("admin:users.allStatuses")}</option>
-            <option value="Active">{t("common:status.active")}</option>
-            <option value="Suspended">{t("common:status.suspended")}</option>
-          </select>
+            <SelectTrigger className="w-[140px] h-9 text-xs">
+              <SelectValue placeholder={t("admin:users.allStatuses")} />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">{t("admin:users.allStatuses")}</SelectItem>
+              <SelectItem value="Active">{t("common:status.active")}</SelectItem>
+              <SelectItem value="Suspended">{t("common:status.suspended")}</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
 
@@ -165,127 +189,112 @@ export default function AdminUsersPage() {
               />
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-start">
-                <thead>
-                  <tr className="border-b border-border/60 bg-muted/20 text-muted-foreground">
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:users.userCol")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("auth:register.phoneNumber")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:users.roleCol")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:users.joinedCol")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-center">
-                      {t("admin:users.statusCol")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-end">
-                      {t("admin:users.actionsCol")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/40">
-                  {users.map((u) => {
-                    const isSuspended = u.status?.toLowerCase().includes("suspend") || false;
+            <Table className="text-xs text-start">
+              <TableHeader className="bg-muted/20 text-muted-foreground">
+                <TableRow className="border-b border-border/60">
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:users.userCol")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("auth:register.phoneNumber")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:users.roleCol")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:users.joinedCol")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-center">
+                    {t("admin:users.statusCol")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-end">
+                    {t("admin:users.actionsCol")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-border/40">
+                {users.map((u) => {
+                  const isSuspended = u.status?.toLowerCase().includes("suspend") || false;
 
-                    const roleLabel =
-                      u.role === "Admin"
-                        ? t("common:roles.admin")
-                        : u.role === "ServiceProvider"
-                          ? t("common:roles.serviceProvider")
-                          : t("common:roles.user");
+                  const roleLabel =
+                    u.role === "Admin"
+                      ? t("common:roles.admin")
+                      : u.role === "ServiceProvider"
+                        ? t("common:roles.serviceProvider")
+                        : t("common:roles.user");
 
-                    return (
-                      <tr key={u.id} className="hover:bg-muted/25 transition-colors">
-                        <td className="py-3 px-4 font-bold text-foreground">
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-9 w-9 rounded-xl border">
-                              <AvatarImage src={getMediaUrl(u.profilePicture)} alt={u.name} />
-                              <AvatarFallback className="rounded-xl font-bold text-xs bg-primary/10 text-primary">
-                                {getInitials(u.name)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <span>{u.name || t("common:roles.user")}</span>
-                          </div>
-                        </td>
+                  return (
+                    <TableRow key={u.id} className="hover:bg-muted/25 transition-colors">
+                      <TableCell className="py-3 px-4 font-bold text-foreground">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-9 w-9 rounded-xl border">
+                            <AvatarImage src={getMediaUrl(u.profilePicture)} alt={u.name} />
+                            <AvatarFallback className="rounded-xl font-bold text-xs bg-primary/10 text-primary">
+                              {getInitials(u.name)}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span>{u.name || t("common:roles.user")}</span>
+                        </div>
+                      </TableCell>
 
-                        <td className="py-3 px-4 text-muted-foreground">
-                          <div>{u.email}</div>
-                          <div className="text-[11px] font-mono">{u.phone || "—"}</div>
-                        </td>
+                      <TableCell className="py-3 px-4 text-muted-foreground">
+                        <div>{u.email}</div>
+                        <div className="text-[11px] font-mono">{u.phone || "—"}</div>
+                      </TableCell>
 
-                        <td className="py-3 px-4">
-                          <Badge
+                      <TableCell className="py-3 px-4">
+                        <Badge
+                          variant="outline"
+                          className={`text-[11px] font-medium ${
+                            u.role === "Admin"
+                              ? "bg-amber-500/10 text-amber-700 border-amber-500/20"
+                              : u.role === "ServiceProvider"
+                                ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
+                                : "bg-primary/10 text-primary border-primary/20"
+                          }`}
+                        >
+                          {roleLabel}
+                        </Badge>
+                      </TableCell>
+
+                      <TableCell className="py-3 px-4 text-muted-foreground">
+                        {u.joined ? formatLocalizedDate(u.joined, "PP", i18n.language) : "—"}
+                      </TableCell>
+
+                      <TableCell className="py-3 px-4 text-center">
+                        <StatusBadge status={isSuspended ? "suspended" : "active"} />
+                      </TableCell>
+
+                      <TableCell className="py-3 px-4 text-end">
+                        {isSuspended ? (
+                          <Button
+                            size="sm"
                             variant="outline"
-                            className={`text-[11px] font-medium ${
-                              u.role === "Admin"
-                                ? "bg-amber-500/10 text-amber-700 border-amber-500/20"
-                                : u.role === "ServiceProvider"
-                                  ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
-                                  : "bg-primary/10 text-primary border-primary/20"
-                            }`}
+                            className="h-7 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
+                            onClick={() => activateMutation.mutate({ userId: u.id, role: u.role })}
+                            disabled={activateMutation.isPending}
                           >
-                            {roleLabel}
-                          </Badge>
-                        </td>
-
-                        <td className="py-3 px-4 text-muted-foreground">
-                          {u.joined ? formatLocalizedDate(u.joined, "PP", i18n.language) : "—"}
-                        </td>
-
-                        <td className="py-3 px-4 text-center">
-                          <span
-                            className={`inline-flex items-center gap-1.5 font-semibold text-xs ${
-                              isSuspended ? "text-destructive" : "text-emerald-600"
-                            }`}
+                            <Unlock className="h-3 w-3 me-1" />
+                            {t("admin:users.activateButton")}
+                          </Button>
+                        ) : (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 text-xs text-destructive hover:bg-destructive/10"
+                            onClick={() => suspendMutation.mutate({ userId: u.id, role: u.role })}
+                            disabled={suspendMutation.isPending}
                           >
-                            <span
-                              className={`h-2 w-2 rounded-full ${
-                                isSuspended ? "bg-destructive" : "bg-emerald-500"
-                              }`}
-                            />
-                            {isSuspended ? t("common:status.suspended") : t("common:status.active")}
-                          </span>
-                        </td>
-
-                        <td className="py-3 px-4 text-end">
-                          {isSuspended ? (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-7 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
-                              onClick={() =>
-                                activateMutation.mutate({ userId: u.id, role: u.role })
-                              }
-                              disabled={activateMutation.isPending}
-                            >
-                              <Unlock className="h-3 w-3 me-1" />
-                              {t("admin:users.activateButton")}
-                            </Button>
-                          ) : (
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-7 text-xs text-destructive hover:bg-destructive/10"
-                              onClick={() => suspendMutation.mutate({ userId: u.id, role: u.role })}
-                              disabled={suspendMutation.isPending}
-                            >
-                              <Lock className="h-3 w-3 me-1" />
-                              {t("admin:users.suspendButton")}
-                            </Button>
-                          )}
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                            <Lock className="h-3 w-3 me-1" />
+                            {t("admin:users.suspendButton")}
+                          </Button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
           )}
         </CardContent>
       </Card>

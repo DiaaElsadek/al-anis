@@ -2,6 +2,7 @@ import { Plus } from "lucide-react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
+import DatePicker from "@/components/shared/DatePicker";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -13,6 +14,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ShiftType } from "@/lib/constants";
 
 export default function AddShiftModal({
@@ -49,11 +57,10 @@ export default function AddShiftModal({
         <div className="space-y-4 pt-2">
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold">{t("provider:availability.selectDate")}</Label>
-            <Input
-              type="date"
+            <DatePicker
               value={singleDate}
               min={new Date().toISOString().split("T")[0]}
-              onChange={(e) => setSingleDate(e.target.value)}
+              onChange={setSingleDate}
             />
           </div>
 
@@ -61,15 +68,22 @@ export default function AddShiftModal({
             <Label className="text-xs font-semibold">
               {t("provider:availability.selectShift")}
             </Label>
-            <select
-              value={singleShift}
-              onChange={(e) => setSingleShift(e.target.value)}
-              className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
-            >
-              <option value={ShiftType.MORNING}>{t("common:shifts.morning")}</option>
-              <option value={ShiftType.EVENING}>{t("common:shifts.evening")}</option>
-              <option value={ShiftType.NIGHT}>{t("common:shifts.night")}</option>
-            </select>
+            <Select value={singleShift} onValueChange={setSingleShift}>
+              <SelectTrigger className="w-full h-10 text-xs">
+                <SelectValue placeholder={t("provider:availability.selectShift")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ShiftType.MORNING} className="text-xs">
+                  {t("common:shifts.morning")}
+                </SelectItem>
+                <SelectItem value={ShiftType.EVENING} className="text-xs">
+                  {t("common:shifts.evening")}
+                </SelectItem>
+                <SelectItem value={ShiftType.NIGHT} className="text-xs">
+                  {t("common:shifts.night")}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="space-y-1.5">

@@ -12,6 +12,7 @@ import {
   User,
   Sparkles,
   AlertCircle,
+  Loader2,
 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,6 +21,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -201,13 +203,13 @@ export default function LoginPage() {
 
         {/* Error Alert */}
         {authError && (
-          <div className="flex items-start gap-3 p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-            <div className="flex-1">
-              <p className="font-medium">{t("common:toasts.somethingWentWrong")}</p>
-              <p className="text-xs opacity-90 mt-0.5">{authError}</p>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <div>
+              <AlertTitle>{t("common:toasts.somethingWentWrong")}</AlertTitle>
+              <AlertDescription className="text-xs opacity-90 mt-0.5">{authError}</AlertDescription>
             </div>
-          </div>
+          </Alert>
         )}
 
         {/* Login Form */}
@@ -291,7 +293,7 @@ export default function LoginPage() {
           >
             {loginMutation.isPending ? (
               <div className="flex items-center gap-2">
-                <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
                 <span>{t("auth:login.signingIn")}</span>
               </div>
             ) : (

@@ -13,6 +13,7 @@ import {
   createBulkPricing,
 } from "@/api/servicePricing";
 import CategoryIcon from "@/components/shared/CategoryIcon";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import EmptyState from "@/components/shared/EmptyState";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,6 +29,7 @@ export default function AdminPricingPage() {
   const [singleModalOpen, setSingleModalOpen] = useState(false);
   const [bulkModalOpen, setBulkModalOpen] = useState(false);
   const [editingPricing, setEditingPricing] = useState(null);
+  const [deletingId, setDeletingId] = useState(null);
 
   // Form states for single
   const [selectedCatId, setSelectedCatId] = useState("");
@@ -303,11 +305,7 @@ export default function AdminPricingPage() {
                               size="icon"
                               className="h-7 w-7 text-muted-foreground hover:text-destructive"
                               title={t("common:actions.delete")}
-                              onClick={() => {
-                                if (confirm(t("common:actions.delete") + "?")) {
-                                  deleteMutation.mutate(priceRecord.id);
-                                }
-                              }}
+                              onClick={() => setDeletingId(priceRecord.id)}
                             >
                               <Trash2 className="h-3.5 w-3.5" />
                             </Button>
@@ -322,6 +320,26 @@ export default function AdminPricingPage() {
           ))}
         </div>
       )}
+
+      <ConfirmDialog
+        open={Boolean(deletingId)}
+        onOpenChange={(open) => {
+          if (!open) setDeletingId(null);
+        }}
+        title={t("common:actions.delete")}
+        description={t("common:actions.delete") + "?"}
+        confirmLabel={t("common:actions.delete")}
+        cancelLabel={t("common:actions.cancel")}
+        variant="destructive"
+        loading={deleteMutation.isPending}
+        onConfirm={() => {
+          if (deletingId) {
+            deleteMutation.mutate(deletingId, {
+              onSettled: () => setDeletingId(null),
+            });
+          }
+        }}
+      />
     </div>
   );
 }
