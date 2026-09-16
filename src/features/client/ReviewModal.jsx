@@ -1,12 +1,12 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Star } from "lucide-react";
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import { createReview } from "@/api/reviews";
+import RatingStars from "@/components/shared/RatingStars";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -23,7 +23,6 @@ import { createReviewSchema } from "@/lib/validators";
 export default function ReviewModal({ open, onOpenChange, serviceRequestId, providerName }) {
   const { t } = useTranslation(["client", "common"]);
   const queryClient = useQueryClient();
-  const [hoverRating, setHoverRating] = useState(0);
 
   const {
     register,
@@ -87,25 +86,13 @@ export default function ReviewModal({ open, onOpenChange, serviceRequestId, prov
             <Label className="text-xs font-semibold block">
               {t("client:reviewModal.ratingLabel")}
             </Label>
-            <div className="flex justify-center gap-1.5 py-2">
-              {[1, 2, 3, 4, 5].map((star) => (
-                <button
-                  key={star}
-                  type="button"
-                  onClick={() => setValue("rating", star)}
-                  onMouseEnter={() => setHoverRating(star)}
-                  onMouseLeave={() => setHoverRating(0)}
-                  className="p-1 focus:outline-none transition-transform hover:scale-125"
-                >
-                  <Star
-                    className={`h-7 w-7 transition-colors ${
-                      star <= (hoverRating || selectedRating)
-                        ? "text-amber-400 fill-amber-400"
-                        : "text-muted-foreground/30"
-                    }`}
-                  />
-                </button>
-              ))}
+            <div className="flex justify-center py-2">
+              <RatingStars
+                rating={selectedRating}
+                interactive
+                size="h-7 w-7"
+                onChange={(val) => setValue("rating", val, { shouldValidate: true })}
+              />
             </div>
             {errors.rating && <p className="text-xs text-destructive">{errors.rating.message}</p>}
           </div>

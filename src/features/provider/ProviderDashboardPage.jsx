@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ShieldCheck, Power } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -7,7 +7,7 @@ import { getProviderDashboard, updateAvailabilityStatus } from "@/api/provider";
 import { respondToRequest } from "@/api/requests";
 import DashboardSkeleton from "@/components/shared/DashboardSkeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
 import ProviderStatsGrid from "@/features/provider/components/ProviderStatsGrid";
 import RecentRequestsList from "@/features/provider/components/RecentRequestsList";
 import UpcomingJobsList from "@/features/provider/components/UpcomingJobsList";
@@ -94,20 +94,13 @@ export default function ProviderDashboardPage() {
             </span>
           </div>
 
-          <Button
-            size="sm"
-            variant={isAvail ? "default" : "outline"}
-            className={`h-9 px-3 rounded-lg text-xs font-semibold ${
-              isAvail
-                ? "bg-emerald-500 hover:bg-emerald-600 text-white"
-                : "border-white/30 text-white hover:bg-white/10"
-            }`}
-            onClick={() => availMutation.mutate(!isAvail)}
+          <Switch
+            checked={isAvail}
+            onCheckedChange={(checked) => availMutation.mutate(checked)}
             disabled={availMutation.isPending}
-          >
-            <Power className="h-3.5 w-3.5 me-1.5" />
-            {isAvail ? t("provider:dashboard.available") : t("provider:dashboard.unavailable")}
-          </Button>
+            className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-white/20 border-white/20"
+            aria-label={t("provider:dashboard.availabilityStatus")}
+          />
         </div>
       </div>
 

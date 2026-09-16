@@ -12,6 +12,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function BulkPricingModal({
   open,
@@ -57,18 +64,18 @@ export default function BulkPricingModal({
         <div className="space-y-4 pt-2">
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold">{t("admin:pricing.category")} *</Label>
-            <select
-              value={bulkCatId}
-              onChange={(e) => setBulkCatId(e.target.value)}
-              className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
-            >
-              <option value="">{t("client:directory.allCategories")}</option>
-              {categories.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {i18n.language === "ar" ? c.name || c.nameEn : c.nameEn || c.name}
-                </option>
-              ))}
-            </select>
+            <Select value={bulkCatId || ""} onValueChange={setBulkCatId}>
+              <SelectTrigger className="w-full h-10 text-xs">
+                <SelectValue placeholder={t("client:directory.allCategories")} />
+              </SelectTrigger>
+              <SelectContent>
+                {categories.map((c) => (
+                  <SelectItem key={c.id} value={c.id} className="text-xs">
+                    {i18n.language === "ar" ? c.name || c.nameEn : c.nameEn || c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="grid grid-cols-3 gap-2">

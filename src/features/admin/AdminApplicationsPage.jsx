@@ -16,6 +16,15 @@ import StatusBadge from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ApplicationDetailDialog from "@/features/admin/components/ApplicationDetailDialog";
 import ApplicationRejectDialog from "@/features/admin/components/ApplicationRejectDialog";
 import { formatLocalizedDate, formatPrice, handleMutationError } from "@/lib/utils";
@@ -30,24 +39,18 @@ export default function AdminApplicationsPage() {
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectionReason, setRejectionReason] = useState("");
 
-  // Applications list
-  const {
-    data: appData,
-    isLoading,
-    isError,
-    refetch,
-  } = useQuery({
-    queryKey: ["admin-applications", page],
-    queryFn: () => getServiceProviderApplications({ page, pageSize }),
-    keepPreviousData: true,
+  // Fetch paginated applications
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["admin-applications", page, pageSize],
+    queryFn: () => getServiceProviderApplications(page, pageSize),
   });
 
-  const applications = appData?.items || [];
-  const totalPages = appData?.totalPages || 1;
+  const applications = data?.items || [];
+  const totalPages = data?.totalPages || 1;
 
-  // Single application detail for review dialog
+  // Single application details
   const { data: selectedApp, isLoading: detailLoading } = useQuery({
-    queryKey: ["admin-application-detail", selectedAppId],
+    queryKey: ["admin-application", selectedAppId],
     queryFn: () => getServiceProviderApplication(selectedAppId),
     enabled: !!selectedAppId,
   });
@@ -56,30 +59,28 @@ export default function AdminApplicationsPage() {
   const approveMutation = useMutation({
     mutationFn: (id) => approveServiceProviderApplication(id),
     onSuccess: () => {
-      toast.success("Application approved!", {
-        description: "Provider credentials verified and elevated.",
-      });
+      toast.success(t("admin:applications.toasts.approved"));
       queryClient.invalidateQueries(["admin-applications"]);
-      queryClient.invalidateQueries(["admin-dashboard-stats"]);
-      setSelectedAppId(null);
+      queryClient.invalidateQueries(["admin-application", selectedAppId]);
     },
-    onError: (error) => handleMutationError(error, t, "common:error"),
+    onError: (error) => handleMutationError(error, t, "common:error", { id: "approve-app-error" }),
   });
 
   // Reject mutation
   const rejectMutation = useMutation({
     mutationFn: ({ id, reason }) => rejectServiceProviderApplication(id, reason),
     onSuccess: () => {
-      toast.success("Application rejected.");
+      toast.success(t("admin:applications.toasts.rejected"));
       queryClient.invalidateQueries(["admin-applications"]);
-      queryClient.invalidateQueries(["admin-dashboard-stats"]);
+      queryClient.invalidateQueries(["admin-application", selectedAppId]);
       setRejectModalOpen(false);
       setSelectedAppId(null);
       setRejectionReason("");
     },
-    onError: (error) => handleMutationError(error, t, "common:error"),
+    onError: (error) => handleMutationError(error, t, "common:error", { id: "reject-app-error" }),
   });
 
+  // Filter applications by local activeTab
   const filteredApps = applications.filter((app) => {
     if (activeTab === "all") return true;
     if (activeTab === "pending") return app.status === 0;
@@ -91,56 +92,47 @@ export default function AdminApplicationsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground">{t("admin:applications.title")}</h1>
+        <h1 className="text-2xl font-bold tracking-tight text-foreground">
+          {t("admin:applications.title")}
+        </h1>
         <p className="text-xs text-muted-foreground mt-0.5">{t("admin:applications.subtitle")}</p>
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-border/70 pb-3">
-        {[
-          { key: "all", label: t("admin:applications.tabs.all", { count: applications.length }) },
-          {
-            key: "pending",
-            label: t("admin:applications.tabs.pending", {
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <TabsList className="bg-muted/60 p-1">
+          <TabsTrigger value="all" className="text-xs">
+            {t("admin:applications.tabs.all", { count: applications.length })}
+          </TabsTrigger>
+          <TabsTrigger value="pending" className="text-xs">
+            {t("admin:applications.tabs.pending", {
               count: applications.filter((a) => a.status === 0).length,
-            }),
-          },
-          {
-            key: "approved",
-            label: t("admin:applications.tabs.approved", {
+            })}
+          </TabsTrigger>
+          <TabsTrigger value="approved" className="text-xs">
+            {t("admin:applications.tabs.approved", {
               count: applications.filter((a) => a.status === 1).length,
-            }),
-          },
-          {
-            key: "rejected",
-            label: t("admin:applications.tabs.rejected", {
+            })}
+          </TabsTrigger>
+          <TabsTrigger value="rejected" className="text-xs">
+            {t("admin:applications.tabs.rejected", {
               count: applications.filter((a) => a.status === 2).length,
-            }),
-          },
-        ].map((tab) => (
-          <Button
-            key={tab.key}
-            variant={activeTab === tab.key ? "default" : "outline"}
-            size="sm"
-            className="text-xs h-8 rounded-full"
-            onClick={() => setActiveTab(tab.key)}
-          >
-            {tab.label}
-          </Button>
-        ))}
-      </div>
+            })}
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
 
       {/* Applications Table */}
       <Card className="border-border/70 shadow-sm bg-card">
         <CardContent className="p-0">
           {isLoading ? (
-            <div className="p-6 space-y-3">
+            <div className="p-6 space-y-4">
               {[...Array(5)].map((_, i) => (
                 <Skeleton key={i} className="h-12 w-full rounded-lg" />
               ))}
             </div>
           ) : isError ? (
-            <div className="py-16 text-center">
+            <div className="py-12 text-center">
               <EmptyState
                 icon={FileCheck}
                 title={t("common:error")}
@@ -150,7 +142,7 @@ export default function AdminApplicationsPage() {
               />
             </div>
           ) : filteredApps.length === 0 ? (
-            <div className="py-16 text-center">
+            <div className="py-12 text-center">
               <EmptyState
                 icon={FileCheck}
                 title={t("common:empty.noResults")}
@@ -158,71 +150,69 @@ export default function AdminApplicationsPage() {
               />
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-start">
-                <thead>
-                  <tr className="border-b border-border/60 bg-muted/20 text-muted-foreground">
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:applications.applicant")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("auth:register.phoneNumber")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:applications.experience")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:applications.hourlyRate")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:applications.submitted")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-center">
-                      {t("admin:applications.status")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-end">
-                      {t("admin:applications.actions")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/40">
-                  {filteredApps.map((app) => (
-                    <tr key={app.id} className="hover:bg-muted/25 transition-colors">
-                      <td className="py-3.5 px-4 font-bold text-foreground">
-                        {app.firstName} {app.lastName}
-                      </td>
-                      <td className="py-3.5 px-4 text-muted-foreground">
-                        <div>{app.userEmail}</div>
-                        <div className="text-[11px] font-mono">{app.phoneNumber}</div>
-                      </td>
-                      <td className="py-3.5 px-4 text-foreground/90 max-w-[180px] truncate">
-                        {app.experience}
-                      </td>
-                      <td className="py-3.5 px-4 font-mono font-bold text-primary">
-                        {formatPrice(app.hourlyRate, "EGP", i18n.language)}
-                      </td>
-                      <td className="py-3.5 px-4 text-muted-foreground">
-                        {formatLocalizedDate(app.createdAt, "PP", i18n.language)}
-                      </td>
-                      <td className="py-3.5 px-4 text-center">
-                        <StatusBadge status={app.status} />
-                      </td>
-                      <td className="py-3.5 px-4 text-end">
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="h-7 text-xs font-medium"
-                          onClick={() => setSelectedAppId(app.id)}
-                        >
-                          <Eye className="h-3.5 w-3.5 me-1" />
-                          {t("admin:applications.reviewButton")}
-                        </Button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+            <Table className="text-xs text-start">
+              <TableHeader className="bg-muted/20 text-muted-foreground">
+                <TableRow className="border-b border-border/60">
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:applications.applicant")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("auth:register.phoneNumber")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:applications.experience")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:applications.hourlyRate")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:applications.submitted")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-center">
+                    {t("admin:applications.status")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-end">
+                    {t("admin:applications.actions")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-border/40">
+                {filteredApps.map((app) => (
+                  <TableRow key={app.id} className="hover:bg-muted/25 transition-colors">
+                    <TableCell className="py-3.5 px-4 font-bold text-foreground">
+                      {app.firstName} {app.lastName}
+                    </TableCell>
+                    <TableCell className="py-3.5 px-4 text-muted-foreground">
+                      <div>{app.userEmail}</div>
+                      <div className="text-[11px] font-mono">{app.phoneNumber}</div>
+                    </TableCell>
+                    <TableCell className="py-3.5 px-4 text-foreground/90 max-w-[180px] truncate">
+                      {app.experience}
+                    </TableCell>
+                    <TableCell className="py-3.5 px-4 font-mono font-bold text-primary">
+                      {formatPrice(app.hourlyRate, "EGP", i18n.language)}
+                    </TableCell>
+                    <TableCell className="py-3.5 px-4 text-muted-foreground">
+                      {formatLocalizedDate(app.createdAt, "PP", i18n.language)}
+                    </TableCell>
+                    <TableCell className="py-3.5 px-4 text-center">
+                      <StatusBadge status={app.status} />
+                    </TableCell>
+                    <TableCell className="py-3.5 px-4 text-end">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="h-7 text-xs font-medium"
+                        onClick={() => setSelectedAppId(app.id)}
+                      >
+                        <Eye className="h-3.5 w-3.5 me-1" />
+                        {t("admin:applications.reviewButton")}
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           )}
         </CardContent>
       </Card>

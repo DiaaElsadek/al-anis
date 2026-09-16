@@ -7,11 +7,20 @@ import { toast } from "sonner";
 
 import { getCategories, createCategory, updateCategory, deleteCategory } from "@/api/category";
 import CategoryIcon from "@/components/shared/CategoryIcon";
+import ConfirmDialog from "@/components/shared/ConfirmDialog";
 import EmptyState from "@/components/shared/EmptyState";
-import { Badge } from "@/components/ui/badge";
+import StatusBadge from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import CategoryFormDialog from "@/features/admin/components/CategoryFormDialog";
 import { handleMutationError } from "@/lib/utils";
 
@@ -20,6 +29,7 @@ export default function AdminCategoriesPage() {
   const queryClient = useQueryClient();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCategory, setEditingCategory] = useState(null);
+  const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
   const {
     data: categories = [],
@@ -147,86 +157,73 @@ export default function AdminCategoriesPage() {
               />
             </div>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs text-start">
-                <thead>
-                  <tr className="border-b border-border/60 bg-muted/20 text-muted-foreground">
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:categories.icon")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:categories.nameAr")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:categories.nameEn")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-start">
-                      {t("admin:categories.description")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-center">
-                      {t("admin:categories.activeStatus")}
-                    </th>
-                    <th className="py-3 px-4 font-semibold text-end">
-                      {t("admin:applications.actions")}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border/40">
-                  {categories.map((c) => (
-                    <tr key={c.id} className="hover:bg-muted/25 transition-colors">
-                      <td className="py-3 px-4">
-                        <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
-                          <CategoryIcon icon={c.icon} name={c.name} className="h-4 w-4" />
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 font-bold text-foreground">{c.name}</td>
-                      <td className="py-3 px-4 text-muted-foreground">{c.nameEn || "—"}</td>
-                      <td className="py-3 px-4 text-muted-foreground max-w-[240px] truncate">
-                        {c.description || "—"}
-                      </td>
-                      <td className="py-3 px-4 text-center">
-                        <Badge
-                          variant="outline"
-                          className={
-                            c.isActive
-                              ? "bg-emerald-500/10 text-emerald-700 border-emerald-500/20"
-                              : "bg-muted text-muted-foreground"
-                          }
+            <Table className="text-xs text-start">
+              <TableHeader className="bg-muted/20 text-muted-foreground">
+                <TableRow className="border-b border-border/60">
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:categories.icon")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:categories.nameAr")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:categories.nameEn")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-start">
+                    {t("admin:categories.description")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-center">
+                    {t("admin:categories.activeStatus")}
+                  </TableHead>
+                  <TableHead className="py-3 px-4 font-semibold text-end">
+                    {t("admin:applications.actions")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="divide-y divide-border/40">
+                {categories.map((c) => (
+                  <TableRow key={c.id} className="hover:bg-muted/25 transition-colors">
+                    <TableCell className="py-3 px-4">
+                      <div className="h-8 w-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center">
+                        <CategoryIcon icon={c.icon} name={c.name} className="h-4 w-4" />
+                      </div>
+                    </TableCell>
+                    <TableCell className="py-3 px-4 font-bold text-foreground">{c.name}</TableCell>
+                    <TableCell className="py-3 px-4 text-muted-foreground">
+                      {c.nameEn || "—"}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-muted-foreground max-w-[240px] truncate">
+                      {c.description || "—"}
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-center">
+                      <StatusBadge status={c.isActive ? "active" : "suspended"} />
+                    </TableCell>
+                    <TableCell className="py-3 px-4 text-end">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                          onClick={() => handleEdit(c)}
+                          title={t("common:actions.edit")}
                         >
-                          {c.isActive ? t("common:status.active") : t("common:status.suspended")}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4 text-end">
-                        <div className="flex items-center justify-end gap-1">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 text-muted-foreground hover:text-foreground"
-                            onClick={() => handleEdit(c)}
-                            title={t("common:actions.edit")}
-                          >
-                            <Edit2 className="h-3.5 w-3.5" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-7 w-7 text-muted-foreground hover:text-destructive"
-                            title={t("common:actions.delete")}
-                            onClick={() => {
-                              if (confirm(t("admin:categories.deleteConfirm"))) {
-                                deleteMutation.mutate(c.id);
-                              }
-                            }}
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                          <Edit2 className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                          title={t("common:actions.delete")}
+                          onClick={() => setDeleteConfirmId(c.id)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           )}
         </CardContent>
       </Card>
@@ -243,6 +240,25 @@ export default function AdminCategoriesPage() {
         setValue={setValue}
         isActiveValue={isActiveValue}
         isSaving={saveMutation.isPending}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <ConfirmDialog
+        open={!!deleteConfirmId}
+        onOpenChange={(open) => !open && setDeleteConfirmId(null)}
+        title={t("common:actions.delete")}
+        description={t("admin:categories.deleteConfirm")}
+        confirmLabel={t("common:actions.delete")}
+        cancelLabel={t("common:actions.cancel")}
+        variant="destructive"
+        loading={deleteMutation.isPending}
+        onConfirm={() => {
+          if (deleteConfirmId) {
+            deleteMutation.mutate(deleteConfirmId, {
+              onSettled: () => setDeleteConfirmId(null),
+            });
+          }
+        }}
       />
     </div>
   );

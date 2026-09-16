@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { ShieldCheck, ArrowRight, RefreshCw, AlertCircle, ArrowLeft } from "lucide-react";
+import { ShieldCheck, ArrowRight, RefreshCw, AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -7,6 +7,7 @@ import { toast } from "sonner";
 
 import { verifyOtp, resendOtp } from "@/api/account";
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -149,10 +150,10 @@ export default function VerifyOtpPage() {
 
       <CardContent className="space-y-6">
         {errorMessage && (
-          <div className="flex items-start gap-3 p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-            <p className="text-xs font-medium">{errorMessage}</p>
-          </div>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-xs font-medium">{errorMessage}</AlertDescription>
+          </Alert>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -197,7 +198,7 @@ export default function VerifyOtpPage() {
           >
             {verifyMutation.isPending ? (
               <div className="flex items-center gap-2">
-                <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
                 <span>{t("auth:otp.verifying")}</span>
               </div>
             ) : (

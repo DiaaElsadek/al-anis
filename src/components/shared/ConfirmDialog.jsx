@@ -1,14 +1,17 @@
 import { AlertTriangle } from "lucide-react";
 
-import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 /**
  * ConfirmDialog — confirmation dialog for destructive actions
@@ -17,7 +20,7 @@ import {
  * @param {boolean} props.open
  * @param {Function} props.onOpenChange
  * @param {string} props.title
- * @param {string} props.description
+ * @param {string} [props.description]
  * @param {string} [props.confirmLabel="Confirm"]
  * @param {string} [props.cancelLabel="Cancel"]
  * @param {"default"|"destructive"} [props.variant="destructive"]
@@ -36,30 +39,35 @@ export default function ConfirmDialog({
   onConfirm,
 }) {
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+    <AlertDialog open={open} onOpenChange={onOpenChange}>
+      <AlertDialogContent className="sm:max-w-md">
+        <AlertDialogHeader>
           <div className="flex items-center gap-3">
             {variant === "destructive" && (
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-destructive/10">
                 <AlertTriangle className="h-5 w-5 text-destructive" />
               </div>
             )}
-            <div>
-              <DialogTitle>{title}</DialogTitle>
-              <DialogDescription className="mt-1">{description}</DialogDescription>
+            <div className="space-y-1">
+              <AlertDialogTitle>{title}</AlertDialogTitle>
+              {description && <AlertDialogDescription>{description}</AlertDialogDescription>}
             </div>
           </div>
-        </DialogHeader>
-        <DialogFooter className="gap-2 sm:gap-0">
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
-            {cancelLabel}
-          </Button>
-          <Button variant={variant} onClick={onConfirm} disabled={loading}>
+        </AlertDialogHeader>
+        <AlertDialogFooter className="gap-2 sm:gap-2">
+          <AlertDialogCancel disabled={loading}>{cancelLabel}</AlertDialogCancel>
+          <AlertDialogAction
+            className={cn(buttonVariants({ variant }))}
+            disabled={loading}
+            onClick={(e) => {
+              e.preventDefault();
+              onConfirm?.();
+            }}
+          >
             {loading ? "Processing..." : confirmLabel}
-          </Button>
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
+          </AlertDialogAction>
+        </AlertDialogFooter>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

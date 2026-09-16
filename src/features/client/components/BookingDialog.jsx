@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { createRequest } from "@/api/requests";
+import DatePicker from "@/components/shared/DatePicker";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -18,6 +19,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { ShiftType } from "@/lib/constants";
 import {
@@ -53,6 +61,7 @@ export default function BookingDialog({ open, onOpenChange, provider, providerId
 
   const selectedCatId = watch("categoryId");
   const selectedShift = watch("shiftType");
+  const selectedDate = watch("date");
 
   // Calculate estimated price based on shiftPrices from backend
   const matchedPrice = provider?.shiftPrices?.find(
@@ -121,18 +130,21 @@ export default function BookingDialog({ open, onOpenChange, provider, providerId
             <Label htmlFor="catSelect" className="text-xs font-semibold">
               {t("auth:register.categories")} <span className="text-destructive">*</span>
             </Label>
-            <select
-              id="catSelect"
-              className="w-full h-10 rounded-lg border border-input bg-background px-3 text-sm focus:ring-1 focus:ring-primary outline-none"
-              {...register("categoryId")}
+            <Select
+              value={selectedCatId || ""}
+              onValueChange={(val) => setValue("categoryId", val, { shouldValidate: true })}
             >
-              <option value="">{t("auth:register.categories")}...</option>
-              {provider?.categories?.map((cat) => (
-                <option key={cat.id} value={cat.id}>
-                  {getLocalizedCategoryName(cat, i18n.language)}
-                </option>
-              ))}
-            </select>
+              <SelectTrigger id="catSelect" className="w-full h-10 text-sm">
+                <SelectValue placeholder={`${t("auth:register.categories")}...`} />
+              </SelectTrigger>
+              <SelectContent>
+                {provider?.categories?.map((cat) => (
+                  <SelectItem key={cat.id} value={cat.id}>
+                    {getLocalizedCategoryName(cat, i18n.language)}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             {errors.categoryId && (
               <p className="text-xs text-destructive">{errors.categoryId.message}</p>
             )}
@@ -189,11 +201,11 @@ export default function BookingDialog({ open, onOpenChange, provider, providerId
                 {t("client:profile.bookShiftModal.dateLabel")}{" "}
                 <span className="text-destructive">*</span>
               </Label>
-              <Input
+              <DatePicker
                 id="reqDate"
-                type="date"
+                value={selectedDate}
                 min={new Date().toISOString().split("T")[0]}
-                {...register("date")}
+                onChange={(val) => setValue("date", val, { shouldValidate: true })}
               />
               {errors.date && <p className="text-xs text-destructive">{errors.date.message}</p>}
             </div>

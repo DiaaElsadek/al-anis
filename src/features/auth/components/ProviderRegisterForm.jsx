@@ -10,15 +10,16 @@ import {
   Mail,
   MapPin,
   Phone,
-  Calendar,
   ShieldCheck,
   User,
+  Loader2,
 } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
+import DatePicker from "@/components/shared/DatePicker";
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import FileUploadField from "@/components/shared/FileUploadField";
 import { Button } from "@/components/ui/button";
@@ -223,15 +224,19 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
             <Label htmlFor="pDob" className="text-xs font-semibold">
               {t("auth:register.dateOfBirth")} <span className="text-destructive">*</span>
             </Label>
-            <div className="relative">
-              <Calendar className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
-              <Input
-                id="pDob"
-                type="date"
-                className="ps-9 h-10"
-                {...providerForm.register("dateOfBirth")}
-              />
-            </div>
+            <Controller
+              control={providerForm.control}
+              name="dateOfBirth"
+              render={({ field }) => (
+                <DatePicker
+                  id="pDob"
+                  value={field.value}
+                  max={new Date().toISOString().split("T")[0]}
+                  onChange={(val) => field.onChange(val)}
+                  placeholder={t("auth:register.dateOfBirth")}
+                />
+              )}
+            />
             {providerForm.formState.errors.dateOfBirth && (
               <p className="text-xs text-destructive">
                 {providerForm.formState.errors.dateOfBirth.message}
@@ -511,7 +516,7 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
       >
         {providerMutation.isPending ? (
           <div className="flex items-center gap-2">
-            <div className="h-4 w-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
             <span>{t("auth:register.submitting")}</span>
           </div>
         ) : (

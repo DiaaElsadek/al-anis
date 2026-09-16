@@ -2,6 +2,7 @@ import { CalendarRange, Sparkles } from "lucide-react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
+import DatePicker from "@/components/shared/DatePicker";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -12,8 +13,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ShiftType } from "@/lib/constants";
 
 export default function BulkShiftModal({
@@ -61,22 +68,16 @@ export default function BulkShiftModal({
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">{t("common:dates.from")}</Label>
-              <Input
-                type="date"
+              <DatePicker
                 value={bulkStartDate}
                 min={new Date().toISOString().split("T")[0]}
-                onChange={(e) => setBulkStartDate(e.target.value)}
+                onChange={setBulkStartDate}
               />
             </div>
 
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">{t("common:dates.to")}</Label>
-              <Input
-                type="date"
-                value={bulkEndDate}
-                min={bulkStartDate}
-                onChange={(e) => setBulkEndDate(e.target.value)}
-              />
+              <DatePicker value={bulkEndDate} min={bulkStartDate} onChange={setBulkEndDate} />
             </div>
           </div>
 
@@ -84,15 +85,22 @@ export default function BulkShiftModal({
             <Label className="text-xs font-semibold">
               {t("provider:availability.shiftsOffered")}
             </Label>
-            <select
-              value={bulkShift}
-              onChange={(e) => setBulkShift(e.target.value)}
-              className="w-full h-10 rounded-lg border border-input bg-background px-3 text-xs"
-            >
-              <option value={ShiftType.MORNING}>{t("common:shifts.morning")}</option>
-              <option value={ShiftType.EVENING}>{t("common:shifts.evening")}</option>
-              <option value={ShiftType.NIGHT}>{t("common:shifts.night")}</option>
-            </select>
+            <Select value={bulkShift} onValueChange={setBulkShift}>
+              <SelectTrigger className="w-full h-10 text-xs">
+                <SelectValue placeholder={t("provider:availability.shiftsOffered")} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={ShiftType.MORNING} className="text-xs">
+                  {t("common:shifts.morning")}
+                </SelectItem>
+                <SelectItem value={ShiftType.EVENING} className="text-xs">
+                  {t("common:shifts.evening")}
+                </SelectItem>
+                <SelectItem value={ShiftType.NIGHT} className="text-xs">
+                  {t("common:shifts.night")}
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Exclude days */}

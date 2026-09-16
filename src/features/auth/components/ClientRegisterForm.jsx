@@ -1,12 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import { Calendar, Eye, EyeOff, Lock, Mail, MapPin, Phone } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, MapPin, Phone, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
+import DatePicker from "@/components/shared/DatePicker";
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import FileUploadField from "@/components/shared/FileUploadField";
 import { Button } from "@/components/ui/button";
@@ -180,15 +181,19 @@ export default function ClientRegisterForm() {
           <Label htmlFor="clientDob" className="text-xs font-semibold">
             {t("auth:register.dateOfBirth")} <span className="text-destructive">*</span>
           </Label>
-          <div className="relative">
-            <Calendar className="absolute start-3 top-3 h-4 w-4 text-muted-foreground" />
-            <Input
-              id="clientDob"
-              type="date"
-              className="ps-9 h-10"
-              {...clientForm.register("dateOfBirth")}
-            />
-          </div>
+          <Controller
+            control={clientForm.control}
+            name="dateOfBirth"
+            render={({ field }) => (
+              <DatePicker
+                id="clientDob"
+                value={field.value}
+                max={new Date().toISOString().split("T")[0]}
+                onChange={(val) => field.onChange(val)}
+                placeholder={t("auth:register.dateOfBirth")}
+              />
+            )}
+          />
           {clientForm.formState.errors.dateOfBirth && (
             <p className="text-xs text-destructive">
               {clientForm.formState.errors.dateOfBirth.message}
@@ -277,7 +282,7 @@ export default function ClientRegisterForm() {
       >
         {clientMutation.isPending ? (
           <div className="flex items-center gap-2">
-            <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
             <span>{t("auth:register.creatingAccount")}</span>
           </div>
         ) : (

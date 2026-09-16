@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Key,
   ShieldCheck,
+  Loader2,
 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -20,6 +21,7 @@ import { toast } from "sonner";
 
 import { resetPassword } from "@/api/account";
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,6 +33,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
 import { resetPasswordSchema } from "@/lib/validators";
 
 export default function ResetPasswordPage() {
@@ -149,10 +152,10 @@ export default function ResetPasswordPage() {
 
       <CardContent className="space-y-6">
         {serverError && (
-          <div className="flex items-start gap-3 p-3.5 rounded-lg bg-destructive/10 border border-destructive/20 text-destructive text-sm">
-            <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
-            <p className="text-xs font-medium">{serverError}</p>
-          </div>
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription className="text-xs font-medium">{serverError}</AlertDescription>
+          </Alert>
         )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -225,12 +228,11 @@ export default function ResetPasswordPage() {
                   </span>
                   <span className="font-semibold">{strengthText}</span>
                 </div>
-                <div className="h-1.5 w-full bg-muted rounded-full overflow-hidden">
-                  <div
-                    className={`h-full ${strengthColor} transition-all duration-300`}
-                    style={{ width: `${strengthPercent}%` }}
-                  />
-                </div>
+                <Progress
+                  value={strengthPercent}
+                  className="h-1.5"
+                  indicatorClassName={strengthColor}
+                />
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5 pt-1">
                   {strengthChecks.map((check, i) => (
                     <div
@@ -282,7 +284,7 @@ export default function ResetPasswordPage() {
           >
             {resetMutation.isPending ? (
               <div className="flex items-center gap-2">
-                <div className="h-4 w-4 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
                 <span>{t("common:actions.saveChanges")}...</span>
               </div>
             ) : (
