@@ -40,6 +40,8 @@ export default function AdminDashboardPage() {
       icon: DollarSign,
       color: "text-emerald-600",
       bg: "bg-emerald-500/10",
+      link: "/admin/payments",
+      linkLabel: t("admin:dashboard.viewAllTransactions"),
     },
     {
       title: t("admin:dashboard.pendingApplications"),
@@ -49,6 +51,7 @@ export default function AdminDashboardPage() {
       color: "text-amber-600",
       bg: "bg-amber-500/10",
       link: "/admin/applications",
+      linkLabel: t("admin:applications.reviewButton"),
     },
     {
       title: t("admin:dashboard.totalProviders"),
@@ -57,14 +60,18 @@ export default function AdminDashboardPage() {
       icon: Briefcase,
       color: "text-primary",
       bg: "bg-primary/10",
+      link: "/admin/users",
+      linkLabel: t("admin:users.title"),
     },
     {
       title: t("admin:dashboard.completedShifts"),
       value: `${stats?.completedServiceRequests || 0} / ${stats?.totalServiceRequests || 0}`,
-      desc: `Avg. Client Rating: ${stats?.averageRating?.toFixed(1) || "4.9"} / 5`,
+      desc: `Avg. Client Rating: ${stats?.averageRating ? `${stats.averageRating.toFixed(1)} / 5` : "—"}`,
       icon: CheckCircle2,
       color: "text-teal-600",
       bg: "bg-teal-500/10",
+      link: "/admin/payments",
+      linkLabel: t("admin:dashboard.viewAllTransactions"),
     },
   ];
 
@@ -112,7 +119,7 @@ export default function AdminDashboardPage() {
                   to={item.link}
                   className="inline-flex items-center text-[11px] font-semibold text-primary hover:underline mt-2"
                 >
-                  {t("admin:applications.reviewButton")}{" "}
+                  {item.linkLabel || t("admin:applications.reviewButton")}{" "}
                   <DirectionalIcon icon={ArrowRight} className="h-3 w-3 ms-1" />
                 </Link>
               )}

@@ -245,18 +245,23 @@ export default function BookingDialog({ open, onOpenChange, provider, providerId
           </div>
 
           {/* Estimated Price summary */}
-          <div className="p-3 rounded-xl bg-muted/40 border border-border flex items-center justify-between">
-            <div>
-              <span className="text-xs text-muted-foreground block">
-                {t("client:requests.amountLabel")}
-              </span>
-              <span className="text-xs font-medium text-foreground">
-                {getShiftLabel(selectedShift, t)} (8h)
+          <div className="p-3.5 rounded-xl bg-muted/30 border border-border/70 space-y-1.5">
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-xs font-semibold text-foreground block">
+                  {t("client:profile.bookShiftModal.estimatedCost")}
+                </span>
+                <span className="text-[11px] text-muted-foreground">
+                  {getShiftLabel(selectedShift, t)} (8h)
+                </span>
+              </div>
+              <span className="text-xl font-bold text-primary">
+                {matchedPrice ? formatPrice(matchedPrice) : "-"}
               </span>
             </div>
-            <span className="text-lg font-bold text-primary">
-              {matchedPrice ? formatPrice(matchedPrice) : "-"}
-            </span>
+            <p className="text-[11px] text-muted-foreground/90 border-t border-border/40 pt-1.5">
+              {t("client:profile.bookShiftModal.chargeNotice")}
+            </p>
           </div>
 
           <div className="flex justify-end gap-2 pt-2">

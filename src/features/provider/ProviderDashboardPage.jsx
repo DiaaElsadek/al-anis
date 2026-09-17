@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { ShieldCheck } from "lucide-react";
+import { Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
@@ -69,15 +69,28 @@ export default function ProviderDashboardPage() {
             </AvatarFallback>
           </Avatar>
           <div>
-            <div className="flex items-center gap-1.5">
-              <h1 className="text-xl font-bold">
-                {t("provider:dashboard.title")}, {displayName}
-              </h1>
-              <ShieldCheck className="h-4 w-4 text-emerald-400" />
+            <h1 className="text-xl font-bold">
+              {t("provider:dashboard.title")}, {displayName}
+            </h1>
+            <div className="flex items-center flex-wrap gap-2 mt-1 text-xs text-teal-100/90">
+              {stats.averageRating ? (
+                <span className="flex items-center gap-1 font-semibold text-amber-300">
+                  <Star className="h-3.5 w-3.5 fill-amber-300 text-amber-300" />
+                  {stats.averageRating.toFixed(1)}
+                </span>
+              ) : null}
+              {stats.completedJobs != null && stats.completedJobs > 0 ? (
+                <span className="text-teal-200/90">
+                  {stats.averageRating ? "·" : ""} {stats.completedJobs}{" "}
+                  {t("provider:dashboard.completedShifts").toLowerCase()}
+                </span>
+              ) : null}
+              {dashboard?.categories?.[0]?.name ? (
+                <span className="px-2 py-0.5 rounded-md bg-white/10 text-[11px] font-medium text-teal-100 border border-white/10">
+                  {dashboard.categories[0].name}
+                </span>
+              ) : null}
             </div>
-            <p className="text-xs text-teal-100/75 mt-0.5">
-              {dashboard?.categories?.[0]?.name || t("client:directory.verified")}
-            </p>
           </div>
         </div>
 
@@ -99,6 +112,7 @@ export default function ProviderDashboardPage() {
             onCheckedChange={(checked) => availMutation.mutate(checked)}
             disabled={availMutation.isPending}
             className="data-[state=checked]:bg-emerald-500 data-[state=unchecked]:bg-white/20 border-white/20"
+            thumbClassName="bg-white shadow-md"
             aria-label={t("provider:dashboard.availabilityStatus")}
           />
         </div>

@@ -1,4 +1,4 @@
-import { Calendar, Clock, MapPin, MessageSquare, Sparkles, ShieldCheck } from "lucide-react";
+import { Calendar, Clock, MapPin, MessageSquare, Sparkles } from "lucide-react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -108,10 +108,7 @@ export default function ActiveCareTracker({ activeRequest, onStartChat, isStarti
                   <span>{activeRequest.categoryName}</span>
                 </Badge>
               </div>
-              <p className="text-xs text-muted-foreground flex items-center gap-1.5">
-                <ShieldCheck className="h-3.5 w-3.5 text-teal-600" />
-                <span>{t("client:directory.verified")}</span>
-              </p>
+              <p className="text-xs text-muted-foreground">{t("client:profile.reviewedByTeam")}</p>
             </div>
           </div>
 

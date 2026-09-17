@@ -14,6 +14,16 @@ import {
 import EmptyState from "@/components/shared/EmptyState";
 import Pagination from "@/components/shared/Pagination";
 import StatusBadge from "@/components/shared/StatusBadge";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -47,6 +57,7 @@ export default function AdminUsersPage() {
   const [statusFilter, setStatusFilter] = useState("all");
   const [page, setPage] = useState(1);
   const pageSize = 10;
+  const [confirmAction, setConfirmAction] = useState(null);
 
   const {
     data: usersData,
@@ -77,8 +88,10 @@ export default function AdminUsersPage() {
       }
       return suspendUser(userId);
     },
-    onSuccess: () => {
-      toast.success("User account suspended.");
+    onSuccess: (_, variables) => {
+      const targetName = confirmAction?.user?.name || variables?.name || "User";
+      toast.success(t("admin:users.toasts.userSuspended", { name: targetName }));
+      setConfirmAction(null);
       queryClient.invalidateQueries(["admin-users"]);
     },
     onError: (error) => handleMutationError(error, t, "common:error"),
@@ -92,8 +105,10 @@ export default function AdminUsersPage() {
       }
       return activateUser(userId);
     },
-    onSuccess: () => {
-      toast.success("User account activated!");
+    onSuccess: (_, variables) => {
+      const targetName = confirmAction?.user?.name || variables?.name || "User";
+      toast.success(t("admin:users.toasts.userActivated", { name: targetName }));
+      setConfirmAction(null);
       queryClient.invalidateQueries(["admin-users"]);
     },
     onError: (error) => handleMutationError(error, t, "common:error"),
@@ -271,8 +286,8 @@ export default function AdminUsersPage() {
                             size="sm"
                             variant="outline"
                             className="h-7 text-xs text-emerald-600 hover:text-emerald-700 hover:bg-emerald-50 dark:hover:bg-emerald-950/30"
-                            onClick={() => activateMutation.mutate({ userId: u.id, role: u.role })}
-                            disabled={activateMutation.isPending}
+                            onClick={() => setConfirmAction({ type: "activate", user: u })}
+                            disabled={activateMutation.isPending || suspendMutation.isPending}
                           >
                             <Unlock className="h-3 w-3 me-1" />
                             {t("admin:users.activateButton")}
@@ -282,8 +297,8 @@ export default function AdminUsersPage() {
                             size="sm"
                             variant="outline"
                             className="h-7 text-xs text-destructive hover:bg-destructive/10"
-                            onClick={() => suspendMutation.mutate({ userId: u.id, role: u.role })}
-                            disabled={suspendMutation.isPending}
+                            onClick={() => setConfirmAction({ type: "suspend", user: u })}
+                            disabled={activateMutation.isPending || suspendMutation.isPending}
                           >
                             <Lock className="h-3 w-3 me-1" />
                             {t("admin:users.suspendButton")}
@@ -304,6 +319,58 @@ export default function AdminUsersPage() {
           <Pagination currentPage={page} totalPages={totalPages} onPageChange={setPage} />
         </div>
       )}
+
+      {/* Consequence-specific confirmation dialog */}
+      <AlertDialog open={!!confirmAction} onOpenChange={(open) => !open && setConfirmAction(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {confirmAction?.type === "suspend"
+                ? t("admin:users.suspendModal.title", { name: confirmAction?.user?.name })
+                : t("admin:users.activateModal.title", { name: confirmAction?.user?.name })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {confirmAction?.type === "suspend"
+                ? t("admin:users.suspendModal.description", { name: confirmAction?.user?.name })
+                : t("admin:users.activateModal.description", { name: confirmAction?.user?.name })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={suspendMutation.isPending || activateMutation.isPending}>
+              {t("common:cancel")}
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className={
+                confirmAction?.type === "suspend"
+                  ? "bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                  : ""
+              }
+              disabled={suspendMutation.isPending || activateMutation.isPending}
+              onClick={(e) => {
+                e.preventDefault();
+                if (!confirmAction) return;
+                if (confirmAction.type === "suspend") {
+                  suspendMutation.mutate({
+                    userId: confirmAction.user.id,
+                    role: confirmAction.user.role,
+                    name: confirmAction.user.name,
+                  });
+                } else {
+                  activateMutation.mutate({
+                    userId: confirmAction.user.id,
+                    role: confirmAction.user.role,
+                    name: confirmAction.user.name,
+                  });
+                }
+              }}
+            >
+              {confirmAction?.type === "suspend"
+                ? t("admin:users.suspendModal.confirmButton")
+                : t("admin:users.activateModal.confirmButton")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }

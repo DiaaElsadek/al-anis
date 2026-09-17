@@ -1,4 +1,4 @@
-import { ShieldCheck, Lock, Headphones, CheckCircle2 } from "lucide-react";
+import { CreditCard, Lock, MessageSquare, CheckCircle2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Card } from "@/components/ui/card";
@@ -9,25 +9,25 @@ export default function ClientTrustCard() {
 
   const trustFeatures = [
     {
-      icon: ShieldCheck,
-      title: "100% ID Verified",
-      titleAr: "هويات معتمدة وموثقة",
-      desc: "Criminal background audited",
-      descAr: "تدقيق أمني وسجل جنائي",
+      icon: CreditCard,
+      title: t("client:trustCard.idOnFile", "National ID on file"),
+      titleAr: "بطاقة الرقم القومي مسجلة",
+      desc: t("client:trustCard.idOnFileDesc", "Submitted during registration"),
+      descAr: "مقدمة ومسجلة عند التسجيل",
     },
     {
       icon: Lock,
-      title: "Escrow Protection",
-      titleAr: "حماية الضمان المالي",
-      desc: "Funds held until shift completes",
-      descAr: "أموالك بأمان حتى اكتمال الوردية",
+      title: t("client:trustCard.escrow", "Escrow-protected payments"),
+      titleAr: "مدفوعات محمية بالضمان",
+      desc: t("client:trustCard.escrowDesc", "Held securely until shift completes"),
+      descAr: "محفوظة بأمان حتى اكتمال الوردية",
     },
     {
-      icon: Headphones,
-      title: "24/7 Priority Support",
-      titleAr: "دعم فني على مدار الساعة",
-      desc: "Instant client care assistance",
-      descAr: "مساعدة فورية طوال أيام الأسبوع",
+      icon: MessageSquare,
+      title: t("client:trustCard.messaging", "Direct provider messaging"),
+      titleAr: "محادثة مباشرة مع المزود",
+      desc: t("client:trustCard.messagingDesc", "Coordinate instructions in-app"),
+      descAr: "تنسيق التعليمات داخل التطبيق",
     },
   ];
 

@@ -221,6 +221,19 @@ export default function ProviderRequestsPage() {
                     </p>
                   )}
 
+                  {(req.status === 4 ||
+                    req.status === 5 ||
+                    req.statusName?.toLowerCase().includes("reject") ||
+                    req.statusName?.toLowerCase().includes("cancel")) &&
+                    (req.rejectionReason || req.reason) && (
+                      <div className="text-xs text-destructive/90 bg-destructive/5 border-s-2 border-destructive p-2.5 rounded-e-lg">
+                        <span className="font-semibold me-1">
+                          {t("provider:requests.rejectionReasonLabel")}
+                        </span>
+                        <span>{req.rejectionReason || req.reason}</span>
+                      </div>
+                    )}
+
                   {/* Provider Action Buttons */}
                   <div className="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-border/40">
                     <Button

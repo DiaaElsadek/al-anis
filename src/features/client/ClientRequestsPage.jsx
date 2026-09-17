@@ -37,6 +37,59 @@ import {
 
 import ReviewModal from "./ReviewModal";
 
+function RequestStatusTimeline({ status, t }) {
+  if (status === 4 || status === 5) return null;
+
+  const steps = [
+    { key: "requested", label: t("client:requests.timeline.requested", "Requested"), stepNum: 0 },
+    { key: "accepted", label: t("client:requests.timeline.accepted", "Accepted"), stepNum: 1 },
+    {
+      key: "inProgress",
+      label: t("client:requests.timeline.inProgress", "In Progress"),
+      stepNum: 2,
+    },
+    { key: "completed", label: t("client:requests.timeline.completed", "Completed"), stepNum: 3 },
+  ];
+
+  return (
+    <div className="py-2.5 px-2 bg-muted/15 rounded-xl border border-border/40">
+      <div className="flex items-center justify-between relative">
+        <div className="absolute start-6 end-6 top-2.5 h-0.5 bg-border/70 -z-0" />
+        {steps.map((s, idx) => {
+          const isDone = status > s.stepNum;
+          const isCurrent = status === s.stepNum;
+          return (
+            <div key={s.key} className="flex flex-col items-center relative z-10 px-1 text-center">
+              <div
+                className={`h-5 w-5 rounded-full flex items-center justify-center text-[10px] font-bold transition-all ${
+                  isDone
+                    ? "bg-emerald-600 text-white shadow-xs"
+                    : isCurrent
+                      ? "bg-primary text-primary-foreground ring-4 ring-primary/20 shadow-xs"
+                      : "bg-muted text-muted-foreground border border-border/80"
+                }`}
+              >
+                {isDone ? "✓" : idx + 1}
+              </div>
+              <span
+                className={`text-[11px] mt-1.5 font-medium ${
+                  isCurrent
+                    ? "text-primary font-bold"
+                    : isDone
+                      ? "text-foreground"
+                      : "text-muted-foreground"
+                }`}
+              >
+                {s.label}
+              </span>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export default function ClientRequestsPage() {
   const { t, i18n } = useTranslation(["client", "common"]);
   const navigate = useNavigate();
@@ -200,12 +253,29 @@ export default function ClientRequestsPage() {
                     </div>
                   </div>
 
+                  {/* Status Progression Timeline */}
+                  <RequestStatusTimeline status={req.status} t={t} />
+
                   {/* Description note */}
                   {req.description && (
                     <p className="text-xs text-foreground/80 bg-muted/20 p-2.5 rounded-lg border border-border/40">
                       {req.description}
                     </p>
                   )}
+
+                  {/* Rejection / Cancellation Reason */}
+                  {(req.status === 4 ||
+                    req.status === 5 ||
+                    req.statusName?.toLowerCase().includes("reject") ||
+                    req.statusName?.toLowerCase().includes("cancel")) &&
+                    (req.rejectionReason || req.reason) && (
+                      <div className="text-xs text-destructive/90 bg-destructive/5 border-s-2 border-destructive p-2.5 rounded-e-lg">
+                        <span className="font-semibold me-1">
+                          {t("client:requests.rejectionReasonLabel")}
+                        </span>
+                        <span>{req.rejectionReason || req.reason}</span>
+                      </div>
+                    )}
 
                   {/* Action buttons bar */}
                   <div className="flex flex-wrap items-center justify-end gap-2 pt-2">
