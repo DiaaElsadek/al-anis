@@ -12,21 +12,21 @@ export default function ProviderStatsGrid({ stats }) {
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
       {/* Total Earnings */}
-      <Card className="border-border/70 shadow-sm">
+      <Card className="border-border/70 shadow-xs">
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">
+            <span className="text-xs font-semibold text-muted-foreground">
               {t("provider:dashboard.totalEarnings")}
             </span>
-            <div className="p-2 rounded-xl bg-emerald-500/10 text-emerald-600">
+            <div className="p-2 rounded-lg bg-muted text-foreground">
               <DollarSign className="h-4 w-4" />
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-extrabold text-foreground">
+            <span className="text-2xl font-extrabold text-foreground tracking-tight">
               {formatPrice(stats.totalEarnings || 0)}
             </span>
-            <span className="text-[11px] text-muted-foreground block mt-0.5">
+            <span className="text-[11px] text-muted-foreground block mt-1">
               {isAr
                 ? `هذا الشهر: ${formatPrice(stats.currentMonthEarnings || 0)}`
                 : `This month: ${formatPrice(stats.currentMonthEarnings || 0)}`}
@@ -36,21 +36,21 @@ export default function ProviderStatsGrid({ stats }) {
       </Card>
 
       {/* Completed Shifts */}
-      <Card className="border-border/70 shadow-sm">
+      <Card className="border-border/70 shadow-xs">
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">
+            <span className="text-xs font-semibold text-muted-foreground">
               {t("provider:dashboard.completedShifts")}
             </span>
-            <div className="p-2 rounded-xl bg-primary/10 text-primary">
+            <div className="p-2 rounded-lg bg-muted text-foreground">
               <CheckCircle2 className="h-4 w-4" />
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-extrabold text-foreground">
+            <span className="text-2xl font-extrabold text-foreground tracking-tight">
               {stats.completedJobs || 0}
             </span>
-            <span className="text-[11px] text-muted-foreground block mt-0.5">
+            <span className="text-[11px] text-muted-foreground block mt-1">
               {stats.workedDays || 0} {isAr ? "أيام عمل" : "days worked"}
             </span>
           </div>
@@ -58,27 +58,33 @@ export default function ProviderStatsGrid({ stats }) {
       </Card>
 
       {/* Pending Requests */}
-      <Card className="border-border/70 shadow-sm">
+      <Card className="border-border/70 shadow-xs">
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">
+            <span className="text-xs font-semibold text-muted-foreground">
               {t("provider:dashboard.pendingRequests")}
             </span>
-            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-600">
+            <div className="p-2 rounded-lg bg-muted text-foreground">
               <Clock className="h-4 w-4" />
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-extrabold text-foreground">
+            <span className="text-2xl font-extrabold text-foreground tracking-tight">
               {stats.pendingRequests || 0}
             </span>
-            <span className="text-[11px] text-amber-600 font-medium block mt-0.5">
+            <span
+              className={`text-[11px] font-medium block mt-1 ${
+                stats.pendingRequests > 0
+                  ? "text-amber-600 dark:text-amber-400"
+                  : "text-muted-foreground"
+              }`}
+            >
               {stats.pendingRequests > 0
                 ? isAr
                   ? `${stats.pendingRequests} بانتظار الإجراء`
                   : `${stats.pendingRequests} awaiting action`
                 : isAr
-                  ? "لا توجد طلبات معلقة"
+                  ? "مكتمل ومحدث"
                   : "Up to date"}
             </span>
           </div>
@@ -86,21 +92,21 @@ export default function ProviderStatsGrid({ stats }) {
       </Card>
 
       {/* Client Rating */}
-      <Card className="border-border/70 shadow-sm">
+      <Card className="border-border/70 shadow-xs">
         <CardContent className="p-5">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-muted-foreground">
+            <span className="text-xs font-semibold text-muted-foreground">
               {t("provider:dashboard.rating")}
             </span>
-            <div className="p-2 rounded-xl bg-amber-500/10 text-amber-500">
+            <div className="p-2 rounded-lg bg-muted text-amber-500">
               <Star className="h-4 w-4 fill-current" />
             </div>
           </div>
           <div className="mt-3">
-            <span className="text-2xl font-extrabold text-foreground">
+            <span className="text-2xl font-extrabold text-foreground tracking-tight">
               {stats.averageRating ? stats.averageRating.toFixed(1) : "—"}
             </span>
-            <span className="text-[11px] text-muted-foreground block mt-0.5">
+            <span className="text-[11px] text-muted-foreground block mt-1">
               {isAr
                 ? `من ${stats.totalReviews || 0} تقييم`
                 : `from ${stats.totalReviews || 0} reviews`}
