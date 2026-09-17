@@ -1,12 +1,4 @@
-import {
-  Search,
-  FileText,
-  MessageSquare,
-  Mail,
-  Phone,
-  ShieldCheck,
-  CheckCircle2,
-} from "lucide-react";
+import { Search, FileText, MessageSquare, Mail, Phone, User, CheckCircle2 } from "lucide-react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -72,7 +64,7 @@ export default function ClientWelcomeBanner({ user, profile }) {
           <div className="space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <Badge className="bg-teal-500/20 hover:bg-teal-500/30 text-teal-200 border border-teal-500/30 text-xs px-2.5 py-0.5 font-medium backdrop-blur-sm">
-                <ShieldCheck className="h-3.5 w-3.5 me-1 text-teal-300" />
+                <User className="h-3.5 w-3.5 me-1 text-teal-300" />
                 {t("client:dashboard.clientAccount")}
               </Badge>
               {email && (

@@ -21,7 +21,8 @@
   "profile": {
     "about": "About & Experience",
     "experienceYears": "{{years}} years of verified experience",
-    "nationalIdVerified": "National ID Audited & Verified",
+    "nationalIdVerified": "Application reviewed by Alanis",
+    "reviewedByTeam": "Application reviewed by Alanis",
     "contact": "Contact Details",
     "workingAreas": "Coverage Locations",
     "shiftPricing": "Shift Pricing Matrix",
@@ -41,10 +42,21 @@
       "addressPlaceholder": "Detailed address (building, floor, apartment)",
       "notesLabel": "Special Instructions or Care Requirements",
       "notesPlaceholder": "Describe any patient needs, children ages, or specific instructions...",
+      "estimatedCost": "Estimated shift cost",
+      "chargeNotice": "You will be charged this amount after the provider accepts",
       "submitButton": "Send Booking Request",
       "submitting": "Submitting request...",
       "successToast": "Shift request sent! The provider will review your booking shortly."
     }
+  },
+  "trustCard": {
+    "title": "Care Verification & Safety",
+    "idOnFile": "National ID on file",
+    "idOnFileDesc": "Every provider submits government ID during registration",
+    "escrow": "Escrow-protected payments",
+    "escrowDesc": "Funds held securely until your shift is completed",
+    "messaging": "Direct provider messaging",
+    "messagingDesc": "Chat directly with your assigned provider in-app"
   },
   "requests": {
     "title": "My Service Requests",
@@ -60,11 +72,19 @@
     "amountLabel": "Total Amount:",
     "escrowNote": "Held safely in platform escrow",
     "providerLabel": "Provider:",
+    "rejectionReasonLabel": "Decline Reason:",
     "payButton": "Pay Escrow Checkout",
     "chatButton": "Message Provider",
     "reviewButton": "Leave Review",
+    "timeline": {
+      "requested": "Requested",
+      "accepted": "Accepted",
+      "payment": "Payment",
+      "inProgress": "In Progress",
+      "completed": "Completed"
+    },
     "emptyTitle": "No Requests Found",
-    "emptyDesc": "You haven't requested any service shifts in this status yet.",
+    "emptyDesc": "You haven't made any booking requests in this status yet. Browse available providers to find the right match.",
     "findProvidersButton": "Find Providers"
   },
   "reviewModal": {
@@ -121,7 +141,7 @@
     "bookBySpecialty": "Book by Specialty",
     "bookBySpecialtySubtitle": "Select a home care specialty to browse verified caregivers",
     "trustTitle": "Safe & Guaranteed Home Care",
-    "trustDesc": "Every caregiver on Alanis undergoes strict background and ID auditing. Payments are protected in escrow until your shift is completed.",
+    "trustDesc": "Every caregiver on Alanis has their national ID and credentials reviewed by our team. Payments are protected in escrow until your shift is completed.",
     "supportButton": "24/7 Client Support",
     "specialties": {
       "nursing": "Home Nursing",

@@ -6,8 +6,8 @@
     "submittedAt": "Submitted on:",
     "step1": "Document Submission",
     "step1Desc": "National ID, professional license, and resume uploaded",
-    "step2": "Compliance & Background Audit",
-    "step2Desc": "Checking criminal record and verifying certificates",
+    "step2": "Compliance & Credential Audit",
+    "step2Desc": "Our team reviews your submitted documents and credentials",
     "step3": "Approval & Provider Access",
     "step3Desc": "Activate your calendar and start receiving shift requests",
     "refreshButton": "Refresh Application Status",
@@ -80,6 +80,7 @@
     "startButton": "Start Shift",
     "completeButton": "Complete Shift",
     "chatButton": "Message Client",
+    "rejectionReasonLabel": "Reason:",
     "rejectModal": {
       "title": "Decline Shift Request",
       "subtitle": "Please provide a reason to inform the client",

@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { FileCheck, Eye } from "lucide-react";
+import { FileCheck, Eye, Search } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -15,6 +15,7 @@ import Pagination from "@/components/shared/Pagination";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -27,6 +28,7 @@ import {
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ApplicationDetailDialog from "@/features/admin/components/ApplicationDetailDialog";
 import ApplicationRejectDialog from "@/features/admin/components/ApplicationRejectDialog";
+import { useDebounce } from "@/hooks/useDebounce";
 import { formatLocalizedDate, formatPrice, handleMutationError } from "@/lib/utils";
 
 export default function AdminApplicationsPage() {
@@ -34,6 +36,8 @@ export default function AdminApplicationsPage() {
   const queryClient = useQueryClient();
   const [page, setPage] = useState(1);
   const pageSize = 10;
+  const [searchTerm, setSearchTerm] = useState("");
+  const debouncedSearch = useDebounce(searchTerm, 300);
   const [activeTab, setActiveTab] = useState("all");
   const [selectedAppId, setSelectedAppId] = useState(null);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
@@ -59,7 +63,14 @@ export default function AdminApplicationsPage() {
   const approveMutation = useMutation({
     mutationFn: (id) => approveServiceProviderApplication(id),
     onSuccess: () => {
-      toast.success(t("admin:applications.toasts.approved"));
+      const applicantName = selectedApp
+        ? `${selectedApp.firstName || ""} ${selectedApp.lastName || ""}`.trim()
+        : "";
+      toast.success(
+        t("admin:applications.toasts.approvedWithName", {
+          name: applicantName || "Provider",
+        })
+      );
       queryClient.invalidateQueries(["admin-applications"]);
       queryClient.invalidateQueries(["admin-application", selectedAppId]);
     },
@@ -70,7 +81,14 @@ export default function AdminApplicationsPage() {
   const rejectMutation = useMutation({
     mutationFn: ({ id, reason }) => rejectServiceProviderApplication(id, reason),
     onSuccess: () => {
-      toast.success(t("admin:applications.toasts.rejected"));
+      const applicantName = selectedApp
+        ? `${selectedApp.firstName || ""} ${selectedApp.lastName || ""}`.trim()
+        : "";
+      toast.success(
+        t("admin:applications.toasts.rejectedWithName", {
+          name: applicantName || "Provider",
+        })
+      );
       queryClient.invalidateQueries(["admin-applications"]);
       queryClient.invalidateQueries(["admin-application", selectedAppId]);
       setRejectModalOpen(false);
@@ -80,12 +98,20 @@ export default function AdminApplicationsPage() {
     onError: (error) => handleMutationError(error, t, "common:error", { id: "reject-app-error" }),
   });
 
-  // Filter applications by local activeTab
+  // Filter applications by local activeTab and debouncedSearch
   const filteredApps = applications.filter((app) => {
-    if (activeTab === "all") return true;
-    if (activeTab === "pending") return app.status === 0;
-    if (activeTab === "approved") return app.status === 1;
-    if (activeTab === "rejected") return app.status === 2;
+    if (activeTab === "pending" && app.status !== 0) return false;
+    if (activeTab === "approved" && app.status !== 1) return false;
+    if (activeTab === "rejected" && app.status !== 2) return false;
+    if (debouncedSearch) {
+      const q = debouncedSearch.toLowerCase().trim();
+      const fullName = `${app.firstName || ""} ${app.lastName || ""}`.toLowerCase();
+      const nationalId = (app.nationalId || "").toLowerCase();
+      const email = (app.userEmail || "").toLowerCase();
+      if (!fullName.includes(q) && !nationalId.includes(q) && !email.includes(q)) {
+        return false;
+      }
+    }
     return true;
   });
 
@@ -98,29 +124,42 @@ export default function AdminApplicationsPage() {
         <p className="text-xs text-muted-foreground mt-0.5">{t("admin:applications.subtitle")}</p>
       </div>
 
-      {/* Tabs */}
-      <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="bg-muted/60 p-1">
-          <TabsTrigger value="all" className="text-xs">
-            {t("admin:applications.tabs.all", { count: applications.length })}
-          </TabsTrigger>
-          <TabsTrigger value="pending" className="text-xs">
-            {t("admin:applications.tabs.pending", {
-              count: applications.filter((a) => a.status === 0).length,
-            })}
-          </TabsTrigger>
-          <TabsTrigger value="approved" className="text-xs">
-            {t("admin:applications.tabs.approved", {
-              count: applications.filter((a) => a.status === 1).length,
-            })}
-          </TabsTrigger>
-          <TabsTrigger value="rejected" className="text-xs">
-            {t("admin:applications.tabs.rejected", {
-              count: applications.filter((a) => a.status === 2).length,
-            })}
-          </TabsTrigger>
-        </TabsList>
-      </Tabs>
+      {/* Search and Tabs Toolbar */}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="relative w-full sm:w-80">
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground" />
+          <Input
+            placeholder={t("admin:applications.searchPlaceholder")}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="ps-9 h-9 text-xs"
+          />
+        </div>
+
+        {/* Tabs */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full sm:w-auto">
+          <TabsList className="bg-muted/60 p-1 w-full sm:w-auto grid grid-cols-4 sm:flex">
+            <TabsTrigger value="all" className="text-xs">
+              {t("admin:applications.tabs.all", { count: applications.length })}
+            </TabsTrigger>
+            <TabsTrigger value="pending" className="text-xs">
+              {t("admin:applications.tabs.pending", {
+                count: applications.filter((a) => a.status === 0).length,
+              })}
+            </TabsTrigger>
+            <TabsTrigger value="approved" className="text-xs">
+              {t("admin:applications.tabs.approved", {
+                count: applications.filter((a) => a.status === 1).length,
+              })}
+            </TabsTrigger>
+            <TabsTrigger value="rejected" className="text-xs">
+              {t("admin:applications.tabs.rejected", {
+                count: applications.filter((a) => a.status === 2).length,
+              })}
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
 
       {/* Applications Table */}
       <Card className="border-border/70 shadow-sm bg-card">

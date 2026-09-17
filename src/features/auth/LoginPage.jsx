@@ -1,19 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  LogIn,
-  ArrowRight,
-  Shield,
-  Briefcase,
-  User,
-  Sparkles,
-  AlertCircle,
-  Loader2,
-} from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, LogIn, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -135,7 +122,7 @@ export default function LoginPage() {
   };
 
   // Demo accounts helper
-  const fillDemoAccount = (email, password) => {
+  const _fillDemoAccount = (email, password) => {
     setValue("email", email, { shouldValidate: true });
     setValue("password", password, { shouldValidate: true });
   };
@@ -161,7 +148,7 @@ export default function LoginPage() {
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/* Quick Demo Fill Buttons for Testing */}
+        {/* Quick Demo Fill Buttons for Testing
         <div className="p-3 rounded-xl bg-muted/40 border border-muted-foreground/15 space-y-2">
           <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
             <Sparkles className="h-3.5 w-3.5 text-primary" />
@@ -199,7 +186,7 @@ export default function LoginPage() {
               {t("auth:login.demoAdmin")}
             </Button>
           </div>
-        </div>
+        </div> */}
 
         {/* Error Alert */}
         {authError && (

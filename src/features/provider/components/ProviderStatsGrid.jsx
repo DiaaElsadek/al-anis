@@ -6,7 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from "@/lib/utils";
 
 export default function ProviderStatsGrid({ stats }) {
-  const { t } = useTranslation(["provider", "common"]);
+  const { t, i18n } = useTranslation(["provider", "common"]);
+  const isAr = i18n.language === "ar";
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -26,7 +27,9 @@ export default function ProviderStatsGrid({ stats }) {
               {formatPrice(stats.totalEarnings || 0)}
             </span>
             <span className="text-[11px] text-muted-foreground block mt-0.5">
-              {formatPrice(stats.currentMonthEarnings || 0)}
+              {isAr
+                ? `هذا الشهر: ${formatPrice(stats.currentMonthEarnings || 0)}`
+                : `This month: ${formatPrice(stats.currentMonthEarnings || 0)}`}
             </span>
           </div>
         </CardContent>
@@ -48,7 +51,7 @@ export default function ProviderStatsGrid({ stats }) {
               {stats.completedJobs || 0}
             </span>
             <span className="text-[11px] text-muted-foreground block mt-0.5">
-              {stats.workedDays || 0}
+              {stats.workedDays || 0} {isAr ? "أيام عمل" : "days worked"}
             </span>
           </div>
         </CardContent>
@@ -70,7 +73,13 @@ export default function ProviderStatsGrid({ stats }) {
               {stats.pendingRequests || 0}
             </span>
             <span className="text-[11px] text-amber-600 font-medium block mt-0.5">
-              {stats.pendingRequests > 0 ? t("common:status.pending") : "-"}
+              {stats.pendingRequests > 0
+                ? isAr
+                  ? `${stats.pendingRequests} بانتظار الإجراء`
+                  : `${stats.pendingRequests} awaiting action`
+                : isAr
+                  ? "لا توجد طلبات معلقة"
+                  : "Up to date"}
             </span>
           </div>
         </CardContent>
@@ -89,10 +98,12 @@ export default function ProviderStatsGrid({ stats }) {
           </div>
           <div className="mt-3">
             <span className="text-2xl font-extrabold text-foreground">
-              {stats.averageRating ? stats.averageRating.toFixed(1) : "5.0"}
+              {stats.averageRating ? stats.averageRating.toFixed(1) : "—"}
             </span>
             <span className="text-[11px] text-muted-foreground block mt-0.5">
-              {stats.totalReviews || 0}
+              {isAr
+                ? `من ${stats.totalReviews || 0} تقييم`
+                : `from ${stats.totalReviews || 0} reviews`}
             </span>
           </div>
         </CardContent>

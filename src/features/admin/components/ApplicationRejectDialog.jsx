@@ -56,7 +56,7 @@ export default function ApplicationRejectDialog({
               onClick={onConfirm}
             >
               {isRejecting
-                ? t("admin:applications.approving")
+                ? t("admin:applications.rejecting")
                 : t("admin:applications.rejectModal.confirmButton")}
             </Button>
           </div>

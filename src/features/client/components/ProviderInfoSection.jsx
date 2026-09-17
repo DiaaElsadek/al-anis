@@ -1,4 +1,4 @@
-import { CheckCircle2, DollarSign, MapPin, ShieldCheck, Star } from "lucide-react";
+import { DollarSign, MapPin, Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,27 +25,21 @@ export default function ProviderInfoSection({ provider, providerName, children }
                 </AvatarFallback>
               </Avatar>
 
-              <div className="space-y-1 mb-1">
-                <div className="flex items-center gap-2">
-                  <h1 className="text-2xl font-bold text-foreground">{providerName}</h1>
-                  <ShieldCheck
-                    className="h-5 w-5 text-teal-600"
-                    title={t("client:directory.verified")}
-                  />
-                </div>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <span className="flex items-center text-amber-500 font-bold">
-                    <Star className="h-3.5 w-3.5 fill-current me-1" />
+              <div className="space-y-1.5 mb-1">
+                <h1 className="text-2xl font-bold text-foreground">{providerName}</h1>
+
+                <div className="flex items-center flex-wrap gap-2.5 text-xs text-muted-foreground">
+                  <span className="flex items-center text-lg font-bold text-amber-500">
+                    <Star className="h-4 w-4 fill-current me-1" />
                     {provider.averageRating ? provider.averageRating.toFixed(1) : t("common:new")}
                   </span>
                   <span>•</span>
-                  <span>
+                  <span className="text-sm font-medium">
                     {t("client:directory.reviewsCount", { count: provider.totalReviews || 0 })}
                   </span>
                   <span>•</span>
-                  <span className="flex items-center text-emerald-600 font-medium">
-                    <CheckCircle2 className="h-3.5 w-3.5 me-1" />
-                    {t("client:profile.nationalIdVerified")}
+                  <span className="text-xs text-muted-foreground bg-muted/50 px-2.5 py-0.5 rounded-md border border-border/50">
+                    {t("client:profile.reviewedByTeam")}
                   </span>
                 </div>
               </div>

@@ -44,12 +44,25 @@
     "approveButton": "Approve Application",
     "rejectButton": "Reject Application",
     "approving": "Approving...",
+    "rejecting": "Rejecting...",
+    "searchPlaceholder": "Search applicants by name, email, or national ID...",
+    "approveConfirm": {
+      "title": "Approve {{name}}'s Application",
+      "description": "This will approve {{name}}'s application. They will be able to log in as a service provider and appear in client search results immediately.",
+      "confirmButton": "Yes, Approve Application"
+    },
     "rejectModal": {
       "title": "Reject Provider Application",
       "subtitle": "State the compliance or credential issue for the applicant",
       "reasonLabel": "Rejection Reason",
       "reasonPlaceholder": "e.g. National ID document illegible or expired license...",
       "confirmButton": "Confirm Rejection"
+    },
+    "toasts": {
+      "approved": "Application approved",
+      "approvedWithName": "Application approved — {{name}} can now receive shift bookings",
+      "rejected": "Application rejected",
+      "rejectedWithName": "Application rejected — {{name}} has been notified with your stated reason"
     }
   },
   "users": {
@@ -67,14 +80,18 @@
     "actionsCol": "Actions",
     "suspendButton": "Suspend Account",
     "activateButton": "Activate Account",
+    "toasts": {
+      "userSuspended": "{{name}}'s account has been suspended",
+      "userActivated": "{{name}}'s account has been reactivated"
+    },
     "suspendModal": {
-      "title": "Suspend User Account",
-      "description": "Are you sure you want to suspend this user? They will not be able to log in or book shifts.",
+      "title": "Suspend {{name}}'s Account",
+      "description": "This will suspend {{name}}'s account. They will not be able to log in or receive new shift bookings. Their existing accepted requests are unaffected. This action can be reversed.",
       "confirmButton": "Yes, Suspend Account"
     },
     "activateModal": {
-      "title": "Reactivate User Account",
-      "description": "Are you sure you want to reactivate this user account?",
+      "title": "Reactivate {{name}}'s Account",
+      "description": "This will reactivate {{name}}'s account. They will regain login access and appear in search results.",
       "confirmButton": "Yes, Activate Account"
     }
   },

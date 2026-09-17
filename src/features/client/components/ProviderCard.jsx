@@ -1,4 +1,4 @@
-import { MapPin, Star, ShieldCheck } from "lucide-react";
+import { MapPin, Star } from "lucide-react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -36,10 +36,6 @@ export default function ProviderCard({ provider: p, language }) {
               <h3 className="font-bold text-base text-foreground truncate group-hover:text-primary transition-colors">
                 {providerName}
               </h3>
-              <ShieldCheck
-                className="h-4 w-4 text-teal-600 flex-shrink-0"
-                title={t("client:directory.verified")}
-              />
             </div>
 
             <div className="flex items-center gap-1 text-xs text-muted-foreground mt-0.5">
