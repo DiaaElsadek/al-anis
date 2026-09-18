@@ -1,5 +1,4 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { motion, useReducedMotion } from "framer-motion";
 import { Calendar, MapPin, Star, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -16,14 +15,12 @@ import ProviderWeeklyShiftStrip from "@/features/provider/components/ProviderWee
 import RecentRequestsList from "@/features/provider/components/RecentRequestsList";
 import UpcomingJobsList from "@/features/provider/components/UpcomingJobsList";
 import { useAuth } from "@/hooks/useAuth";
-import { fadeInUp } from "@/lib/motion";
 import { getInitials, getMediaUrl, handleMutationError } from "@/lib/utils";
 
 export default function ProviderDashboardPage() {
   const { t, i18n } = useTranslation(["provider", "common"]);
   const queryClient = useQueryClient();
   const { user } = useAuth();
-  const shouldReduceMotion = useReducedMotion();
 
   const { data: dashboard, isLoading } = useQuery({
     queryKey: ["provider-dashboard"],
@@ -68,12 +65,7 @@ export default function ProviderDashboardPage() {
   const avatarUrl = dashboard?.profilePicture || user?.profilePicture || user?.profilePictureUrl;
 
   return (
-    <motion.div
-      className="space-y-6"
-      initial={shouldReduceMotion ? false : "hidden"}
-      animate="visible"
-      variants={fadeInUp}
-    >
+    <div className="space-y-6">
       {/* Hero Command Banner with Availability Switch & Factual Identity */}
       <div className="rounded-2xl bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white shadow-xs p-5 sm:p-6 space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -207,6 +199,6 @@ export default function ProviderDashboardPage() {
 
         <UpcomingJobsList upcomingJobs={upcomingJobs} language={i18n.language} />
       </div>
-    </motion.div>
+    </div>
   );
 }
