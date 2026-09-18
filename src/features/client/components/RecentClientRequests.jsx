@@ -58,7 +58,7 @@ export default function RecentClientRequests({ requests = [], onStartChat, isSta
           />
         </Card>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4">
           {recentRequests.map((req) => {
             const shiftLabel = getShiftLabel(req.shiftType, t, req.shiftTypeName);
 

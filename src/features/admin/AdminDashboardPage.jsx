@@ -8,15 +8,11 @@ import DashboardSkeleton from "@/components/shared/DashboardSkeleton";
 import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { useTheme } from "@/context/ThemeContext";
-import DashboardCharts from "@/features/admin/components/DashboardCharts";
 import RecentBookingsList from "@/features/admin/components/RecentBookingsList";
 import { formatPrice } from "@/lib/utils";
 
 export default function AdminDashboardPage() {
   const { t, i18n } = useTranslation(["admin", "common"]);
-  const { resolvedTheme } = useTheme();
-  const isDark = resolvedTheme === "dark";
 
   const { data: stats, isLoading: statsLoading } = useQuery({
     queryKey: ["admin-dashboard-stats"],
@@ -25,7 +21,7 @@ export default function AdminDashboardPage() {
 
   const { data: recentBookings = [], isLoading: bookingsLoading } = useQuery({
     queryKey: ["admin-recent-bookings"],
-    queryFn: () => getRecentBookings({ limit: 6 }),
+    queryFn: () => getRecentBookings({ limit: 10 }),
   });
 
   if (statsLoading) {
@@ -66,7 +62,7 @@ export default function AdminDashboardPage() {
     {
       title: t("admin:dashboard.completedShifts"),
       value: `${stats?.completedServiceRequests || 0} / ${stats?.totalServiceRequests || 0}`,
-      desc: `Avg. Client Rating: ${stats?.averageRating ? `${stats.averageRating.toFixed(1)} / 5` : "—"}`,
+      desc: t("admin:dashboard.completedShiftsDesc"),
       icon: CheckCircle2,
       color: "text-teal-600",
       bg: "bg-teal-500/10",
@@ -76,7 +72,7 @@ export default function AdminDashboardPage() {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       {/* Top Title */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -127,9 +123,6 @@ export default function AdminDashboardPage() {
           </Card>
         ))}
       </div>
-
-      {/* Recharts Analytics Section */}
-      <DashboardCharts isDark={isDark} stats={stats} language={i18n.language} />
 
       {/* Recent Platform Bookings */}
       <RecentBookingsList

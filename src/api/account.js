@@ -15,8 +15,14 @@ export const login = ({ email, password, phoneNumber = "" }) =>
  * @param {Object} data
  * @param {string} data.idToken
  */
-export const loginWithGoogle = ({ idToken }) =>
-  axiosClient.post("/Account/login/google", { idToken });
+export const loginWithGoogle = ({ idToken } = {}) =>
+  axiosClient.post("/Account/login/google", {
+    idToken:
+      idToken ||
+      import.meta.env.VITE_GOOGLE_CLIENT_ID ||
+      import.meta.env.VITE_GOOGLE_ID ||
+      import.meta.env.GOOGLE_ID,
+  });
 
 /**
  * POST /api/Account/register-user

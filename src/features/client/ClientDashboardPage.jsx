@@ -4,15 +4,12 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import { getActiveCategories } from "@/api/category";
-import { getMyChats } from "@/api/chat";
 import { getUserRequests } from "@/api/requests";
 import { getUserProfile } from "@/api/user";
 import DashboardSkeleton from "@/components/shared/DashboardSkeleton";
 import EmptyState from "@/components/shared/EmptyState";
 import ActiveCareTracker from "@/features/client/components/ActiveCareTracker";
 import ClientSpecialtiesGrid from "@/features/client/components/ClientSpecialtiesGrid";
-import ClientStatsGrid from "@/features/client/components/ClientStatsGrid";
-import ClientTrustCard from "@/features/client/components/ClientTrustCard";
 import ClientWelcomeBanner from "@/features/client/components/ClientWelcomeBanner";
 import RecentClientRequests from "@/features/client/components/RecentClientRequests";
 import { useAuth } from "@/hooks/useAuth";
@@ -47,14 +44,7 @@ export default function ClientDashboardPage() {
     refetchInterval: 15000,
   });
 
-  // 3. Fetch active chat conversations
-  const { data: chats = [], refetch: refetchChats } = useQuery({
-    queryKey: ["my-chats"],
-    queryFn: getMyChats,
-    refetchInterval: 10000,
-  });
-
-  // 4. Fetch active categories for fast booking shortcuts
+  // 3. Fetch active categories for fast booking shortcuts
   const { data: categories = [] } = useQuery({
     queryKey: ["active-categories"],
     queryFn: getActiveCategories,
@@ -96,39 +86,32 @@ export default function ClientDashboardPage() {
         onAction={() => {
           refetchProfile();
           refetchRequests();
-          refetchChats();
         }}
       />
     );
   }
 
   return (
-    <div className="space-y-6 sm:space-y-8 animate-in fade-in-50 duration-300">
-      {/* 1. Personalized Hero Greeting Banner */}
+    <div className="max-w-3xl mx-auto space-y-8 animate-in fade-in-50 duration-300">
+      {/* 1. Compact Warm Greeting */}
       <ClientWelcomeBanner user={user} profile={profileData} />
 
-      {/* 2. Responsive 4-card KPI Metric Grid */}
-      <ClientStatsGrid requests={requests} chatsCount={chats.length} isLoading={requestsLoading} />
-
-      {/* 3. Live Active Care Spotlight */}
+      {/* 2. FOCAL ELEMENT: Live Active Care Spotlight (or Booking Prompt) */}
       <ActiveCareTracker
         activeRequest={activeRequest}
         onStartChat={startChat}
         isStartingChat={isStartingChat}
       />
 
-      {/* 4. Recent Shift Bookings Section */}
+      {/* 3. Recent Shift Bookings Section (Single-column story) */}
       <RecentClientRequests
         requests={requests}
         onStartChat={startChat}
         isStartingChat={isStartingChat}
       />
 
-      {/* 5. Book by Specialty Shortcuts Grid */}
+      {/* 4. Book by Specialty Shortcuts Grid */}
       <ClientSpecialtiesGrid categories={categories} />
-
-      {/* 6. Guarantee & Safety Card */}
-      <ClientTrustCard />
     </div>
   );
 }

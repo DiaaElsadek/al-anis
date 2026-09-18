@@ -9,6 +9,7 @@
     "totalProviders": "Total Service Providers",
     "providersDesc": "Audited & active healthcare aides",
     "completedShifts": "Completed Shifts",
+    "completedShiftsDesc": "Successfully fulfilled shifts",
     "revenueChartTitle": "Revenue & Shift Volume Trend",
     "revenueChartDesc": "Monthly platform booking growth (EGP)",
     "shiftFulfilmentTitle": "Shift Fulfilment",
