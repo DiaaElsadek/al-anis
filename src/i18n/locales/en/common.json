@@ -127,6 +127,36 @@
     "noActiveChat": "No active chat selected",
     "chooseConversation": "Choose a conversation from the left to start messaging.",
     "participant": "Participant",
-    "shiftChatInit": "Shift chat initialized"
+    "shiftChatInit": "Shift chat initialized",
+    "signalr": {
+      "notConfigured": "REST Mode",
+      "connecting": "Connecting...",
+      "connected": "Live",
+      "reconnecting": "Reconnecting...",
+      "disconnected": "Offline"
+    },
+    "allChats": "All",
+    "unreadChats": "Unread",
+    "clearSearch": "Clear search",
+    "noSearchResults": "No conversations found",
+    "noSearchResultsDesc": "Try searching with a different name or keyword.",
+    "backToConversations": "Back to conversations",
+    "viewRequest": "View Request Details",
+    "scrollToBottom": "Scroll to bottom",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "justNow": "Just now",
+    "send": "Send",
+    "sending": "Sending...",
+    "pressEnterToSend": "Press Enter to send, Shift+Enter for new line",
+    "quickReplyTitle": "Quick replies",
+    "attachmentsComingSoon": "Attachment sharing will be available soon",
+    "quickReplies": {
+      "greeting": "Hello! 👋",
+      "onMyWay": "I'm on my way 🚗",
+      "arrived": "I have arrived 📍",
+      "confirmTime": "Can you confirm the start time? ⏱️",
+      "thankYou": "Thank you very much! 🙏"
+    }
   }
 }

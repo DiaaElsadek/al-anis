@@ -127,6 +127,36 @@
     "noActiveChat": "لم يتم تحديد أي محادثة",
     "chooseConversation": "اختر محادثة من القائمة لبدء المراسلة.",
     "participant": "المشارك",
-    "shiftChatInit": "تم بدء محادثة الوردية"
+    "shiftChatInit": "تم بدء محادثة الوردية",
+    "signalr": {
+      "notConfigured": "وضع REST",
+      "connecting": "جاري الاتصال...",
+      "connected": "مباشر",
+      "reconnecting": "إعادة الاتصال...",
+      "disconnected": "غير متصل"
+    },
+    "allChats": "الكل",
+    "unreadChats": "غير مقروءة",
+    "clearSearch": "مسح البحث",
+    "noSearchResults": "لم يتم العثور على محادثات",
+    "noSearchResultsDesc": "جرب البحث باسم أو كلمة مختلفة.",
+    "backToConversations": "الرجوع للمحادثات",
+    "viewRequest": "عرض تفاصيل الطلب",
+    "scrollToBottom": "الانتقال إلى أحدث الرسائل",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "justNow": "الآن",
+    "send": "إرسال",
+    "sending": "جاري الإرسال...",
+    "pressEnterToSend": "اضغط Enter للإرسال، Shift+Enter لسطر جديد",
+    "quickReplyTitle": "ردود سريعة",
+    "attachmentsComingSoon": "إرفاق الملفات سيكون متاحاً قريباً",
+    "quickReplies": {
+      "greeting": "مرحباً! 👋",
+      "onMyWay": "أنا في طريقي 🚗",
+      "arrived": "لقد وصلت إلى الموقع 📍",
+      "confirmTime": "هل يمكنك تأكيد وقت البدء؟ ⏱️",
+      "thankYou": "شكراً جزيلاً لك! 🙏"
+    }
   }
 }
