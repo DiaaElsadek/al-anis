@@ -1,11 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
 import { getMyChats, getChatMessages, sendChatMessage, markChatAsRead } from "@/api/chat";
 import ChatSidebar from "@/features/chat/components/ChatSidebar";
 import MessagePanel from "@/features/chat/components/MessagePanel";
+import { useAuth } from "@/hooks/useAuth";
+import { useChatSignalR } from "@/hooks/useChatSignalR";
+import { UserRole } from "@/lib/constants";
 import { handleMutationError } from "@/lib/utils";
 
 export default function ChatInboxPage() {
@@ -15,8 +18,26 @@ export default function ChatInboxPage() {
   const messagesEndRef = useRef(null);
   const [messageText, setMessageText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const { user } = useAuth();
+  const isProvider = user?.role === UserRole.SERVICE_PROVIDER;
 
   const activeChatId = searchParams.get("active");
+
+  // Track desktop breakpoint (768px)
+  const [isDesktop, setIsDesktop] = useState(
+    () => typeof window !== "undefined" && window.innerWidth >= 768
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // SignalR real-time connection (opt-in: no-op when env vars are empty)
+  const { status: signalrStatus } = useChatSignalR(activeChatId);
 
   // Fetch all user chat threads
   const {
@@ -30,15 +51,15 @@ export default function ChatInboxPage() {
     refetchInterval: 5000,
   });
 
-  // Select first chat if none selected and chats exist
+  // On desktop, auto-select first chat if none selected and chats exist
   useEffect(() => {
-    if (!activeChatId && chats.length > 0) {
+    if (isDesktop && !activeChatId && chats.length > 0) {
       setSearchParams({ active: chats[0].id }, { replace: true });
     }
-  }, [activeChatId, chats, setSearchParams]);
+  }, [isDesktop, activeChatId, chats, setSearchParams]);
 
   // Active chat object
-  const activeChat = chats.find((c) => c.id === activeChatId) || chats[0];
+  const activeChat = chats.find((c) => c.id === activeChatId) || (isDesktop ? chats[0] : null);
 
   // Fetch messages for active chat
   const { data: messagesData, isLoading: messagesLoading } = useQuery({
@@ -86,29 +107,55 @@ export default function ChatInboxPage() {
     sendMutation.mutate(trimmed);
   };
 
-  return (
-    <div className="h-[calc(100vh-8.5rem)] flex rounded-2xl border border-border/80 shadow-md bg-card overflow-hidden">
-      <ChatSidebar
-        chats={chats}
-        chatsLoading={chatsLoading}
-        chatsError={chatsError}
-        onRetryChats={() => refetchChats()}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        activeChatId={activeChatId}
-        onSelectChat={(id) => setSearchParams({ active: id })}
-      />
+  const handleSelectChat = useCallback(
+    (id) => {
+      setSearchParams({ active: id });
+    },
+    [setSearchParams]
+  );
 
-      <MessagePanel
-        activeChat={activeChat}
-        messages={messages}
-        messagesLoading={messagesLoading}
-        messagesEndRef={messagesEndRef}
-        messageText={messageText}
-        onMessageTextChange={setMessageText}
-        onSend={handleSend}
-        isSending={sendMutation.isPending}
-      />
+  const handleBackToList = useCallback(() => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.delete("active");
+    setSearchParams(newParams, { replace: true });
+  }, [searchParams, setSearchParams]);
+
+  return (
+    <div className="h-[calc(100dvh-10rem)] md:h-[calc(100dvh-9rem)] min-h-[500px] max-h-[880px] flex rounded-2xl border border-border/80 shadow-md bg-card overflow-hidden">
+      {/* Sidebar: Full-width on mobile if no active chat, hidden on mobile when viewing chat */}
+      <div
+        className={`w-full md:w-80 lg:w-96 flex-shrink-0 flex flex-col border-e border-border/70 bg-card ${
+          activeChatId ? "hidden md:flex" : "flex"
+        }`}
+      >
+        <ChatSidebar
+          chats={chats}
+          chatsLoading={chatsLoading}
+          chatsError={chatsError}
+          onRetryChats={() => refetchChats()}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          activeChatId={activeChatId}
+          onSelectChat={handleSelectChat}
+        />
+      </div>
+
+      {/* Message Panel: Full-width on mobile if active chat selected, hidden on mobile if no chat */}
+      <div className={`flex-1 min-w-0 flex flex-col ${activeChatId ? "flex" : "hidden md:flex"}`}>
+        <MessagePanel
+          activeChat={activeChat}
+          messages={messages}
+          messagesLoading={messagesLoading}
+          messagesEndRef={messagesEndRef}
+          messageText={messageText}
+          onMessageTextChange={setMessageText}
+          onSend={handleSend}
+          isSending={sendMutation.isPending}
+          connectionStatus={signalrStatus}
+          onBackToList={handleBackToList}
+          isProvider={isProvider}
+        />
+      </div>
     </div>
   );
 }
