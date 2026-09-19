@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
 
@@ -15,7 +15,6 @@ export default function ChatInboxPage() {
   const { t } = useTranslation("common");
   const [searchParams, setSearchParams] = useSearchParams();
   const queryClient = useQueryClient();
-  const messagesEndRef = useRef(null);
   const [messageText, setMessageText] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const { user } = useAuth();
@@ -51,7 +50,7 @@ export default function ChatInboxPage() {
     refetchInterval: 5000,
   });
 
-  // On desktop, auto-select first chat if none selected and chats exist
+  // Auto-select first chat on desktop if none selected
   useEffect(() => {
     if (isDesktop && !activeChatId && chats.length > 0) {
       setSearchParams({ active: chats[0].id }, { replace: true });
@@ -70,11 +69,6 @@ export default function ChatInboxPage() {
   });
 
   const messages = messagesData?.messages || [];
-
-  // Scroll to bottom on new messages
-  useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages.length]);
 
   // Mark active chat as read
   useEffect(() => {
@@ -121,10 +115,10 @@ export default function ChatInboxPage() {
   }, [searchParams, setSearchParams]);
 
   return (
-    <div className="h-[calc(100dvh-10rem)] md:h-[calc(100dvh-9rem)] min-h-[500px] max-h-[880px] flex rounded-2xl border border-border/80 shadow-md bg-card overflow-hidden">
-      {/* Sidebar: Full-width on mobile if no active chat, hidden on mobile when viewing chat */}
-      <div
-        className={`w-full md:w-80 lg:w-96 flex-shrink-0 flex flex-col border-e border-border/70 bg-card ${
+    <div className="h-[calc(100dvh-7.5rem)] min-h-[560px] max-h-[920px] flex rounded-2xl border border-border/70 shadow-sm bg-card overflow-hidden">
+      {/* Left conversation rail: fixed width 320-350px */}
+      <aside
+        className={`w-full md:w-[320px] lg:w-[350px] flex-shrink-0 flex flex-col border-e border-border/60 bg-card ${
           activeChatId ? "hidden md:flex" : "flex"
         }`}
       >
@@ -138,15 +132,16 @@ export default function ChatInboxPage() {
           activeChatId={activeChatId}
           onSelectChat={handleSelectChat}
         />
-      </div>
+      </aside>
 
-      {/* Message Panel: Full-width on mobile if active chat selected, hidden on mobile if no chat */}
-      <div className={`flex-1 min-w-0 flex flex-col ${activeChatId ? "flex" : "hidden md:flex"}`}>
+      {/* Main conversation pane: flexible width with WhatsApp-style wallpaper behind messages */}
+      <main
+        className={`flex-1 min-w-0 flex flex-col bg-background/50 ${activeChatId ? "flex" : "hidden md:flex"}`}
+      >
         <MessagePanel
           activeChat={activeChat}
           messages={messages}
           messagesLoading={messagesLoading}
-          messagesEndRef={messagesEndRef}
           messageText={messageText}
           onMessageTextChange={setMessageText}
           onSend={handleSend}
@@ -154,8 +149,9 @@ export default function ChatInboxPage() {
           connectionStatus={signalrStatus}
           onBackToList={handleBackToList}
           isProvider={isProvider}
+          currentUser={user}
         />
-      </div>
+      </main>
     </div>
   );
 }
