@@ -145,7 +145,7 @@ export default function ApplicationDetailDialog({
                   {/* National ID Document */}
                   <div className="rounded-xl border border-border/70 p-3 bg-card/60 flex flex-col justify-between">
                     <div className="flex items-center gap-2 mb-2 font-medium text-foreground">
-                      <CreditCard className="h-4 w-4 text-primary" />
+                      <CreditCard className="h-4 w-4 text-muted-foreground" />
                       <span>{t("admin:applications.idDocument")}</span>
                     </div>
 
@@ -156,7 +156,7 @@ export default function ApplicationDetailDialog({
                             <img
                               src={getMediaUrl(selectedApp.idDocumentPath)}
                               alt="National ID"
-                              className="h-28 w-full object-cover group-hover:scale-105 transition-transform duration-200 cursor-pointer"
+                              className="h-28 w-full object-cover cursor-pointer"
                               onClick={() => {
                                 setPreviewImage(getMediaUrl(selectedApp.idDocumentPath));
                                 setZoomLevel(1);
@@ -179,7 +179,7 @@ export default function ApplicationDetailDialog({
                           href={getMediaUrl(selectedApp.idDocumentPath)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-semibold"
+                          className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-medium"
                         >
                           <span>{t("admin:applications.openDocument")}</span>
                           <ExternalLink className="h-3 w-3" />
@@ -193,7 +193,7 @@ export default function ApplicationDetailDialog({
                   {/* Professional Certificate */}
                   <div className="rounded-xl border border-border/70 p-3 bg-card/60 flex flex-col justify-between">
                     <div className="flex items-center gap-2 mb-2 font-medium text-foreground">
-                      <FileText className="h-4 w-4 text-teal-600 dark:text-teal-400" />
+                      <FileText className="h-4 w-4 text-muted-foreground" />
                       <span>{t("admin:applications.certificate")}</span>
                     </div>
 
@@ -204,7 +204,7 @@ export default function ApplicationDetailDialog({
                             <img
                               src={getMediaUrl(selectedApp.certificatePath)}
                               alt="Certificate"
-                              className="h-28 w-full object-cover group-hover:scale-105 transition-transform duration-200 cursor-pointer"
+                              className="h-28 w-full object-cover cursor-pointer"
                               onClick={() => {
                                 setPreviewImage(getMediaUrl(selectedApp.certificatePath));
                                 setZoomLevel(1);
@@ -227,7 +227,7 @@ export default function ApplicationDetailDialog({
                           href={getMediaUrl(selectedApp.certificatePath)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs text-teal-700 dark:text-teal-400 hover:underline font-semibold"
+                          className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-medium"
                         >
                           <span>{t("admin:applications.openDocument")}</span>
                           <ExternalLink className="h-3 w-3" />
@@ -241,7 +241,7 @@ export default function ApplicationDetailDialog({
                   {/* CV / Resume Document (if exists) */}
                   <div className="rounded-xl border border-border/70 p-3 bg-card/60 flex flex-col justify-between">
                     <div className="flex items-center gap-2 mb-2 font-medium text-foreground">
-                      <File className="h-4 w-4 text-sky-600 dark:text-sky-400" />
+                      <File className="h-4 w-4 text-muted-foreground" />
                       <span>{t("admin:applications.cv")}</span>
                     </div>
 
@@ -252,7 +252,7 @@ export default function ApplicationDetailDialog({
                             <img
                               src={getMediaUrl(selectedApp.cvPath)}
                               alt="CV"
-                              className="h-28 w-full object-cover group-hover:scale-105 transition-transform duration-200 cursor-pointer"
+                              className="h-28 w-full object-cover cursor-pointer"
                               onClick={() => {
                                 setPreviewImage(getMediaUrl(selectedApp.cvPath));
                                 setZoomLevel(1);
@@ -275,7 +275,7 @@ export default function ApplicationDetailDialog({
                           href={getMediaUrl(selectedApp.cvPath)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 text-xs text-sky-700 dark:text-sky-400 hover:underline font-semibold"
+                          className="inline-flex items-center gap-1.5 text-xs text-primary hover:underline font-medium"
                         >
                           <span>{t("admin:applications.openDocument")}</span>
                           <ExternalLink className="h-3 w-3" />

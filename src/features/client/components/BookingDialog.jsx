@@ -97,7 +97,7 @@ export default function BookingDialog({ open, onOpenChange, provider, providerId
       <DialogTrigger asChild>
         <Button
           size="lg"
-          className="w-full sm:w-auto font-semibold shadow-md shadow-primary/20 hover:shadow-lg transition-all"
+          className="w-full sm:w-auto font-semibold shadow-sm"
           onClick={() => {
             if (provider?.categories?.[0]?.id) {
               setValue("categoryId", provider.categories[0].id);

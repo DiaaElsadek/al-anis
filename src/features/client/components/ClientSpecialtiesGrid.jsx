@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import CategoryIcon from "@/components/shared/CategoryIcon";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Card } from "@/components/ui/card";
 import { FALLBACK_CATEGORIES } from "@/lib/constants";
 
@@ -30,7 +29,6 @@ export default function ClientSpecialtiesGrid({ categories = [] }) {
           className="text-xs font-semibold text-primary hover:underline inline-flex items-center"
         >
           <span>{t("common:actions.view")}</span>
-          <DirectionalIcon className="h-3 w-3 ms-1" />
         </Link>
       </div>
 
@@ -44,8 +42,8 @@ export default function ClientSpecialtiesGrid({ categories = [] }) {
               to={`/app/providers?category=${cat.id || ""}`}
               className="group block"
             >
-              <Card className="h-full border-border/70 group-hover:border-primary/50 group-hover:shadow-md transition-all duration-200 p-4 rounded-2xl text-center bg-card flex flex-col items-center justify-center space-y-2.5">
-                <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary group-hover:scale-110 group-hover:bg-primary group-hover:text-primary-foreground transition-all duration-200 flex items-center justify-center shadow-xs">
+              <Card className="h-full border-border/70 group-hover:border-primary/50 group-hover:shadow-sm transition-colors duration-200 p-4 rounded-2xl text-center bg-card flex flex-col items-center justify-center space-y-2.5">
+                <div className="h-12 w-12 rounded-2xl bg-primary/10 text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-200 flex items-center justify-center shadow-xs">
                   <CategoryIcon icon={cat.icon} name={name} className="h-6 w-6" />
                 </div>
                 <div>

@@ -31,7 +31,7 @@ export default function AdminLayout() {
   function SidebarContent() {
     return (
       <nav className="flex flex-col gap-1 p-4">
-        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-3">
+        <p className="text-xs font-semibold text-muted-foreground mb-3 px-3">
           {t("nav.adminPanel")}
         </p>
         {adminNavItems.map((item) => (

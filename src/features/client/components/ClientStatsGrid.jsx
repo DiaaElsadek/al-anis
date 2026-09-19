@@ -97,7 +97,7 @@ export default function ClientStatsGrid({ requests = [], chatsCount = 0, isLoadi
                   {stat.title}
                 </span>
                 <div
-                  className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 ${stat.bg} ${stat.color} border ${stat.border}`}
+                  className={`h-10 w-10 rounded-xl flex items-center justify-center shrink-0 ${stat.bg} ${stat.color} border ${stat.border}`}
                 >
                   <stat.icon className="h-5 w-5" />
                 </div>

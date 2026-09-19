@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
 
 import RatingStars from "@/components/shared/RatingStars";
-import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTestimonials } from "@/features/landing/data";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
@@ -15,9 +14,6 @@ export default function TestimonialsSection({ isArabic }) {
     <section id="testimonials" className="py-16 md:py-24">
       <div className="container max-w-5xl mx-auto space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
-          <Badge variant="outline" className="text-xs text-primary border-primary/20 font-medium">
-            {isArabic ? "تجارب الأسر" : "Family Stories"}
-          </Badge>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
             {isArabic
               ? "تجارب حقيقية من عائلات ومقدمي رعاية"
@@ -82,7 +78,7 @@ export default function TestimonialsSection({ isArabic }) {
                       </blockquote>
                     </div>
 
-                    <div className="pt-4 border-t border-border/50 flex items-center justify-between gap-2">
+                    <div className="pt-4 border-t border-border/50 flex flex-wrap items-center justify-between gap-2.5">
                       <div>
                         <p className="font-bold text-xs sm:text-sm text-foreground">
                           {tItem.author}
@@ -90,7 +86,7 @@ export default function TestimonialsSection({ isArabic }) {
                         <p className="text-xs text-muted-foreground mt-0.5">{tItem.role}</p>
                       </div>
 
-                      <span className="text-[11px] bg-muted text-foreground/80 px-2 py-0.5 rounded-md">
+                      <span className="text-[11px] bg-muted text-foreground/80 px-2.5 py-0.5 rounded-md shrink-0">
                         {tItem.category}
                       </span>
                     </div>

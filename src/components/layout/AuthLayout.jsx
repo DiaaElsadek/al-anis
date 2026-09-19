@@ -13,22 +13,18 @@ export default function AuthLayout() {
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row bg-background">
       {/* Brand Hero Panel (Desktop) */}
-      <div className="relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between overflow-hidden bg-gradient-to-br from-slate-950 via-[hsl(192,80%,12%)] to-slate-950 p-12 text-white">
-        {/* Ambient background glows */}
-        <div className="absolute -top-24 -left-24 h-96 w-96 rounded-full bg-primary/15 blur-3xl pointer-events-none" />
-        <div className="absolute top-1/2 -right-24 h-96 w-96 rounded-full bg-primary/10 blur-3xl pointer-events-none" />
-
+      <div className="relative hidden lg:flex lg:w-5/12 xl:w-1/2 flex-col justify-between overflow-hidden bg-slate-950 p-12 text-white border-e border-border/20">
         {/* Brand Header */}
         <div className="relative z-10">
           <Link to="/" className="inline-flex items-center gap-3 group">
-            <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-md transition-transform duration-300 group-hover:scale-105">
+            <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-sm">
               <ShieldCheck className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
               <span className="text-xl font-bold tracking-tight text-white">
                 {t("common:brand.name")}
               </span>
-              <span className="block text-[10px] font-medium text-slate-300/80 tracking-wider uppercase">
+              <span className="block text-[10px] font-medium text-slate-400">
                 {t("common:brand.subtitle")}
               </span>
             </div>
@@ -37,11 +33,6 @@ export default function AuthLayout() {
 
         {/* Center Hero Content */}
         <div className="relative z-10 my-auto py-10 max-w-lg">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-white/10 border border-white/15 text-slate-200 text-xs font-medium mb-6">
-            <span className="h-2 w-2 rounded-full bg-emerald-400" />
-            {t("auth:hero.badge")}
-          </div>
-
           <h2 className="text-3xl xl:text-4xl font-bold tracking-tight leading-tight text-white mb-4">
             {t("auth:hero.headline")}
           </h2>
@@ -49,12 +40,10 @@ export default function AuthLayout() {
             {t("auth:hero.subtitle")}
           </p>
 
-          {/* Value Prop Cards */}
-          <div className="space-y-3">
-            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white/[0.05] border border-white/[0.08] backdrop-blur-sm transition-colors hover:bg-white/[0.08]">
-              <div className="p-2 rounded-lg bg-primary/30 text-white mt-0.5 shrink-0">
-                <ShieldCheck className="h-4 w-4" />
-              </div>
+          {/* Value Prop List */}
+          <div className="space-y-5 pt-2">
+            <div className="flex items-start gap-3">
+              <ShieldCheck className="h-5 w-5 text-primary mt-0.5 shrink-0" />
               <div>
                 <h4 className="text-sm font-semibold text-white">{t("auth:hero.benefit1Title")}</h4>
                 <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
@@ -63,10 +52,8 @@ export default function AuthLayout() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white/[0.05] border border-white/[0.08] backdrop-blur-sm transition-colors hover:bg-white/[0.08]">
-              <div className="p-2 rounded-lg bg-primary/30 text-white mt-0.5 shrink-0">
-                <Clock className="h-4 w-4" />
-              </div>
+            <div className="flex items-start gap-3">
+              <Clock className="h-5 w-5 text-primary mt-0.5 shrink-0" />
               <div>
                 <h4 className="text-sm font-semibold text-white">{t("auth:hero.benefit2Title")}</h4>
                 <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
@@ -75,10 +62,8 @@ export default function AuthLayout() {
               </div>
             </div>
 
-            <div className="flex items-start gap-3.5 p-3.5 rounded-xl bg-white/[0.05] border border-white/[0.08] backdrop-blur-sm transition-colors hover:bg-white/[0.08]">
-              <div className="p-2 rounded-lg bg-primary/30 text-white mt-0.5 shrink-0">
-                <CheckCircle2 className="h-4 w-4" />
-              </div>
+            <div className="flex items-start gap-3">
+              <CheckCircle2 className="h-5 w-5 text-primary mt-0.5 shrink-0" />
               <div>
                 <h4 className="text-sm font-semibold text-white">{t("auth:hero.benefit3Title")}</h4>
                 <p className="text-xs text-slate-300 mt-0.5 leading-relaxed">
@@ -112,12 +97,9 @@ export default function AuthLayout() {
         <div className="flex items-center justify-between w-full max-w-2xl mx-auto mb-6">
           <Link
             to="/"
-            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            <DirectionalIcon
-              icon={ArrowLeft}
-              className="h-4 w-4 transition-transform group-hover:-translate-x-1 rtl:group-hover:translate-x-1"
-            />
+            <DirectionalIcon icon={ArrowLeft} className="h-4 w-4" />
             <span>{t("common:nav.backToHome")}</span>
           </Link>
 

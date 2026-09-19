@@ -1,8 +1,7 @@
 import { motion } from "framer-motion";
-import { ArrowRight, BadgeCheck, ChevronRight, MapPin, Star } from "lucide-react";
+import { BadgeCheck, MapPin, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,9 +19,6 @@ export default function CaregiversSection({ isArabic }) {
       <div className="container max-w-6xl mx-auto space-y-12">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-2">
-            <Badge variant="outline" className="text-xs text-primary border-primary/20 font-medium">
-              {isArabic ? "نخبة الكوادر الطبية" : "Audited Caregivers"}
-            </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
               {isArabic
                 ? "تعرف على نماذج من أطقم الرعاية المعتمدة"
@@ -39,11 +35,10 @@ export default function CaregiversSection({ isArabic }) {
             variant="outline"
             size="sm"
             asChild
-            className="self-start sm:self-auto gap-1 font-medium"
+            className="self-start sm:self-auto font-medium"
           >
             <Link to="/register">
               <span>{isArabic ? "انضم كأخصائي رعاية" : "Join as Caregiver"}</span>
-              <DirectionalIcon icon={ChevronRight} className="h-4 w-4" />
             </Link>
           </Button>
         </div>
@@ -137,7 +132,7 @@ export default function CaregiversSection({ isArabic }) {
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-border/60 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="pt-4 border-t border-border/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                       <span className="text-xs text-muted-foreground font-medium block">
                         {isArabic ? "سعر الوردية (8 ساعات)" : "Shift Rate (8 Hours)"}
@@ -153,7 +148,6 @@ export default function CaregiversSection({ isArabic }) {
                     >
                       <Link to="/register">
                         <span>{isArabic ? "طلب حجز وردية" : "Book Shift with Provider"}</span>
-                        <DirectionalIcon icon={ArrowRight} className="h-4 w-4 ms-2" />
                       </Link>
                     </Button>
                   </div>
@@ -192,7 +186,7 @@ export default function CaregiversSection({ isArabic }) {
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between pt-3 border-t border-border/50 text-xs">
+                    <div className="flex flex-wrap items-center justify-between pt-3 border-t border-border/50 text-xs gap-2">
                       <div className="flex items-center gap-1">
                         <Star className="h-3.5 w-3.5 fill-warm-accent text-warm-accent" />
                         <span className="font-bold text-foreground">{prov.rating}</span>
@@ -216,7 +210,6 @@ export default function CaregiversSection({ isArabic }) {
                     >
                       <Link to="/register">
                         <span>{isArabic ? "عرض الملف وحجز الوردية" : "View Profile & Book"}</span>
-                        <DirectionalIcon icon={ArrowRight} className="h-3 w-3 ms-1" />
                       </Link>
                     </Button>
                   </CardContent>

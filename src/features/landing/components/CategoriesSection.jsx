@@ -1,10 +1,7 @@
 import { motion } from "framer-motion";
-import { ArrowRight, ChevronRight } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 
 import CategoryIcon from "@/components/shared/CategoryIcon";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
@@ -18,9 +15,6 @@ export default function CategoriesSection({ isArabic, categories }) {
       <div className="container max-w-6xl mx-auto space-y-10">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-2">
-            <Badge variant="outline" className="text-xs text-primary border-primary/20 font-medium">
-              {isArabic ? "تخصصات الرعاية المعتمدة" : "Care Specialties"}
-            </Badge>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
               {isArabic
                 ? "تخصصات الرعاية والخدمات المنزلية"
@@ -37,11 +31,10 @@ export default function CategoriesSection({ isArabic, categories }) {
             variant="outline"
             size="sm"
             asChild
-            className="self-start sm:self-auto gap-1 font-medium"
+            className="self-start sm:self-auto font-medium"
           >
             <Link to="/register">
               <span>{isArabic ? "استعرض كافة التخصصات" : "View All Specialties"}</span>
-              <DirectionalIcon icon={ChevronRight} className="h-4 w-4" />
             </Link>
           </Button>
         </div>
@@ -68,7 +61,7 @@ export default function CategoriesSection({ isArabic, categories }) {
                 className="w-[280px] shrink-0 sm:w-auto snap-center"
               >
                 <Card
-                  className="h-full border border-border/80 shadow-xs hover:border-primary/40 hover:-translate-y-0.5 transition-all duration-200 cursor-pointer group rounded-2xl bg-card"
+                  className="h-full border border-border/80 shadow-xs hover:border-primary/40 transition-colors duration-200 cursor-pointer group rounded-2xl bg-card"
                   onClick={() => navigate(`/login?redirect=/app/providers&cat=${cat.id}`)}
                 >
                   <CardContent className="p-5 sm:p-6 flex flex-col justify-between h-full space-y-4">
@@ -103,9 +96,8 @@ export default function CategoriesSection({ isArabic, categories }) {
                           {formatPrice(startingPrice)}
                         </strong>
                       </span>
-                      <span className="font-medium text-primary flex items-center gap-1 group-hover:translate-x-1 rtl:group-hover:-translate-x-1 transition-transform">
+                      <span className="font-medium text-primary">
                         <span>{isArabic ? "احجز مزود" : "Explore"}</span>
-                        <DirectionalIcon icon={ArrowRight} className="h-3.5 w-3.5" />
                       </span>
                     </div>
                   </CardContent>

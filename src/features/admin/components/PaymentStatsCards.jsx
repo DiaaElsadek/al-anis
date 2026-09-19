@@ -22,7 +22,7 @@ export default function PaymentStatsCards({
       <Card className="shadow-xs border-border/80">
         <CardContent className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="text-xs font-medium text-muted-foreground">
               {t("admin:payments.totalVolume")}
             </p>
             <h3 className="text-2xl font-bold mt-1 text-foreground">
@@ -43,7 +43,7 @@ export default function PaymentStatsCards({
       <Card className="shadow-xs border-border/80">
         <CardContent className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="text-xs font-medium text-muted-foreground">
               {t("admin:payments.totalTransactions")}
             </p>
             <h3 className="text-2xl font-bold mt-1 text-foreground">
@@ -66,7 +66,7 @@ export default function PaymentStatsCards({
       <Card className="shadow-xs border-border/80">
         <CardContent className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="text-xs font-medium text-muted-foreground">
               {t("admin:payments.avgShift")}
             </p>
             <h3 className="text-2xl font-bold mt-1 text-foreground">
@@ -83,7 +83,7 @@ export default function PaymentStatsCards({
       <Card className="shadow-xs border-border/80">
         <CardContent className="p-5 flex items-center justify-between">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+            <p className="text-xs font-medium text-muted-foreground">
               {t("admin:payments.escrowSecurity")}
             </p>
             <h3 className="text-2xl font-bold mt-1 text-foreground">100%</h3>

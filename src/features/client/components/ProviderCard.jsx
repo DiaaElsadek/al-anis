@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,7 @@ export default function ProviderCard({ provider: p, language }) {
     : p.governorate || "Egypt";
 
   return (
-    <Card className="group relative flex flex-col justify-between border-border/70 hover:border-primary/50 hover:shadow-xl transition-all duration-300 bg-card overflow-hidden">
+    <Card className="group relative flex flex-col justify-between border-border/70 hover:border-primary/50 hover:shadow-md transition-all duration-300 bg-card overflow-hidden">
       <div className="p-6 space-y-4">
         {/* Top Avatar & Name */}
         <div className="flex items-start gap-4">
@@ -81,7 +80,7 @@ export default function ProviderCard({ provider: p, language }) {
           <div className="flex items-center gap-1.5">
             <span
               className={`h-2 w-2 rounded-full ${
-                p.isAvailable ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground/40"
+                p.isAvailable ? "bg-emerald-500" : "bg-muted-foreground/40"
               }`}
             />
             <span
@@ -107,14 +106,9 @@ export default function ProviderCard({ provider: p, language }) {
         <Button variant="outline" size="sm" className="flex-1 text-xs font-semibold h-9" asChild>
           <Link to={`/app/providers/${p.id}`}>{t("client:directory.viewProfile")}</Link>
         </Button>
-        <Button
-          size="sm"
-          className="flex-1 text-xs font-semibold h-9 shadow-sm shadow-primary/20"
-          asChild
-        >
+        <Button size="sm" className="flex-1 text-xs font-semibold h-9 shadow-sm" asChild>
           <Link to={`/app/providers/${p.id}?book=true`}>
             <span>{t("client:directory.bookShift")}</span>
-            <DirectionalIcon className="h-3.5 w-3.5 ms-1" />
           </Link>
         </Button>
       </CardFooter>

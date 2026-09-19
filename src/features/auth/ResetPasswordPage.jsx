@@ -1,18 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import {
-  Lock,
-  Eye,
-  EyeOff,
-  Check,
-  X,
-  ArrowRight,
-  ArrowLeft,
-  AlertCircle,
-  Key,
-  ShieldCheck,
-  Loader2,
-} from "lucide-react";
+import { Lock, Eye, EyeOff, Check, X, ArrowLeft, AlertCircle, Key, Loader2 } from "lucide-react";
 import { useState, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
@@ -128,16 +116,11 @@ export default function ResetPasswordPage() {
   };
 
   return (
-    <Card className="border-border/60 shadow-xl shadow-teal-950/5 backdrop-blur-sm bg-card/95">
+    <Card className="border-border shadow-sm bg-card">
       <CardHeader className="space-y-1 pb-6">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl font-bold tracking-tight">
-            {t("auth:resetPassword.title")}
-          </CardTitle>
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-            <ShieldCheck className="h-4 w-4" />
-          </div>
-        </div>
+        <CardTitle className="text-2xl font-bold tracking-tight">
+          {t("auth:resetPassword.title")}
+        </CardTitle>
         <CardDescription className="text-muted-foreground text-sm">
           {registeredEmail ? (
             <>
@@ -279,7 +262,7 @@ export default function ResetPasswordPage() {
 
           <Button
             type="submit"
-            className="w-full h-11 text-sm font-semibold shadow-md shadow-primary/20 hover:shadow-lg transition-all mt-2"
+            className="w-full h-11 text-sm font-semibold shadow-sm mt-2"
             disabled={resetMutation.isPending}
           >
             {resetMutation.isPending ? (
@@ -288,10 +271,7 @@ export default function ResetPasswordPage() {
                 <span>{t("common:actions.saveChanges")}...</span>
               </div>
             ) : (
-              <div className="flex items-center justify-center gap-2">
-                <span>{t("auth:resetPassword.resetButton")}</span>
-                <DirectionalIcon icon={ArrowRight} className="h-4 w-4" />
-              </div>
+              <span>{t("auth:resetPassword.resetButton")}</span>
             )}
           </Button>
         </form>
