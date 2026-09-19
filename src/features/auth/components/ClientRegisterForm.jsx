@@ -8,7 +8,6 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import DatePicker from "@/components/shared/DatePicker";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import FileUploadField from "@/components/shared/FileUploadField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -277,7 +276,7 @@ export default function ClientRegisterForm() {
       {/* Submit */}
       <Button
         type="submit"
-        className="w-full h-11 text-sm font-semibold shadow-md shadow-primary/20 hover:shadow-lg transition-all mt-4"
+        className="w-full h-11 text-sm font-semibold shadow-sm mt-4"
         disabled={clientMutation.isPending}
       >
         {clientMutation.isPending ? (
@@ -286,10 +285,7 @@ export default function ClientRegisterForm() {
             <span>{t("auth:register.creatingAccount")}</span>
           </div>
         ) : (
-          <div className="flex items-center justify-center gap-2">
-            <span>{t("auth:register.submitClient")}</span>
-            <DirectionalIcon className="h-4 w-4" />
-          </div>
+          <span>{t("auth:register.submitClient")}</span>
         )}
       </Button>
     </form>

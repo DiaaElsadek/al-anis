@@ -20,7 +20,6 @@ import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 import DatePicker from "@/components/shared/DatePicker";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import FileUploadField from "@/components/shared/FileUploadField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -115,9 +114,7 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
       <div className="space-y-3">
         <div className="flex items-center gap-2 pb-1 border-b border-border/60">
           <User className="h-4 w-4 text-primary" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-            {t("auth:register.section1")}
-          </h3>
+          <h3 className="text-sm font-semibold text-foreground">{t("auth:register.section1")}</h3>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -302,9 +299,7 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
       <div className="space-y-3 pt-2">
         <div className="flex items-center gap-2 pb-1 border-b border-border/60">
           <Briefcase className="h-4 w-4 text-emerald-600" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-            {t("auth:register.section2")}
-          </h3>
+          <h3 className="text-sm font-semibold text-foreground">{t("auth:register.section2")}</h3>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -451,9 +446,7 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
       <div className="space-y-3 pt-2">
         <div className="flex items-center gap-2 pb-1 border-b border-border/60">
           <ShieldCheck className="h-4 w-4 text-cyan-600" />
-          <h3 className="text-xs font-bold uppercase tracking-wider text-foreground">
-            {t("auth:register.section3")}
-          </h3>
+          <h3 className="text-sm font-semibold text-foreground">{t("auth:register.section3")}</h3>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -511,7 +504,7 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
       {/* Submit */}
       <Button
         type="submit"
-        className="w-full h-11 text-sm font-semibold shadow-md shadow-emerald-900/20 bg-emerald-600 hover:bg-emerald-700 text-white transition-all mt-4"
+        className="w-full h-11 text-sm font-semibold shadow-sm bg-emerald-600 hover:bg-emerald-700 text-white mt-4"
         disabled={providerMutation.isPending}
       >
         {providerMutation.isPending ? (
@@ -520,10 +513,7 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
             <span>{t("auth:register.submitting")}</span>
           </div>
         ) : (
-          <div className="flex items-center justify-center gap-2">
-            <span>{t("auth:register.submitProvider")}</span>
-            <DirectionalIcon className="h-4 w-4" />
-          </div>
+          <span>{t("auth:register.submitProvider")}</span>
         )}
       </Button>
     </form>

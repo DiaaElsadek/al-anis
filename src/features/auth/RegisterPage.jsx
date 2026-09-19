@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { Briefcase, Sparkles, User } from "lucide-react";
+import { Briefcase, User } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
@@ -40,16 +40,11 @@ export default function RegisterPage() {
   }
 
   return (
-    <Card className="border-border/60 shadow-xl shadow-teal-950/5 backdrop-blur-sm bg-card/95">
+    <Card className="border-border shadow-sm bg-card">
       <CardHeader className="space-y-2 pb-5">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl font-bold tracking-tight">
-            {t("auth:register.title")}
-          </CardTitle>
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-            <Sparkles className="h-4 w-4" />
-          </div>
-        </div>
+        <CardTitle className="text-2xl font-bold tracking-tight">
+          {t("auth:register.title")}
+        </CardTitle>
         <CardDescription className="text-muted-foreground text-sm">
           {t("auth:register.subtitle")}
         </CardDescription>

@@ -103,7 +103,7 @@ export default function ProviderDashboardPage() {
           </div>
 
           {/* Live Availability Toggle Switch */}
-          <div className="flex items-center gap-3 bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-xl border border-white/15 shrink-0">
+          <div className="flex items-center gap-3 bg-white/10 px-4 py-2.5 rounded-xl border border-white/15 shrink-0">
             <div className="text-end">
               <div className="flex items-center gap-1.5 justify-end">
                 <span
@@ -112,7 +112,7 @@ export default function ProviderDashboardPage() {
                   }`}
                   aria-hidden="true"
                 />
-                <span className="text-[11px] uppercase tracking-wider text-teal-200/80 font-bold">
+                <span className="text-[11px] font-semibold text-teal-200/80">
                   {t("provider:dashboard.availabilityStatus")}
                 </span>
               </div>

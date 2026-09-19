@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { ShieldCheck, ArrowRight, RefreshCw, AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
+import { RefreshCw, AlertCircle, ArrowLeft, Loader2 } from "lucide-react";
 import { useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
@@ -128,11 +128,8 @@ export default function VerifyOtpPage() {
   };
 
   return (
-    <Card className="border-border/80 shadow-xl shadow-primary/5 backdrop-blur-sm">
+    <Card className="border-border shadow-sm bg-card">
       <CardHeader className="text-center pb-4">
-        <div className="mx-auto h-12 w-12 rounded-2xl bg-primary/10 text-primary flex items-center justify-center mb-2 shadow-xs">
-          <ShieldCheck className="h-6 w-6" />
-        </div>
         <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight">
           {t("auth:otp.title")}
         </CardTitle>
@@ -193,7 +190,7 @@ export default function VerifyOtpPage() {
 
           <Button
             type="submit"
-            className="w-full h-11 text-sm font-semibold shadow-md shadow-primary/20 hover:shadow-lg transition-all"
+            className="w-full h-11 text-sm font-semibold shadow-sm"
             disabled={verifyMutation.isPending || otpCode.length < 4}
           >
             {verifyMutation.isPending ? (
@@ -202,10 +199,7 @@ export default function VerifyOtpPage() {
                 <span>{t("auth:otp.verifying")}</span>
               </div>
             ) : (
-              <div className="flex items-center justify-center gap-2">
-                <span>{t("auth:otp.verifyButton")}</span>
-                <DirectionalIcon icon={ArrowRight} className="h-4 w-4" />
-              </div>
+              <span>{t("auth:otp.verifyButton")}</span>
             )}
           </Button>
         </form>

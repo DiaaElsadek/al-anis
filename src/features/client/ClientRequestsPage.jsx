@@ -16,7 +16,6 @@ import { toast } from "sonner";
 
 import { createCheckout } from "@/api/payments";
 import { getUserRequests } from "@/api/requests";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import EmptyState from "@/components/shared/EmptyState";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -140,10 +139,9 @@ export default function ClientRequestsPage() {
           <p className="text-xs text-muted-foreground mt-0.5">{t("client:requests.subtitle")}</p>
         </div>
 
-        <Button asChild className="font-semibold shadow-sm shadow-primary/20">
+        <Button asChild className="font-semibold shadow-sm">
           <Link to="/app/providers">
             <span>{t("client:requests.findProvidersButton")}</span>
-            <DirectionalIcon className="h-4 w-4 ms-2" />
           </Link>
         </Button>
       </div>

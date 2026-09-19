@@ -46,7 +46,7 @@ export default function UpcomingJobsList({ upcomingJobs, language }) {
             >
               {/* Calendar Tile */}
               <div className="flex flex-col items-center justify-center p-2 rounded-xl bg-primary/10 text-primary min-w-[52px] shrink-0 border border-primary/20 text-center">
-                <span className="text-[10px] font-bold uppercase tracking-wider">
+                <span className="text-[10px] font-semibold text-primary/90">
                   {formatLocalizedDate(job.preferredDate, "EEE", language)}
                 </span>
                 <span className="text-base font-extrabold leading-tight">

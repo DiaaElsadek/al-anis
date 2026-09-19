@@ -1,14 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { GoogleLogin } from "@react-oauth/google";
 import { useMutation } from "@tanstack/react-query";
-import { Mail, Lock, Eye, EyeOff, LogIn, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff, AlertCircle, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import {
@@ -129,62 +128,17 @@ export default function LoginPage() {
   };
 
   return (
-    <Card className="border-border/80 shadow-xl shadow-primary/5 backdrop-blur-sm">
+    <Card className="border-border shadow-sm bg-card">
       <CardHeader className="space-y-1 pb-4">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight">
-            {t("auth:login.title")}
-          </CardTitle>
-          <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
-            <LogIn className="h-4 w-4" />
-          </div>
-        </div>
+        <CardTitle className="text-xl sm:text-2xl font-bold tracking-tight">
+          {t("auth:login.title")}
+        </CardTitle>
         <CardDescription className="text-muted-foreground text-sm">
           {t("auth:login.subtitle")}
         </CardDescription>
       </CardHeader>
 
       <CardContent className="space-y-6">
-        {/* Quick Demo Fill Buttons for Testing
-        <div className="p-3 rounded-xl bg-muted/40 border border-muted-foreground/15 space-y-2">
-          <div className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            <Sparkles className="h-3.5 w-3.5 text-primary" />
-            <span>{t("auth:login.demoAccounts")}</span>
-          </div>
-          <div className="grid grid-cols-3 gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs h-8 hover:border-primary hover:text-primary transition-colors"
-              onClick={() => fillDemoAccount("client@alanis.com", "ClientPass123!")}
-            >
-              <User className="h-3 w-3 me-1 text-teal-600" />
-              {t("auth:login.demoClient")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs h-8 hover:border-primary hover:text-primary transition-colors"
-              onClick={() => fillDemoAccount("provider@alanis.com", "ProviderPass123!")}
-            >
-              <Briefcase className="h-3 w-3 me-1 text-emerald-600" />
-              {t("auth:login.demoProvider")}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              className="text-xs h-8 hover:border-primary hover:text-primary transition-colors"
-              onClick={() => fillDemoAccount("admin@alanis.com", "AdminPass123!")}
-            >
-              <Shield className="h-3 w-3 me-1 text-amber-600" />
-              {t("auth:login.demoAdmin")}
-            </Button>
-          </div>
-        </div> */}
-
         {/* Error Alert */}
         {authError && (
           <Alert variant="destructive">
@@ -272,7 +226,7 @@ export default function LoginPage() {
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full h-11 text-sm font-semibold shadow-md shadow-primary/20 hover:shadow-lg hover:shadow-primary/30 transition-all mt-2"
+            className="w-full h-11 text-sm font-semibold shadow-sm mt-2"
             disabled={loginMutation.isPending}
           >
             {loginMutation.isPending ? (
@@ -281,10 +235,7 @@ export default function LoginPage() {
                 <span>{t("auth:login.signingIn")}</span>
               </div>
             ) : (
-              <div className="flex items-center justify-center gap-2">
-                <span>{t("auth:login.signInButton")}</span>
-                <DirectionalIcon icon={ArrowRight} className="h-4 w-4" />
-              </div>
+              <span>{t("auth:login.signInButton")}</span>
             )}
           </Button>
         </form>

@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
 
 export default function ClientWelcomeBanner({ user, profile }) {
@@ -48,7 +47,6 @@ export default function ClientWelcomeBanner({ user, profile }) {
         <Link to="/app/providers">
           <Search className="h-4 w-4 me-1.5" />
           <span>{t("client:dashboard.quickBook")}</span>
-          <DirectionalIcon className="h-3.5 w-3.5 ms-1.5" />
         </Link>
       </Button>
     </div>

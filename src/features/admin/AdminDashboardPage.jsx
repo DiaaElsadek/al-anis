@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { Briefcase, Clock, DollarSign, CheckCircle2, ArrowRight, FileCheck } from "lucide-react";
+import { Briefcase, Clock, DollarSign, CheckCircle2, FileCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { getDashboardStats, getRecentBookings } from "@/api/admin";
 import DashboardSkeleton from "@/components/shared/DashboardSkeleton";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import RecentBookingsList from "@/features/admin/components/RecentBookingsList";
@@ -115,8 +114,7 @@ export default function AdminDashboardPage() {
                   to={item.link}
                   className="inline-flex items-center text-[11px] font-semibold text-primary hover:underline mt-2"
                 >
-                  {item.linkLabel || t("admin:applications.reviewButton")}{" "}
-                  <DirectionalIcon icon={ArrowRight} className="h-3 w-3 ms-1" />
+                  {item.linkLabel || t("admin:applications.reviewButton")}
                 </Link>
               )}
             </CardContent>

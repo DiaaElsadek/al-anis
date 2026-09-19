@@ -1,21 +1,8 @@
 import { motion } from "framer-motion";
-import {
-  Activity,
-  ArrowRight,
-  Lock,
-  MapPin,
-  Moon,
-  Search,
-  ShieldCheck,
-  Star,
-  Sun,
-  Sunset,
-  UserCheck,
-} from "lucide-react";
+import { Lock, MapPin, Moon, Search, ShieldCheck, Star, Sun, Sunset } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import CategoryIcon from "@/components/shared/CategoryIcon";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -56,33 +43,17 @@ export default function HeroSection({
         animate="visible"
         variants={staggerContainer(0.12, 0.05)}
       >
-        {/* Top Eyebrow Pill */}
-        <motion.div className="text-center" variants={fadeInUp}>
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/5 border border-primary/20 text-xs text-foreground/90 font-medium">
-            <span className="h-2 w-2 rounded-full bg-success" />
-            <span className="font-semibold text-primary">
-              {isArabic
-                ? "المنصة الأولى المعتمدة لحجز الورديات في مصر"
-                : "Egypt's #1 Verified Shift-Based Marketplace"}
-            </span>
-            <span className="text-muted-foreground/60">•</span>
-            <span className="text-muted-foreground">
-              {isArabic ? "حماية كاملة بالدفع الضامن" : "100% Escrow Protected"}
-            </span>
-          </div>
-        </motion.div>
-
-        {/* Headline & Subhead with mixed-weight typography */}
-        <motion.div className="text-center max-w-4xl mx-auto space-y-5" variants={fadeInUp}>
-          <h1 className="text-4xl sm:text-5xl md:text-6xl tracking-tight text-foreground leading-[1.18] text-balance">
-            <span className="font-normal opacity-90">
-              {isArabic ? "رعاية وتمريض منزلي موثوق، " : "Verified Care & Healthcare Aides, "}
-            </span>
-            <span className="font-bold text-primary">
-              {isArabic ? "محجوز بنظام الوردية." : "Booked by Shift."}
-            </span>
+        {/* Headline & Subhead with unified typography */}
+        <motion.div
+          className="text-center max-w-4xl mx-auto space-y-4 sm:space-y-5"
+          variants={fadeInUp}
+        >
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.2] sm:leading-[1.15] text-balance">
+            {isArabic
+              ? "رعاية وتمريض منزلي موثوق، محجوز بنظام الوردية."
+              : "Verified care and healthcare aides, booked by shift."}
           </h1>
-          <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
+          <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
             {isArabic
               ? "تواصل مع ممرضين، وجليسات مسنين وأطفال، وأخصائيي علاج طبيعي معتمدين برقم قومي مدقق. أسعار ثابتة لكل وردية 8 ساعات دون مفاجآت مع حماية كاملة لأموالك بالدفع الضامن."
               : "Connect with certified nurses, elderly companions, babysitters, and rehab therapists. Fixed 8-hour shift rates, zero hidden overtime, and 100% digital escrow safety."}
@@ -193,25 +164,25 @@ export default function HeroSection({
               </div>
 
               {/* Trust Micro-Row */}
-              <div className="pt-3 border-t border-border/50 flex flex-wrap items-center justify-between gap-3 text-xs text-muted-foreground">
-                <div className="flex items-center gap-4">
-                  <span className="flex items-center gap-1.5">
-                    <ShieldCheck className="h-4 w-4 text-primary" />
+              <div className="pt-3 border-t border-border/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 text-xs text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+                  <span className="inline-flex items-center gap-1.5">
+                    <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
                     <span>{isArabic ? "بطاقة رقم قومي مدققة" : "National ID Vetted"}</span>
                   </span>
-                  <span>•</span>
-                  <span className="flex items-center gap-1.5">
-                    <Lock className="h-3.5 w-3.5 text-success" />
+                  <span className="hidden sm:inline text-border">•</span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <Lock className="h-3.5 w-3.5 text-success shrink-0" />
                     <span>{isArabic ? "دفع ضامن إلكتروني" : "Escrow Safeguard"}</span>
                   </span>
                 </div>
 
                 <div className="flex items-center gap-2 font-medium text-foreground">
-                  <span className="text-warm-accent font-bold flex items-center gap-1">
+                  <span className="text-warm-accent font-bold flex items-center gap-1 shrink-0">
                     <Star className="h-3.5 w-3.5 fill-warm-accent text-warm-accent" /> 4.95 / 5
                   </span>
-                  <span className="text-muted-foreground">
-                    {isArabic ? "(من أكثر من 3,800 تقييم موثق)" : "(From 3,800+ Verified Reviews)"}
+                  <span className="text-muted-foreground text-[11px] sm:text-xs">
+                    {isArabic ? "(من 3,800+ تقييم موثق)" : "(From 3,800+ Verified Reviews)"}
                   </span>
                 </div>
               </div>
@@ -221,10 +192,10 @@ export default function HeroSection({
 
         {/* Live Simulation Card Preview */}
         <motion.div className="max-w-3xl mx-auto pt-2" variants={fadeInUp}>
-          <div className="p-4 sm:p-5 rounded-2xl bg-card border border-border/80 shadow-sm flex flex-col sm:flex-row items-center justify-between gap-5">
-            <div className="flex items-center gap-4">
-              <div className="relative">
-                <Avatar className="h-13 w-13 rounded-xl border border-primary/20">
+          <div className="p-4 sm:p-5 rounded-2xl bg-card border border-border/80 shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-5">
+            <div className="flex items-start sm:items-center gap-3.5 sm:gap-4 w-full sm:w-auto">
+              <div className="relative shrink-0 mt-0.5 sm:mt-0">
+                <Avatar className="h-12 w-12 sm:h-14 sm:w-14 rounded-xl border border-primary/20">
                   <AvatarImage src="https://images.unsplash.com/photo-1594824813576-809d43501a30?w=200&auto=format&fit=crop&q=80" />
                   <AvatarFallback className="rounded-xl font-bold bg-primary/10 text-primary">
                     MS
@@ -232,14 +203,14 @@ export default function HeroSection({
                 </Avatar>
                 <span className="absolute -bottom-0.5 -right-0.5 h-3.5 w-3.5 rounded-full bg-success border-2 border-background" />
               </div>
-              <div>
-                <div className="flex items-center gap-2">
+              <div className="flex-1 min-w-0">
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <h4 className="font-semibold text-sm text-foreground">
                     {isArabic ? "أخصائية مريم سمير • تمريض منزلي" : "Mariam Samir, RN • Home Care"}
                   </h4>
                   <Badge
                     variant="outline"
-                    className="bg-success/10 text-success text-[11px] border-success/30 font-medium"
+                    className="bg-success/10 text-success text-[10px] sm:text-[11px] border-success/30 font-medium shrink-0"
                   >
                     {isArabic ? "متاحة اليوم" : "Available Today"}
                   </Badge>
@@ -249,12 +220,12 @@ export default function HeroSection({
                     ? "الوردية القادمة: صباحية (8:00 ص – 4:00 م)"
                     : "Next Shift: Morning (8:00 AM – 4:00 PM)"}
                 </p>
-                <div className="flex items-center gap-3 text-xs mt-1 text-muted-foreground">
+                <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs mt-1 text-muted-foreground">
                   <span className="flex items-center gap-1 text-warm-accent font-semibold">
                     <Star className="h-3 w-3 fill-warm-accent text-warm-accent" /> 5.0 (148{" "}
                     {isArabic ? "تقييم" : "reviews"})
                   </span>
-                  <span>•</span>
+                  <span className="hidden sm:inline text-border">•</span>
                   <span className="text-primary font-semibold">
                     450 {isArabic ? "ج.م / وردية 8 ساعات" : "EGP / 8-hr Shift"}
                   </span>
@@ -265,21 +236,17 @@ export default function HeroSection({
             <Button size="sm" asChild className="font-medium w-full sm:w-auto shrink-0 shadow-xs">
               <Link to="/register">
                 <span>{isArabic ? "احجز هذه الوردية" : "Book This Shift"}</span>
-                <DirectionalIcon icon={ArrowRight} className="h-3.5 w-3.5 ms-1.5" />
               </Link>
             </Button>
           </div>
         </motion.div>
 
-        {/* Inline Stat Row (Flattened metrics - no 4-card grid) */}
+        {/* Inline Stat Row (Clean metrics without decorative icon clutter) */}
         <motion.div
-          className="border-y border-border/60 py-6 grid grid-cols-2 md:grid-cols-4 gap-6 text-center"
+          className="border-y border-border/60 py-6 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center"
           variants={fadeInUp}
         >
           <div className="space-y-1">
-            <div className="flex items-center justify-center gap-1.5 text-primary mb-1">
-              <Activity className="h-4 w-4" />
-            </div>
             <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               15,000+
             </div>
@@ -288,10 +255,7 @@ export default function HeroSection({
             </div>
           </div>
 
-          <div className="space-y-1 border-s border-border/40 sm:border-s-0 md:border-s">
-            <div className="flex items-center justify-center gap-1.5 text-primary mb-1">
-              <UserCheck className="h-4 w-4" />
-            </div>
+          <div className="space-y-1 border-s border-border/40">
             <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               1,250+
             </div>
@@ -300,10 +264,7 @@ export default function HeroSection({
             </div>
           </div>
 
-          <div className="space-y-1 border-t sm:border-t-0 md:border-s border-border/40 pt-4 sm:pt-0">
-            <div className="flex items-center justify-center gap-1.5 text-warm-accent mb-1">
-              <Star className="h-4 w-4 fill-warm-accent text-warm-accent" />
-            </div>
+          <div className="space-y-1 border-t border-border/40 pt-4 sm:pt-0 md:border-t-0 md:border-s">
             <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               4.95 / 5
             </div>
@@ -312,10 +273,7 @@ export default function HeroSection({
             </div>
           </div>
 
-          <div className="space-y-1 border-t sm:border-t-0 md:border-s border-border/40 pt-4 sm:pt-0">
-            <div className="flex items-center justify-center gap-1.5 text-success mb-1">
-              <Lock className="h-4 w-4" />
-            </div>
+          <div className="space-y-1 border-t border-s border-border/40 pt-4 sm:pt-0 md:border-t-0">
             <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
               100%
             </div>

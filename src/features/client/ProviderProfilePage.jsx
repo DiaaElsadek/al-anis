@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useParams, useSearchParams } from "react-router-dom";
@@ -79,9 +79,9 @@ export default function ProviderProfilePage() {
       {/* Top back navigation */}
       <Link
         to="/app/providers"
-        className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors group"
+        className="inline-flex items-center text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
       >
-        <DirectionalIcon className="h-4 w-4 me-2 transition-transform group-hover:-translate-x-1" />
+        <DirectionalIcon icon={ArrowLeft} className="h-4 w-4 me-2" />
         <span>{t("common:back")}</span>
       </Link>
 

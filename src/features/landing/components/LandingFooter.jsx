@@ -27,7 +27,7 @@ export default function LandingFooter({ isArabic }) {
 
       <div className="container max-w-6xl mx-auto px-4 py-12 md:py-16 space-y-12">
         {/* Top Institutional Trust Strip */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-10 border-b border-border/70">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 sm:gap-4 pb-8 sm:pb-10 border-b border-border/70">
           <div className="flex items-start gap-3 p-3.5 rounded-xl bg-muted/30 border border-border/50">
             <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5">
               <ShieldCheck className="h-5 w-5" />
@@ -96,14 +96,14 @@ export default function LandingFooter({ isArabic }) {
           {/* Brand & Mission Column (4 cols) */}
           <div className="space-y-4 lg:col-span-4">
             <Link to="/" className="inline-flex items-center gap-2.5 group">
-              <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-xs transition-transform group-hover:scale-105">
+              <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-xs">
                 <ShieldCheck className="h-5 w-5 text-primary-foreground" />
               </div>
               <div className="flex flex-col">
                 <span className="font-bold text-foreground text-lg tracking-tight">
                   {t("common:brand.name")}
                 </span>
-                <span className="text-[10px] font-medium text-muted-foreground tracking-wider uppercase">
+                <span className="text-[10px] font-medium text-muted-foreground">
                   {t("common:brand.subtitle")}
                 </span>
               </div>
@@ -125,7 +125,7 @@ export default function LandingFooter({ isArabic }) {
 
           {/* Quick Links For Families (3 cols) */}
           <div className="space-y-3.5 lg:col-span-3">
-            <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+            <h4 className="text-sm font-semibold text-foreground">
               {isArabic ? "للأسر والعملاء" : "For Families"}
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
@@ -162,7 +162,7 @@ export default function LandingFooter({ isArabic }) {
 
           {/* For Healthcare Professionals (2 cols) */}
           <div className="space-y-3.5 lg:col-span-2">
-            <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+            <h4 className="text-sm font-semibold text-foreground">
               {isArabic ? "لمزودي الرعاية" : "For Caregivers"}
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
@@ -191,7 +191,7 @@ export default function LandingFooter({ isArabic }) {
 
           {/* Contact & Hotline Card (3 cols) */}
           <div className="space-y-3.5 lg:col-span-3">
-            <h4 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+            <h4 className="text-sm font-semibold text-foreground">
               {isArabic ? "المساعدة والتنسيق الفوري" : "Helpline & Coordination"}
             </h4>
 

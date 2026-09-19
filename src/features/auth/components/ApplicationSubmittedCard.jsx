@@ -2,7 +2,6 @@ import { FileCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardTitle } from "@/components/ui/card";
 
@@ -11,7 +10,7 @@ export default function ApplicationSubmittedCard({ applicationSubmitted }) {
   const navigate = useNavigate();
 
   return (
-    <Card className="border-border/60 shadow-xl backdrop-blur-sm bg-card/95 text-center p-6 sm:p-8">
+    <Card className="border-border shadow-sm bg-card text-center p-6 sm:p-8">
       <div className="h-16 w-16 bg-emerald-500/10 text-emerald-600 rounded-2xl flex items-center justify-center mx-auto mb-5">
         <FileCheck className="h-8 w-8" />
       </div>
@@ -60,7 +59,6 @@ export default function ApplicationSubmittedCard({ applicationSubmitted }) {
             }
           >
             <span>{t("auth:register.verifyEmailOtp")}</span>
-            <DirectionalIcon className="h-4 w-4 ms-2" />
           </Button>
         )}
         <Button variant="outline" className="w-full sm:w-auto" onClick={() => navigate("/login")}>

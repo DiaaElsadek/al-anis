@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, Search, Sparkles } from "lucide-react";
+import { AlertCircle, Search } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -67,15 +67,8 @@ export default function ProviderDirectoryPage() {
   return (
     <div className="space-y-8">
       {/* Hero Search Header */}
-      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white p-8 sm:p-10 shadow-lg shadow-teal-950/10">
-        <div className="absolute -top-16 -right-16 h-64 w-64 rounded-full bg-teal-500/20 blur-3xl pointer-events-none" />
-        <div className="absolute -bottom-16 -left-16 h-64 w-64 rounded-full bg-emerald-500/20 blur-3xl pointer-events-none" />
-
+      <div className="relative rounded-2xl overflow-hidden bg-gradient-to-r from-teal-900 via-teal-800 to-slate-900 text-white p-8 sm:p-10 shadow-sm">
         <div className="relative z-10 max-w-2xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 border border-teal-500/30 text-teal-200 text-xs font-semibold mb-4">
-            <Sparkles className="h-3.5 w-3.5 text-teal-300" />
-            <span>{t("client:directory.verified")}</span>
-          </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight">
             {t("client:directory.title")}
           </h1>

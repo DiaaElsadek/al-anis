@@ -83,7 +83,7 @@ export default function PaymentTable({
           </div>
         ) : (
           <Table className="text-xs text-start">
-            <TableHeader className="bg-muted/50 text-muted-foreground text-xs uppercase tracking-wider font-semibold">
+            <TableHeader className="bg-muted/50 text-muted-foreground text-xs font-semibold">
               <TableRow className="border-b">
                 <TableHead className="px-5 py-3.5 text-start">
                   {t("admin:payments.transactionId")}

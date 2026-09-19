@@ -51,9 +51,7 @@ export default function ProviderInfoSection({ provider, providerName, children }
 
           {/* Bio section */}
           <div className="space-y-2 border-t border-border/60 pt-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-              {t("client:profile.about")}
-            </h3>
+            <h3 className="text-sm font-semibold text-foreground">{t("client:profile.about")}</h3>
             <p className="text-sm text-foreground/90 leading-relaxed">{provider.bio || "-"}</p>
           </div>
         </div>

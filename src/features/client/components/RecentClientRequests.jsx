@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import CategoryIcon from "@/components/shared/CategoryIcon";
-import DirectionalIcon from "@/components/shared/DirectionalIcon";
 import EmptyState from "@/components/shared/EmptyState";
 import StatusBadge from "@/components/shared/StatusBadge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,7 +38,6 @@ export default function RecentClientRequests({ requests = [], onStartChat, isSta
           <Button asChild variant="ghost" size="sm" className="text-xs font-semibold">
             <Link to="/app/requests">
               <span>{t("client:dashboard.viewAll")}</span>
-              <DirectionalIcon className="h-3.5 w-3.5 ms-1.5" />
             </Link>
           </Button>
         )}
@@ -147,7 +145,6 @@ export default function RecentClientRequests({ requests = [], onStartChat, isSta
                     >
                       <Link to="/app/requests">
                         <span>{t("common:actions.view")}</span>
-                        <DirectionalIcon className="h-3 w-3 ms-1" />
                       </Link>
                     </Button>
                   </div>

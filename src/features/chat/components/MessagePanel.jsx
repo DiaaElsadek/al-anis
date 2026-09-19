@@ -653,7 +653,7 @@ export default function MessagePanel({
         {showDetailsPanel && (
           <aside className="w-[280px] sm:w-[320px] flex-shrink-0 border-s border-border/50 bg-card p-4 space-y-4 overflow-y-auto z-20 animate-in slide-in-from-right duration-200 select-none">
             <div className="flex items-center justify-between pb-2 border-b border-border/40">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              <h4 className="text-xs font-semibold text-muted-foreground">
                 {t("chat.chatDetails", "Chat Details")}
               </h4>
               <button
