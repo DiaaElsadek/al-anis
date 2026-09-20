@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/react";
+
 import ErrorBoundary from "@/components/shared/ErrorBoundary";
 
 import AppProviders from "./providers";
@@ -8,6 +10,7 @@ export default function App() {
     <ErrorBoundary>
       <AppProviders>
         <AppRouter />
+        <Analytics />
       </AppProviders>
     </ErrorBoundary>
   );
