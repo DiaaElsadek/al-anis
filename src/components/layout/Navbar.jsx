@@ -95,9 +95,11 @@ export default function Navbar({ onMobileMenuToggle }) {
           )}
 
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-xs">
-              <ShieldCheck className="h-5 w-5 text-primary-foreground" />
-            </div>
+            <img
+              src="/favicon.svg"
+              alt="Al-Anis Logo"
+              className="h-9 w-9 rounded-xl shadow-xs object-contain"
+            />
             <div className="flex flex-col">
               <span className="text-xl font-bold tracking-tight text-foreground">
                 {t("brand.name")}

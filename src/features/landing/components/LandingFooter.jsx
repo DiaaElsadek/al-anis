@@ -90,9 +90,11 @@ export default function LandingFooter() {
           {/* Brand & Mission Column (4 cols) */}
           <div className="space-y-4 lg:col-span-4">
             <Link to="/" className="inline-flex items-center gap-2.5 group">
-              <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground font-bold shadow-xs">
-                <ShieldCheck className="h-5 w-5 text-primary-foreground" />
-              </div>
+              <img
+                src="/favicon.svg"
+                alt="Al-Anis Logo"
+                className="h-9 w-9 rounded-xl shadow-xs transition-transform duration-200 group-hover:scale-105 object-contain"
+              />
               <div className="flex flex-col">
                 <span className="font-bold text-foreground text-lg tracking-tight">
                   {t("common:brand.name")}
