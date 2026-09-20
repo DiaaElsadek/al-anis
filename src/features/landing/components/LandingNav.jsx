@@ -43,9 +43,11 @@ export default function LandingNav() {
         <div className="container max-w-6xl mx-auto flex h-16 items-center justify-between gap-3 sm:gap-4">
           {/* Logo & Brand Identity */}
           <Link to="/" className="flex items-center gap-2.5 group shrink-0">
-            <div className="h-9 w-9 rounded-xl bg-primary flex items-center justify-center text-primary-foreground shadow-xs">
-              <ShieldCheck className="h-5 w-5 text-primary-foreground" />
-            </div>
+            <img
+              src="/favicon.svg"
+              alt="Al-Anis Logo"
+              className="h-9 w-9 rounded-xl shadow-xs transition-transform duration-200 group-hover:scale-105 object-contain"
+            />
             <div className="flex flex-col">
               <span className="text-xl font-bold tracking-tight text-foreground">
                 {t("common:brand.name")}
