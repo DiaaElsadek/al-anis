@@ -6,8 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from "@/lib/utils";
 
 export default function ProviderStatsGrid({ stats }) {
-  const { t, i18n } = useTranslation(["provider", "common"]);
-  const isAr = i18n.language === "ar";
+  const { t } = useTranslation(["provider", "common"]);
 
   return (
     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -27,9 +26,9 @@ export default function ProviderStatsGrid({ stats }) {
               {formatPrice(stats.totalEarnings || 0)}
             </span>
             <span className="text-[11px] text-muted-foreground block mt-1">
-              {isAr
-                ? `هذا الشهر: ${formatPrice(stats.currentMonthEarnings || 0)}`
-                : `This month: ${formatPrice(stats.currentMonthEarnings || 0)}`}
+              {t("provider:dashboard.thisMonth", {
+                amount: formatPrice(stats.currentMonthEarnings || 0),
+              })}
             </span>
           </div>
         </CardContent>
@@ -51,7 +50,7 @@ export default function ProviderStatsGrid({ stats }) {
               {stats.completedJobs || 0}
             </span>
             <span className="text-[11px] text-muted-foreground block mt-1">
-              {stats.workedDays || 0} {isAr ? "أيام عمل" : "days worked"}
+              {t("provider:dashboard.daysWorked", { count: stats.workedDays || 0 })}
             </span>
           </div>
         </CardContent>
@@ -80,12 +79,8 @@ export default function ProviderStatsGrid({ stats }) {
               }`}
             >
               {stats.pendingRequests > 0
-                ? isAr
-                  ? `${stats.pendingRequests} بانتظار الإجراء`
-                  : `${stats.pendingRequests} awaiting action`
-                : isAr
-                  ? "مكتمل ومحدث"
-                  : "Up to date"}
+                ? t("provider:dashboard.awaitingAction", { count: stats.pendingRequests })
+                : t("provider:dashboard.upToDate")}
             </span>
           </div>
         </CardContent>
@@ -107,9 +102,7 @@ export default function ProviderStatsGrid({ stats }) {
               {stats.averageRating ? stats.averageRating.toFixed(1) : "—"}
             </span>
             <span className="text-[11px] text-muted-foreground block mt-1">
-              {isAr
-                ? `من ${stats.totalReviews || 0} تقييم`
-                : `from ${stats.totalReviews || 0} reviews`}
+              {t("provider:dashboard.fromReviews", { count: stats.totalReviews || 0 })}
             </span>
           </div>
         </CardContent>

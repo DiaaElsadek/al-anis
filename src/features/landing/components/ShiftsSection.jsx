@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { Check, CheckCircle2, Moon, Sun, Sunset } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
@@ -10,9 +11,10 @@ import { getShiftDetails } from "@/features/landing/data";
 import { fadeIn } from "@/lib/motion";
 import { formatPrice } from "@/lib/utils";
 
-export default function ShiftsSection({ isArabic }) {
+export default function ShiftsSection() {
+  const { t } = useTranslation(["landing", "common"]);
   const [selectedShift, setSelectedShift] = useState("morning");
-  const shiftDetails = getShiftDetails(isArabic);
+  const shiftDetails = getShiftDetails(t);
   const activeShift = shiftDetails.find((s) => s.id === selectedShift) || shiftDetails[0];
 
   return (
@@ -20,14 +22,10 @@ export default function ShiftsSection({ isArabic }) {
       <div className="container max-w-6xl mx-auto space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
-            {isArabic
-              ? "لماذا الحجز بالوردية أفضل من عدّاد الساعات؟"
-              : "Why Shift-Based Care Outperforms Hourly Meters"}
+            {t("landing:shifts.title")}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            {isArabic
-              ? "وداعاً للقلق من تزايد الساعات والمفاجآت المالية. نظام الوردية يوفر وقتاً كافياً للرعاية المستمرة بسعر ثابت وشفاف مسبقاً."
-              : "Say goodbye to clock-watching and runaway overtime. Standardized 8-hour shifts guarantee dedicated focus with upfront pricing."}
+            {t("landing:shifts.description")}
           </p>
         </div>
 
@@ -40,21 +38,21 @@ export default function ShiftsSection({ isArabic }) {
                 className="rounded-lg text-[11px] sm:text-sm font-semibold gap-1 sm:gap-1.5 px-1 sm:px-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               >
                 <Sun className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                <span>{isArabic ? "صباحية" : "Morning"}</span>
+                <span>{t("landing:shifts.morning")}</span>
               </TabsTrigger>
               <TabsTrigger
                 value="evening"
                 className="rounded-lg text-[11px] sm:text-sm font-semibold gap-1 sm:gap-1.5 px-1 sm:px-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               >
                 <Sunset className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                <span>{isArabic ? "مسائية" : "Evening"}</span>
+                <span>{t("landing:shifts.evening")}</span>
               </TabsTrigger>
               <TabsTrigger
                 value="night"
                 className="rounded-lg text-[11px] sm:text-sm font-semibold gap-1 sm:gap-1.5 px-1 sm:px-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               >
                 <Moon className="h-3.5 w-3.5 sm:h-4 sm:w-4 shrink-0" />
-                <span>{isArabic ? "ليلية" : "Night"}</span>
+                <span>{t("landing:shifts.night")}</span>
               </TabsTrigger>
             </TabsList>
           </div>
@@ -92,7 +90,7 @@ export default function ShiftsSection({ isArabic }) {
 
                       <div>
                         <h4 className="text-xs font-semibold text-muted-foreground mb-1">
-                          {isArabic ? "أبرز الاستخدامات والحالات:" : "Ideal Use Cases:"}
+                          {t("landing:shifts.idealFor")}
                         </h4>
                         <p className="text-sm text-foreground/90 leading-relaxed">
                           {activeShift.bestFor}
@@ -101,9 +99,7 @@ export default function ShiftsSection({ isArabic }) {
 
                       <div>
                         <h4 className="text-xs font-semibold text-muted-foreground mb-2">
-                          {isArabic
-                            ? "ما يشمله نطاق الوردية القياسي:"
-                            : "What Is Covered In This Shift:"}
+                          {t("landing:shifts.covered")}
                         </h4>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm">
                           {activeShift.included.map((item, idx) => (
@@ -119,40 +115,32 @@ export default function ShiftsSection({ isArabic }) {
                     {/* Right Booking Card for this shift */}
                     <div className="p-6 rounded-2xl bg-muted/40 border border-border/60 text-center space-y-4 flex flex-col justify-center">
                       <span className="text-xs font-medium text-muted-foreground block">
-                        {isArabic ? "الأسعار الرسمية المعتمدة" : "Standardized Rate"}
+                        {t("landing:shifts.standardizedRate")}
                       </span>
                       <div>
                         <span className="text-3xl font-bold text-foreground">
                           {formatPrice(activeShift.startingRate)}
                         </span>
                         <span className="text-xs text-muted-foreground block mt-0.5">
-                          {isArabic ? "لكل وردية 8 ساعات كاملة" : "per full 8-hour shift"}
+                          {t("landing:shifts.perShift")}
                         </span>
                       </div>
 
                       <div className="text-xs text-muted-foreground space-y-2 bg-card p-3 rounded-xl border border-border/50 text-start">
                         <p className="flex items-center gap-2">
                           <Check className="h-3.5 w-3.5 text-success shrink-0" />
-                          <span>
-                            {isArabic
-                              ? "ضمان استرداد فوري في حال الإلغاء"
-                              : "100% Escrow protected refund"}
-                          </span>
+                          <span>{t("landing:shifts.refundGuarantee")}</span>
                         </p>
                         <p className="flex items-center gap-2">
                           <Check className="h-3.5 w-3.5 text-success shrink-0" />
-                          <span>
-                            {isArabic ? "تدقيق جنائي للرقم القومي" : "National ID vetted caregiver"}
-                          </span>
+                          <span>{t("landing:shifts.vettedCaregiver")}</span>
                         </p>
                       </div>
 
                       <Button size="lg" asChild className="w-full font-semibold">
                         <Link to="/register">
                           <span>
-                            {isArabic
-                              ? "احجز وردية " + activeShift.title
-                              : "Book " + activeShift.title}
+                            {t("landing:shifts.bookShiftPrefix", { title: activeShift.title })}
                           </span>
                         </Link>
                       </Button>

@@ -4,30 +4,23 @@ import { useTranslation } from "react-i18next";
 import { Card } from "@/components/ui/card";
 
 export default function ClientTrustCard() {
-  const { t, i18n } = useTranslation(["client", "common"]);
-  const isArabic = i18n.language === "ar";
+  const { t } = useTranslation(["client", "common"]);
 
   const trustFeatures = [
     {
       icon: CreditCard,
-      title: t("client:trustCard.idOnFile", "National ID on file"),
-      titleAr: "بطاقة الرقم القومي مسجلة",
-      desc: t("client:trustCard.idOnFileDesc", "Submitted during registration"),
-      descAr: "مقدمة ومسجلة عند التسجيل",
+      title: t("client:trustCard.idOnFile"),
+      desc: t("client:trustCard.idOnFileDesc"),
     },
     {
       icon: Lock,
-      title: t("client:trustCard.escrow", "Escrow-protected payments"),
-      titleAr: "مدفوعات محمية بالضمان",
-      desc: t("client:trustCard.escrowDesc", "Held securely until shift completes"),
-      descAr: "محفوظة بأمان حتى اكتمال الوردية",
+      title: t("client:trustCard.escrow"),
+      desc: t("client:trustCard.escrowDesc"),
     },
     {
       icon: MessageSquare,
-      title: t("client:trustCard.messaging", "Direct provider messaging"),
-      titleAr: "محادثة مباشرة مع المزود",
-      desc: t("client:trustCard.messagingDesc", "Coordinate instructions in-app"),
-      descAr: "تنسيق التعليمات داخل التطبيق",
+      title: t("client:trustCard.messaging"),
+      desc: t("client:trustCard.messagingDesc"),
     },
   ];
 
@@ -37,7 +30,7 @@ export default function ClientTrustCard() {
         <div className="space-y-2 max-w-xl">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-teal-600 dark:text-teal-400 text-xs font-semibold">
             <CheckCircle2 className="h-3.5 w-3.5" />
-            <span>{isArabic ? "ضمان الأنيس للعميل" : "Alanis Client Guarantee"}</span>
+            <span>{t("client:trustCard.guaranteeBadge")}</span>
           </div>
           <h3 className="text-xl sm:text-2xl font-bold text-foreground">
             {t("client:dashboard.trustTitle")}
@@ -57,12 +50,8 @@ export default function ClientTrustCard() {
                 <feat.icon className="h-5 w-5" />
               </div>
               <div>
-                <h5 className="text-xs font-bold text-foreground">
-                  {isArabic ? feat.titleAr : feat.title}
-                </h5>
-                <p className="text-[10px] text-muted-foreground mt-0.5">
-                  {isArabic ? feat.descAr : feat.desc}
-                </p>
+                <h5 className="text-xs font-bold text-foreground">{feat.title}</h5>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{feat.desc}</p>
               </div>
             </div>
           ))}

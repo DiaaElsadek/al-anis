@@ -50,6 +50,7 @@
     }
   },
   "trustCard": {
+    "guaranteeBadge": "Alanis Client Guarantee",
     "title": "Care Verification & Safety",
     "idOnFile": "National ID on file",
     "idOnFileDesc": "Every provider submits government ID during registration",

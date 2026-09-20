@@ -1,4 +1,5 @@
 import { Check, ShieldCheck, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import { Card } from "@/components/ui/card";
 import {
@@ -11,22 +12,19 @@ import {
 } from "@/components/ui/table";
 import { getComparisonRows } from "@/features/landing/data";
 
-export default function WhyAlanisSection({ isArabic }) {
-  const comparisonRows = getComparisonRows(isArabic);
+export default function WhyAlanisSection() {
+  const { t } = useTranslation(["landing", "common"]);
+  const comparisonRows = getComparisonRows(t);
 
   return (
     <section id="why-alanis" className="py-20 bg-muted/40 border-y border-border/70">
       <div className="container max-w-5xl mx-auto space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground">
-            {isArabic
-              ? "مقارنة بين نموذج الأنيس ومكاتب الرعاية التقليدية"
-              : "Alanis Platform vs Traditional Agency Care"}
+            {t("landing:whyAlanis.title")}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground">
-            {isArabic
-              ? "لماذا يفضل آلاف الأسر المصرية حجز الرعاية عبر الأنيس بدلاً من المكاتب العشوائية؟"
-              : "See how our audited shift model solves the pain points of unverified informal care."}
+            {t("landing:whyAlanis.subtitle")}
           </p>
         </div>
 
@@ -37,16 +35,16 @@ export default function WhyAlanisSection({ isArabic }) {
               <TableHeader className="bg-muted/40 text-foreground">
                 <TableRow className="border-b border-border/70">
                   <TableHead className="py-4 px-5 font-bold text-start w-1/3 text-foreground">
-                    {isArabic ? "المعيار / الجانب" : "Feature / Aspect"}
+                    {t("landing:whyAlanis.aspectHeader")}
                   </TableHead>
                   <TableHead className="py-4 px-5 font-bold text-start bg-primary/10 text-primary border-x border-primary/20 w-1/3">
                     <div className="flex items-center gap-1.5">
                       <ShieldCheck className="h-4 w-4" />
-                      <span>{isArabic ? "منصة الأنيس (Alanis)" : "Alanis Platform"}</span>
+                      <span>{t("landing:whyAlanis.alanisHeader")}</span>
                     </div>
                   </TableHead>
                   <TableHead className="py-4 px-5 font-bold text-start text-muted-foreground w-1/3">
-                    {isArabic ? "المكاتب والوسطاء التقليديون" : "Traditional Agencies / Brokers"}
+                    {t("landing:whyAlanis.traditionalHeader")}
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -89,7 +87,7 @@ export default function WhyAlanisSection({ isArabic }) {
                   <Check className="h-4 w-4 text-success shrink-0 mt-0.5" />
                   <div>
                     <span className="text-[11px] text-primary font-bold block mb-0.5">
-                      {isArabic ? "منصة الأنيس" : "Alanis Platform"}
+                      {t("landing:whyAlanis.alanisMobileLabel")}
                     </span>
                     <span className="leading-relaxed">{row.alanis}</span>
                   </div>
@@ -100,7 +98,7 @@ export default function WhyAlanisSection({ isArabic }) {
                   <X className="h-4 w-4 text-destructive/80 shrink-0 mt-0.5" />
                   <div>
                     <span className="text-[11px] text-muted-foreground font-semibold block mb-0.5">
-                      {isArabic ? "المكاتب التقليدية" : "Traditional Agencies"}
+                      {t("landing:whyAlanis.traditionalMobileLabel")}
                     </span>
                     <span className="leading-relaxed">{row.traditional}</span>
                   </div>

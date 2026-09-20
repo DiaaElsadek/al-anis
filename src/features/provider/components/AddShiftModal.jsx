@@ -2,8 +2,8 @@ import { Plus } from "lucide-react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-import DatePicker from "@/components/shared/DatePicker";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Dialog,
   DialogContent,

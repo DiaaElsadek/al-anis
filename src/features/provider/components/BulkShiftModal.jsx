@@ -2,9 +2,9 @@ import { CalendarRange, Sparkles } from "lucide-react";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
 
-import DatePicker from "@/components/shared/DatePicker";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Dialog,
   DialogContent,
@@ -110,16 +110,16 @@ export default function BulkShiftModal({
             </Label>
             <div className="grid grid-cols-2 gap-2 p-3 bg-muted/20 rounded-lg border border-border/50">
               {daysOfWeek.map((d) => (
-                <label
+                <Label
                   key={d.day}
-                  className="flex items-center gap-2 text-xs text-foreground cursor-pointer"
+                  className="flex items-center gap-2 text-xs text-foreground cursor-pointer font-normal"
                 >
                   <Checkbox
                     checked={excludedDays.includes(d.day)}
                     onCheckedChange={() => toggleExcludeDay(d.day)}
                   />
                   <span>{d.label}</span>
-                </label>
+                </Label>
               ))}
             </div>
           </div>

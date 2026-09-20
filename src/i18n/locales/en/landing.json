@@ -1,0 +1,321 @@
+{
+  "nav": {
+    "escrowRibbon": "100% Escrow Protected",
+    "vettedRibbon": "National ID & Criminal Record Vetted",
+    "helplineHours": "24/7 Helpline",
+    "shifts": "Shift System",
+    "categories": "Specialties",
+    "whyAlanis": "Why Alanis",
+    "howItWorks": "How It Works",
+    "caregivers": "Caregivers",
+    "faq": "FAQ",
+    "categoriesMobile": "Specialties",
+    "howItWorksMobile": "How It Works",
+    "caregiversMobile": "Caregivers"
+  },
+  "hero": {
+    "title": "Verified care and healthcare aides, booked by shift.",
+    "description": "Connect with certified nurses, elderly companions, babysitters, and rehab therapists. Fixed 8-hour shift rates, zero hidden overtime, and 100% digital escrow safety.",
+    "console": {
+      "specialtyLabel": "Specialty",
+      "specialtyPlaceholder": "Select specialty...",
+      "allSpecialties": "All Specialties",
+      "shiftLabel": "Shift Time",
+      "shiftPlaceholder": "Select shift...",
+      "anyShift": "Any Shift (24 Hours)",
+      "shiftMorning": "Morning (8am - 4pm)",
+      "shiftEvening": "Evening (4pm - 12am)",
+      "shiftNight": "Night (12am - 8am)",
+      "locationLabel": "Location",
+      "locationPlaceholder": "e.g. New Cairo, Maadi",
+      "searchButton": "Search Providers",
+      "idVetted": "National ID Vetted",
+      "escrowSafeguard": "Escrow Safeguard",
+      "verifiedReviews": "(From 3,800+ Verified Reviews)"
+    },
+    "simulation": {
+      "name": "Mariam Samir, RN • Home Care",
+      "availableToday": "Available Today",
+      "nextShift": "Next Shift: Morning (8:00 AM – 4:00 PM)",
+      "reviews": "reviews",
+      "rate": "EGP / 8-hr Shift",
+      "bookShift": "Book This Shift"
+    },
+    "stats": {
+      "shiftsCount": "15,000+",
+      "shiftsLabel": "Shifts Fulfilled",
+      "aidesCount": "1,250+",
+      "aidesLabel": "Vetted Healthcare Aides",
+      "ratingScore": "4.95 / 5",
+      "ratingLabel": "Client Satisfaction Score",
+      "safetyScore": "100%",
+      "safetyLabel": "Escrow Payment Safety"
+    }
+  },
+  "shifts": {
+    "title": "Why Shift-Based Care Outperforms Hourly Meters",
+    "description": "Say goodbye to clock-watching and runaway overtime. Standardized 8-hour shifts guarantee dedicated focus with upfront pricing.",
+    "morning": "Morning",
+    "evening": "Evening",
+    "night": "Night",
+    "idealFor": "Ideal Use Cases:",
+    "covered": "What Is Covered In This Shift:",
+    "standardizedRate": "Standardized Rate",
+    "perShift": "per full 8-hour shift",
+    "refundGuarantee": "100% Escrow protected refund",
+    "vettedCaregiver": "National ID vetted caregiver",
+    "bookShiftPrefix": "Book {{title}}",
+    "items": {
+      "morning": {
+        "title": "Morning Shift",
+        "time": "8:00 AM – 4:00 PM (8 Hours)",
+        "badge": "Daytime Routine",
+        "bestFor": "Post-op surgical follow-ups, vital signs monitoring, morning medication schedules, physical rehab, and daytime childcare.",
+        "included": [
+          "Vitals & blood glucose level monitoring",
+          "Assisted morning hygiene and mobility exercises",
+          "Medically tailored breakfast & lunch prep",
+          "Live status updates in family chat thread"
+        ]
+      },
+      "evening": {
+        "title": "Evening Shift",
+        "time": "4:00 PM – 12:00 AM (8 Hours)",
+        "badge": "Family Respite",
+        "bestFor": "Elderly companionship, evening dinner assistance, after-school homework supervision, and family evening respite.",
+        "included": [
+          "Evening medication intake supervision",
+          "Companionship, mental stimulation, and indoor walks",
+          "Preparation for bed & nighttime routine assistance",
+          "Comprehensive daily log shared with family"
+        ]
+      },
+      "night": {
+        "title": "Night Shift",
+        "time": "12:00 AM – 8:00 AM (8 Hours)",
+        "badge": "Overnight Safety",
+        "bestFor": "Continuous overnight vital monitoring, bed-sore prevention turning, dementia safety, and infant nighttime soothing.",
+        "included": [
+          "100% alert continuous monitoring through the night",
+          "Repositioning every 2 hours to prevent pressure ulcers",
+          "Emergency protocol readiness & instant family alert",
+          "Nighttime medication & infant feeding assistance"
+        ]
+      }
+    }
+  },
+  "categories": {
+    "title": "Verified In-Home Healthcare & Aides",
+    "subtitle": "Browse verified clinical aides, companions, and certified educators ready for booking.",
+    "viewAll": "View All Specialties",
+    "defaultDesc": "Certified professionals ready for shift booking on your schedule.",
+    "fromPrice": "From",
+    "bookProvider": "Explore"
+  },
+  "whyAlanis": {
+    "title": "Alanis Platform vs Traditional Agency Care",
+    "subtitle": "See how our audited shift model solves the pain points of unverified informal care.",
+    "aspectHeader": "Feature / Aspect",
+    "alanisHeader": "Alanis Platform",
+    "traditionalHeader": "Traditional Agencies / Brokers",
+    "alanisMobileLabel": "Alanis Platform",
+    "traditionalMobileLabel": "Traditional Agencies",
+    "rows": [
+      {
+        "feature": "Pricing Model",
+        "alanis": "Fixed price per 8-hr shift with no hidden costs",
+        "traditional": "Unpredictable hourly meter with sudden overtime"
+      },
+      {
+        "feature": "Payment Protection",
+        "alanis": "100% digital escrow; released only after shift satisfaction",
+        "traditional": "Cash upfront without receipts or legal guarantees"
+      },
+      {
+        "feature": "Identity & Vetting",
+        "alanis": "14-digit National ID verification, criminal check, licenses",
+        "traditional": "Informal word-of-mouth without background check"
+      },
+      {
+        "feature": "Direct Coordination",
+        "alanis": "Instant secure in-app chat with the verified caregiver",
+        "traditional": "Middleman brokers taking cuts and delaying requests"
+      },
+      {
+        "feature": "Replacement Guarantee",
+        "alanis": "Instant 100% escrow refund or instant replacement",
+        "traditional": "Lost deposits and unfulfilled replacement promises"
+      }
+    ]
+  },
+  "howItWorks": {
+    "title": "How Alanis Works in 3 Clear Steps",
+    "subtitle": "Designed for absolute transparency whether you are booking care for family or offering your skills.",
+    "clientTab": "For Families & Clients",
+    "providerTab": "For Healthcare Aides",
+    "clients": [
+      {
+        "num": 1,
+        "title": "Select Shift & Caregiver",
+        "desc": "Filter audited caregivers by specialty, read verified client reviews, and choose your preferred 8-hour shift."
+      },
+      {
+        "num": 2,
+        "title": "Secure Escrow Checkout",
+        "desc": "Pay safely online. Your funds remain 100% safeguarded in platform escrow until the shift is completed satisfactorily."
+      },
+      {
+        "num": 3,
+        "title": "Care Delivered & Review",
+        "desc": "Coordinate instructions via real-time chat. Once care is delivered, confirm completion and leave your review."
+      }
+    ],
+    "providers": [
+      {
+        "num": 1,
+        "title": "Apply & Submit Credentials",
+        "desc": "Create your free provider account and upload your National ID and healthcare certificates for audit."
+      },
+      {
+        "num": 2,
+        "title": "Set Availability & Areas",
+        "desc": "Choose open shift slots (Morning, Evening, Night) and geographical neighborhoods that match your schedule."
+      },
+      {
+        "num": 3,
+        "title": "Fulfill Shifts & Instant Payout",
+        "desc": "Receive direct booking alerts, deliver compassionate care, and receive guaranteed instant escrow payouts."
+      }
+    ]
+  },
+  "caregivers": {
+    "title": "Meet Top Verified Care Providers",
+    "subtitle": "Every nurse and companion passes National ID verification and syndical license audits.",
+    "joinCta": "Join as Caregiver",
+    "spotlightBadge": "Spotlight Caregiver",
+    "ratingLabel": "Rating",
+    "completedLabel": "Completed",
+    "shiftsCount": "shifts",
+    "availableLabel": "Available",
+    "rateLabel": "Shift Rate (8 Hours)",
+    "bookShift": "Book Shift with Provider",
+    "viewProfileAndBook": "View Profile & Book",
+    "spotlight": [
+      {
+        "id": "prov-1",
+        "name": "Nurse Mariam Samir, RN",
+        "title": "Home Healthcare & ICU Specialist",
+        "specialty": "Home Nursing",
+        "badge": "B.Sc. Nursing • Cairo Univ.",
+        "location": "New Cairo • Tagamoa",
+        "shiftsAvailable": "Morning • Evening"
+      },
+      {
+        "id": "prov-2",
+        "name": "Youssef Abdelaziz, PT",
+        "title": "Rehab & Elderly Mobility Therapist",
+        "specialty": "Physiotherapy & Mobility",
+        "badge": "Licensed Physical Therapist",
+        "location": "Maadi • Helwan",
+        "shiftsAvailable": "Morning • Night"
+      },
+      {
+        "id": "prov-3",
+        "name": "Hoda El-Shafei",
+        "title": "Pediatric & Newborn Certified Aide",
+        "specialty": "Childcare & Newborn",
+        "badge": "Early Childhood • Pediatric CPR",
+        "location": "Heliopolis • Nasr City",
+        "shiftsAvailable": "Evening • Night"
+      }
+    ]
+  },
+  "testimonials": {
+    "title": "Real Stories from Egyptian Families",
+    "subtitle": "Verified feedback from clients and professionals relying on shift-based care.",
+    "items": [
+      {
+        "quote": "Finding a trusted certified nurse for my father's night shifts was stressful until Alanis. Knowing the provider was background checked and payment held in escrow gave us true peace of mind.",
+        "author": "Eng. Tarek Mansour",
+        "role": "Verified Client • New Cairo",
+        "category": "Home ICU Nursing"
+      },
+      {
+        "quote": "As a certified pediatric nurse, Alanis allows me to publish my open shifts weeks in advance. The escrow guarantee ensures I receive my earnings immediately upon shift completion.",
+        "author": "Nurse Salma El-Sayed",
+        "role": "Verified Provider • Heliopolis",
+        "category": "Childcare & Nursing"
+      },
+      {
+        "quote": "The shift-based booking model is brilliant. Instead of hourly clock-watching, you know exactly what shift you've reserved and what you're paying upfront.",
+        "author": "Dr. Mona Abdel-Rahman",
+        "role": "Verified Client • Maadi",
+        "category": "Elderly Care"
+      }
+    ]
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about escrow protection, provider audits, and shifts.",
+    "items": [
+      {
+        "q": "How does the Alanis Escrow Payment Guarantee work?",
+        "a": "When you book a shift, you pay via card or digital wallet. Your payment is held securely in platform escrow and is NOT sent directly to the provider. Funds are only released to the caregiver after the shift has been successfully fulfilled and you confirm satisfaction."
+      },
+      {
+        "q": "How are nurses and service providers vetted before approval?",
+        "a": "Every applicant undergoes rigorous multi-step auditing: official 14-digit National ID validation, verification of professional medical/nursing licenses from Egyptian medical syndicates, criminal record confirmation, and manual resume inspection by our compliance team."
+      },
+      {
+        "q": "What happens if a caregiver cancels or fails to arrive?",
+        "a": "You are 100% protected. If a provider cancels or cannot attend, our platform instantly lets you assign another verified caregiver for the shift with one click, or receive an immediate 100% refund of your escrowed funds back to your payment method."
+      },
+      {
+        "q": "What are the fixed shift hours, and can I book consecutive days?",
+        "a": "Shifts are structured into 3 standardized 8-hour blocks: Morning (8:00 AM – 4:00 PM), Evening (4:00 PM – 12:00 AM), and Night (12:00 AM – 8:00 AM). You can book single shifts or reserve consecutive shifts across multiple days or weeks in advance."
+      },
+      {
+        "q": "How can qualified healthcare professionals join Alanis as providers?",
+        "a": "You can apply via the 'Register as Provider' page by uploading your National ID and credentials. Once vetted and approved by our compliance desk, you can set your open shift calendar and accept booking requests with guaranteed instant payouts."
+      }
+    ]
+  },
+  "cta": {
+    "title": "Ready to book trusted shift-based care for your family?",
+    "subtitle": "Sign up in 2 minutes. Browse vetted healthcare aides, select your 8-hour shift, and enjoy 100% escrow protection with guaranteed caregiver replacement.",
+    "bookShift": "Book a Caregiver Shift",
+    "escrowTitle": "100% Escrow Protection",
+    "escrowSubtitle": "Released only upon satisfaction",
+    "vettingTitle": "Vetted National ID",
+    "vettingSubtitle": "Criminal & license audits",
+    "helplineTitle": "Helpline: 19824",
+    "helplineSubtitle": "24/7 Coordinator support"
+  },
+  "footer": {
+    "escrowSafeguard": "100% Escrow Safeguard",
+    "escrowSubtitle": "Payment released after shift completion",
+    "vettedAides": "Vetted Healthcare Aides",
+    "vettedSubtitle": "14-digit National ID & syndicate licenses",
+    "replacementGuarantee": "Replacement Guarantee",
+    "replacementSubtitle": "Instant backup provider upon cancellation",
+    "institutionalDignity": "Institutional Dignity",
+    "institutionalSubtitle": "Ethical healthcare code of conduct",
+    "aboutText": "Egypt's premier shift-based marketplace connecting verified nurses and companions with families under 100% escrow protection and standardized 8-hour blocks.",
+    "encryptionBadge": "256-bit Encrypted Escrow",
+    "forFamilies": "For Families",
+    "findProviders": "Find Verified Providers",
+    "shiftsAndPricing": "Shift System & Pricing",
+    "specialties": "Available Specialties",
+    "howBookingWorks": "How Booking Works",
+    "createFamilyAccount": "Create Family Account",
+    "forCaregivers": "For Caregivers",
+    "joinAsCaregiver": "Join as Caregiver",
+    "escrowPayouts": "Guaranteed Escrow Payouts",
+    "vettingRequirements": "Vetting Requirements",
+    "providerLogin": "Provider Portal Login",
+    "helplineTitle": "Helpline & Coordination",
+    "centralHotline": "Central Care Hotline",
+    "coordinationDesc": "Immediate shift coordination & case monitoring 24/7.",
+    "cities": "Cairo • Giza • Alexandria"
+  }
+}

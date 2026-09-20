@@ -189,14 +189,16 @@ export default function ResetPasswordPage() {
                 className="ps-9 pe-9 h-10"
                 {...register("newPassword")}
               />
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute end-3 top-3 text-muted-foreground hover:text-foreground"
+                className="absolute end-1 top-1 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-transparent"
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+              </Button>
             </div>
             {errors.newPassword && (
               <p className="text-xs text-destructive">{errors.newPassword.message}</p>
@@ -263,16 +265,10 @@ export default function ResetPasswordPage() {
           <Button
             type="submit"
             className="w-full h-11 text-sm font-semibold shadow-sm mt-2"
-            disabled={resetMutation.isPending}
+            loading={resetMutation.isPending}
+            loadingText={t("common:actions.saveChanges")}
           >
-            {resetMutation.isPending ? (
-              <div className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>{t("common:actions.saveChanges")}...</span>
-              </div>
-            ) : (
-              <span>{t("auth:resetPassword.resetButton")}</span>
-            )}
+            {t("auth:resetPassword.resetButton")}
           </Button>
         </form>
       </CardContent>

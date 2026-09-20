@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Lock, MapPin, Moon, Search, ShieldCheck, Star, Sun, Sunset } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import CategoryIcon from "@/components/shared/CategoryIcon";
@@ -8,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -19,7 +21,6 @@ import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { getLocalizedCategoryName } from "@/lib/utils";
 
 export default function HeroSection({
-  isArabic,
   categories,
   selectedCategory,
   setSelectedCategory,
@@ -29,6 +30,8 @@ export default function HeroSection({
   setLocationQuery,
   handleConsoleSearch,
 }) {
+  const { t, i18n } = useTranslation(["landing", "common"]);
+
   return (
     <section className="relative overflow-hidden pt-12 pb-16 md:pt-20 md:pb-24">
       {/* Ambient Lighting Mesh - Subdued institutional warmth */}
@@ -49,14 +52,10 @@ export default function HeroSection({
           variants={fadeInUp}
         >
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-foreground leading-[1.2] sm:leading-[1.15] text-balance">
-            {isArabic
-              ? "رعاية وتمريض منزلي موثوق، محجوز بنظام الوردية."
-              : "Verified care and healthcare aides, booked by shift."}
+            {t("landing:hero.title")}
           </h1>
           <p className="text-sm sm:text-base md:text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed text-balance">
-            {isArabic
-              ? "تواصل مع ممرضين، وجليسات مسنين وأطفال، وأخصائيي علاج طبيعي معتمدين برقم قومي مدقق. أسعار ثابتة لكل وردية 8 ساعات دون مفاجآت مع حماية كاملة لأموالك بالدفع الضامن."
-              : "Connect with certified nurses, elderly companions, babysitters, and rehab therapists. Fixed 8-hour shift rates, zero hidden overtime, and 100% digital escrow safety."}
+            {t("landing:hero.description")}
           </p>
         </motion.div>
 
@@ -67,18 +66,16 @@ export default function HeroSection({
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {/* Category Select */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-muted-foreground block">
-                    {isArabic ? "التخصص المطلوب" : "Specialty"}
-                  </label>
+                  <Label className="text-xs font-medium text-muted-foreground block">
+                    {t("landing:hero.console.specialtyLabel")}
+                  </Label>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                     <SelectTrigger className="h-11 rounded-xl text-sm bg-background">
-                      <SelectValue
-                        placeholder={isArabic ? "اختر التخصص..." : "Select specialty..."}
-                      />
+                      <SelectValue placeholder={t("landing:hero.console.specialtyPlaceholder")} />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">
-                        {isArabic ? "جميع التخصصات" : "All Specialties"}
+                        {t("landing:hero.console.allSpecialties")}
                       </SelectItem>
                       {categories.map((cat) => (
                         <SelectItem key={cat.id} value={cat.id}>
@@ -88,7 +85,7 @@ export default function HeroSection({
                               name={cat.name}
                               className="h-3.5 w-3.5 text-primary shrink-0"
                             />
-                            <span>{getLocalizedCategoryName(cat, isArabic ? "ar" : "en")}</span>
+                            <span>{getLocalizedCategoryName(cat, i18n.language)}</span>
                           </div>
                         </SelectItem>
                       ))}
@@ -98,35 +95,31 @@ export default function HeroSection({
 
                 {/* Shift Select */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-muted-foreground block">
-                    {isArabic ? "موعد الوردية" : "Shift Time"}
-                  </label>
+                  <Label className="text-xs font-medium text-muted-foreground block">
+                    {t("landing:hero.console.shiftLabel")}
+                  </Label>
                   <Select value={selectedShift} onValueChange={setSelectedShift}>
                     <SelectTrigger className="h-11 rounded-xl text-sm bg-background">
-                      <SelectValue
-                        placeholder={isArabic ? "اختر موعد الوردية..." : "Select shift..."}
-                      />
+                      <SelectValue placeholder={t("landing:hero.console.shiftPlaceholder")} />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all">
-                        {isArabic ? "كافة الورديات (24 ساعة)" : "Any Shift (24 Hours)"}
-                      </SelectItem>
+                      <SelectItem value="all">{t("landing:hero.console.anyShift")}</SelectItem>
                       <SelectItem value="morning">
                         <div className="flex items-center gap-2">
                           <Sun className="h-3.5 w-3.5 text-amber-500 shrink-0" />
-                          <span>{isArabic ? "صباحية (8 ص – 4 م)" : "Morning (8am - 4pm)"}</span>
+                          <span>{t("landing:hero.console.shiftMorning")}</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="evening">
                         <div className="flex items-center gap-2">
                           <Sunset className="h-3.5 w-3.5 text-orange-500 shrink-0" />
-                          <span>{isArabic ? "مسائية (4 م – 12 ص)" : "Evening (4pm - 12am)"}</span>
+                          <span>{t("landing:hero.console.shiftEvening")}</span>
                         </div>
                       </SelectItem>
                       <SelectItem value="night">
                         <div className="flex items-center gap-2">
                           <Moon className="h-3.5 w-3.5 text-indigo-400 shrink-0" />
-                          <span>{isArabic ? "ليلية (12 ص – 8 ص)" : "Night (12am - 8am)"}</span>
+                          <span>{t("landing:hero.console.shiftNight")}</span>
                         </div>
                       </SelectItem>
                     </SelectContent>
@@ -135,15 +128,13 @@ export default function HeroSection({
 
                 {/* Area / Location */}
                 <div className="space-y-1.5">
-                  <label className="text-xs font-medium text-muted-foreground block">
-                    {isArabic ? "المنطقة / المحافظة" : "Location"}
-                  </label>
+                  <Label className="text-xs font-medium text-muted-foreground block">
+                    {t("landing:hero.console.locationLabel")}
+                  </Label>
                   <div className="relative">
                     <MapPin className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input
-                      placeholder={
-                        isArabic ? "مثال: التجمع، المعادي، الشيخ زايد" : "e.g. New Cairo, Maadi"
-                      }
+                      placeholder={t("landing:hero.console.locationPlaceholder")}
                       value={locationQuery}
                       onChange={(e) => setLocationQuery(e.target.value)}
                       className="ps-9 h-11 rounded-xl text-sm bg-background"
@@ -158,7 +149,7 @@ export default function HeroSection({
                     className="h-11 rounded-xl text-sm font-semibold gap-2 w-full shadow-sm"
                   >
                     <Search className="h-4 w-4" />
-                    <span>{isArabic ? "ابحث عن مزود معتمد" : "Search Providers"}</span>
+                    <span>{t("landing:hero.console.searchButton")}</span>
                   </Button>
                 </div>
               </div>
@@ -168,12 +159,12 @@ export default function HeroSection({
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <span className="inline-flex items-center gap-1.5">
                     <ShieldCheck className="h-4 w-4 text-primary shrink-0" />
-                    <span>{isArabic ? "بطاقة رقم قومي مدققة" : "National ID Vetted"}</span>
+                    <span>{t("landing:hero.console.idVetted")}</span>
                   </span>
                   <span className="hidden sm:inline text-border">•</span>
                   <span className="inline-flex items-center gap-1.5">
                     <Lock className="h-3.5 w-3.5 text-success shrink-0" />
-                    <span>{isArabic ? "دفع ضامن إلكتروني" : "Escrow Safeguard"}</span>
+                    <span>{t("landing:hero.console.escrowSafeguard")}</span>
                   </span>
                 </div>
 
@@ -182,7 +173,7 @@ export default function HeroSection({
                     <Star className="h-3.5 w-3.5 fill-warm-accent text-warm-accent" /> 4.95 / 5
                   </span>
                   <span className="text-muted-foreground text-[11px] sm:text-xs">
-                    {isArabic ? "(من 3,800+ تقييم موثق)" : "(From 3,800+ Verified Reviews)"}
+                    {t("landing:hero.console.verifiedReviews")}
                   </span>
                 </div>
               </div>
@@ -206,28 +197,26 @@ export default function HeroSection({
               <div className="flex-1 min-w-0">
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                   <h4 className="font-semibold text-sm text-foreground">
-                    {isArabic ? "أخصائية مريم سمير • تمريض منزلي" : "Mariam Samir, RN • Home Care"}
+                    {t("landing:hero.simulation.name")}
                   </h4>
                   <Badge
                     variant="outline"
                     className="bg-success/10 text-success text-[10px] sm:text-[11px] border-success/30 font-medium shrink-0"
                   >
-                    {isArabic ? "متاحة اليوم" : "Available Today"}
+                    {t("landing:hero.simulation.availableToday")}
                   </Badge>
                 </div>
                 <p className="text-xs text-muted-foreground mt-0.5">
-                  {isArabic
-                    ? "الوردية القادمة: صباحية (8:00 ص – 4:00 م)"
-                    : "Next Shift: Morning (8:00 AM – 4:00 PM)"}
+                  {t("landing:hero.simulation.nextShift")}
                 </p>
                 <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-xs mt-1 text-muted-foreground">
                   <span className="flex items-center gap-1 text-warm-accent font-semibold">
                     <Star className="h-3 w-3 fill-warm-accent text-warm-accent" /> 5.0 (148{" "}
-                    {isArabic ? "تقييم" : "reviews"})
+                    {t("landing:hero.simulation.reviews")})
                   </span>
                   <span className="hidden sm:inline text-border">•</span>
                   <span className="text-primary font-semibold">
-                    450 {isArabic ? "ج.م / وردية 8 ساعات" : "EGP / 8-hr Shift"}
+                    450 {t("landing:hero.simulation.rate")}
                   </span>
                 </div>
               </div>
@@ -235,7 +224,7 @@ export default function HeroSection({
 
             <Button size="sm" asChild className="font-medium w-full sm:w-auto shrink-0 shadow-xs">
               <Link to="/register">
-                <span>{isArabic ? "احجز هذه الوردية" : "Book This Shift"}</span>
+                <span>{t("landing:hero.simulation.bookShift")}</span>
               </Link>
             </Button>
           </div>
@@ -248,37 +237,37 @@ export default function HeroSection({
         >
           <div className="space-y-1">
             <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-              15,000+
+              {t("landing:hero.stats.shiftsCount")}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
-              {isArabic ? "وردية نُفذت باحترافية" : "Shifts Fulfilled"}
+              {t("landing:hero.stats.shiftsLabel")}
             </div>
           </div>
 
           <div className="space-y-1 border-s border-border/40">
             <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-              1,250+
+              {t("landing:hero.stats.aidesCount")}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
-              {isArabic ? "مزود خدمة معتمد ومدقق" : "Vetted Healthcare Aides"}
+              {t("landing:hero.stats.aidesLabel")}
             </div>
           </div>
 
           <div className="space-y-1 border-t border-border/40 pt-4 sm:pt-0 md:border-t-0 md:border-s">
             <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-              4.95 / 5
+              {t("landing:hero.stats.ratingScore")}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
-              {isArabic ? "متوسط تقييمات العائلات" : "Client Satisfaction Score"}
+              {t("landing:hero.stats.ratingLabel")}
             </div>
           </div>
 
           <div className="space-y-1 border-t border-s border-border/40 pt-4 sm:pt-0 md:border-t-0">
             <div className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-              100%
+              {t("landing:hero.stats.safetyScore")}
             </div>
             <div className="text-xs sm:text-sm text-muted-foreground">
-              {isArabic ? "حماية المدفوعات بالضمان" : "Escrow Payment Safety"}
+              {t("landing:hero.stats.safetyLabel")}
             </div>
           </div>
         </motion.div>

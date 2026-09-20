@@ -174,9 +174,9 @@ export const GOVERNORATES = [
 
 export const FALLBACK_CATEGORIES = [
   {
-    id: "cat-1",
+    id: "762f04c5-f5b8-4b34-b662-08de126b3f5e",
     name: "تمريض منزلي ورعاية صحية",
-    nameEn: "Home Nursing & Medical Care",
+    nameEn: "Home Nursing",
     icon: "Stethoscope",
     providersCount: 340,
     startingPrice: 400,
@@ -185,9 +185,9 @@ export const FALLBACK_CATEGORIES = [
       "ممرضون مؤهلون لمتابعة الحالات بعد العمليات، وإعطاء الحقن، ومتابعة المؤشرات الحيوية.",
   },
   {
-    id: "cat-2",
+    id: "033179fd-33a5-4fa8-21e1-08de170f46e3",
     name: "رعاية كبار السن وجليسات",
-    nameEn: "Elderly Care & Companionship",
+    nameEn: "Elderly Care",
     icon: "HeartHandshake",
     providersCount: 280,
     startingPrice: 350,
@@ -195,9 +195,9 @@ export const FALLBACK_CATEGORIES = [
     descriptionAr: "مساعدون رحماء للمساعدة في الحركة وتناول الأدوية والمرافقة اليومية باهتمام.",
   },
   {
-    id: "cat-3",
+    id: "a4597ed1-55ae-4d9e-056b-08de164e9751",
     name: "رعاية وجليسات أطفال",
-    nameEn: "Childcare & Babysitting",
+    nameEn: "Child Care",
     icon: "Baby",
     providersCount: 310,
     startingPrice: 250,

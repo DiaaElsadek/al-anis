@@ -1,13 +1,15 @@
 import { motion } from "framer-motion";
 import { Quote } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 import RatingStars from "@/components/shared/RatingStars";
 import { Card, CardContent } from "@/components/ui/card";
 import { getTestimonials } from "@/features/landing/data";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 
-export default function TestimonialsSection({ isArabic }) {
-  const testimonials = getTestimonials(isArabic);
+export default function TestimonialsSection() {
+  const { t } = useTranslation(["landing", "common"]);
+  const testimonials = getTestimonials(t);
   const [lead, ...others] = testimonials;
 
   return (
@@ -15,14 +17,10 @@ export default function TestimonialsSection({ isArabic }) {
       <div className="container max-w-5xl mx-auto space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
-            {isArabic
-              ? "تجارب حقيقية من عائلات ومقدمي رعاية"
-              : "Real Stories from Egyptian Families"}
+            {t("landing:testimonials.title")}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            {isArabic
-              ? "آراء موثقة من عملاء ومقدمي رعاية اعتمدوا على نظام الوردية لراحة أحبائهم."
-              : "Verified feedback from clients and professionals relying on shift-based care."}
+            {t("landing:testimonials.subtitle")}
           </p>
         </div>
 

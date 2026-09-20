@@ -5,10 +5,10 @@ import { Link } from "react-router-dom";
 import CategoryIcon from "@/components/shared/CategoryIcon";
 import { Card } from "@/components/ui/card";
 import { FALLBACK_CATEGORIES } from "@/lib/constants";
+import { getLocalizedCategoryName } from "@/lib/utils";
 
 export default function ClientSpecialtiesGrid({ categories = [] }) {
   const { t, i18n } = useTranslation(["client", "common"]);
-  const isArabic = i18n.language === "ar";
 
   const displayCategories = categories.length > 0 ? categories : FALLBACK_CATEGORIES;
 
@@ -34,7 +34,7 @@ export default function ClientSpecialtiesGrid({ categories = [] }) {
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
         {displayCategories.slice(0, 6).map((cat) => {
-          const name = isArabic ? cat.name || cat.nameEn : cat.nameEn || cat.name;
+          const name = getLocalizedCategoryName(cat, i18n.language);
 
           return (
             <Link

@@ -20,6 +20,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ShiftType } from "@/lib/constants";
+import { getLocalizedCategoryName } from "@/lib/utils";
 
 export default function SinglePricingModal({
   open,
@@ -43,9 +44,9 @@ export default function SinglePricingModal({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
-        <Button size="sm" className="text-xs font-semibold shadow-sm" onClick={onOpenAdd}>
-          <Plus className="h-4 w-4 me-1.5" />
-          {t("admin:pricing.addPricing")}
+        <Button size="sm" className="gap-2 font-semibold" onClick={onOpenAdd}>
+          <Plus className="h-4 w-4" />
+          <span>{t("admin:pricing.addPricing")}</span>
         </Button>
       </DialogTrigger>
 
@@ -54,12 +55,21 @@ export default function SinglePricingModal({
           <DialogTitle>
             {editingPricing ? t("admin:pricing.editModalTitle") : t("admin:pricing.addPricing")}
           </DialogTitle>
-          <DialogDescription className="text-xs mt-0.5">
-            {t("admin:pricing.subtitle")}
-          </DialogDescription>
+          <DialogDescription className="text-xs">{t("admin:pricing.subtitle")}</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 pt-2">
+          {editingPricing && (
+            <div className="p-3 bg-muted rounded-lg text-xs space-y-1">
+              <div className="font-semibold text-foreground">
+                {getLocalizedCategoryName(
+                  categories.find((c) => c.id === editingPricing.categoryId),
+                  i18n.language
+                )}
+              </div>
+            </div>
+          )}
+
           {!editingPricing && (
             <div className="space-y-1.5">
               <Label className="text-xs font-semibold">{t("admin:pricing.category")} *</Label>
@@ -70,7 +80,7 @@ export default function SinglePricingModal({
                 <SelectContent>
                   {categories.map((c) => (
                     <SelectItem key={c.id} value={c.id} className="text-xs">
-                      {i18n.language === "ar" ? c.name || c.nameEn : c.nameEn || c.name}
+                      {getLocalizedCategoryName(c, i18n.language)}
                     </SelectItem>
                   ))}
                 </SelectContent>

@@ -52,6 +52,19 @@ export function getLocalizedCategoryName(category, lng) {
 }
 
 /**
+ * Return appropriate localized category description from bilingual backend entity
+ */
+export function getLocalizedCategoryDescription(category, lng) {
+  if (!category) return "";
+  const isArabic =
+    (lng || (typeof document !== "undefined" ? document.documentElement.lang : "en")) === "ar";
+  if (isArabic) {
+    return category.descriptionAr || category.description || "";
+  }
+  return category.description || category.descriptionAr || "";
+}
+
+/**
  * Get initials from a full name
  */
 export function getInitials(name) {
@@ -102,13 +115,20 @@ export function getMediaUrl(path) {
  * @param {string} [fallbackKey="common:error"] — translation key for the toast title
  * @param {Object} [toastOpts] — extra sonner options (e.g. { id: "unique-id" })
  */
-export function handleMutationError(error, t, fallbackKey = "common:error", toastOpts = {}) {
+export function handleMutationError(error, t, fallbackKey = "common:error.title", toastOpts = {}) {
+  const actualKey = fallbackKey === "common:error" ? "common:error.title" : fallbackKey;
+  const rawTitle = typeof t === "function" ? t(actualKey, { defaultValue: "Error" }) : "Error";
+  const title = typeof rawTitle === "string" ? rawTitle : "Error";
   const msg =
     error?.response?.data?.message ||
-    error?.response?.data?.errors?.join(", ") ||
+    (Array.isArray(error?.response?.data?.errors)
+      ? error.response.data.errors.join(", ")
+      : typeof error?.response?.data?.errors === "object" && error?.response?.data?.errors !== null
+        ? Object.values(error.response.data.errors).flat().join(", ")
+        : null) ||
     error?.message ||
-    t(fallbackKey);
-  toast.error(t(fallbackKey), { description: msg, ...toastOpts });
+    title;
+  toast.error(title, { description: msg, ...toastOpts });
 }
 
 /**
