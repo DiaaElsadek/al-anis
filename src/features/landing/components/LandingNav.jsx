@@ -8,9 +8,10 @@ import ThemeToggle from "@/components/shared/ThemeToggle";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
-export default function LandingNav({ isArabic }) {
-  const { t } = useTranslation(["common", "auth", "client"]);
+export default function LandingNav() {
+  const { t, i18n } = useTranslation(["landing", "common"]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const isRtl = i18n.language?.startsWith("ar");
 
   return (
     <>
@@ -20,21 +21,17 @@ export default function LandingNav({ isArabic }) {
           <div className="flex items-center gap-2 truncate">
             <span className="inline-flex items-center gap-1.5 text-success font-medium shrink-0">
               <ShieldCheck className="h-3.5 w-3.5" />
-              {isArabic ? "حماية الضمان 100%" : "100% Escrow Protected"}
+              {t("landing:nav.escrowRibbon")}
             </span>
             <span className="hidden sm:inline text-muted-foreground/40 shrink-0">•</span>
-            <span className="hidden sm:inline truncate">
-              {isArabic
-                ? "فحص جنائي ورقم قومي معتمد لكافة الكوادر"
-                : "National ID & Criminal Record Vetted"}
-            </span>
+            <span className="hidden sm:inline truncate">{t("landing:nav.vettedRibbon")}</span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <span className="flex items-center gap-1.5 font-medium">
               <PhoneCall className="h-3 w-3 text-primary" />
               <span className="font-mono">19824</span>
               <span className="hidden md:inline text-muted-foreground">
-                ({isArabic ? "دعم على مدار الساعة" : "24/7 Helpline"})
+                ({t("landing:nav.helplineHours")})
               </span>
             </span>
           </div>
@@ -62,22 +59,22 @@ export default function LandingNav({ isArabic }) {
           {/* Desktop Navigation Links */}
           <nav className="hidden lg:flex items-center gap-6 text-sm font-medium text-muted-foreground">
             <a href="#shifts" className="hover:text-primary transition-colors">
-              {isArabic ? "نظام الورديات" : "Shift System"}
+              {t("landing:nav.shifts")}
             </a>
             <a href="#categories" className="hover:text-primary transition-colors">
-              {isArabic ? "التخصصات" : "Specialties"}
+              {t("landing:nav.categories")}
             </a>
             <a href="#why-alanis" className="hover:text-primary transition-colors">
-              {isArabic ? "لماذا الأنيس" : "Why Alanis"}
+              {t("landing:nav.whyAlanis")}
             </a>
             <a href="#how-it-works" className="hover:text-primary transition-colors">
-              {isArabic ? "كيف تعمل" : "How It Works"}
+              {t("landing:nav.howItWorks")}
             </a>
             <a href="#caregivers" className="hover:text-primary transition-colors">
-              {isArabic ? "أطقم الرعاية" : "Caregivers"}
+              {t("landing:nav.caregivers")}
             </a>
             <a href="#faq" className="hover:text-primary transition-colors">
-              {isArabic ? "الأسئلة الشائعة" : "FAQ"}
+              {t("landing:nav.faq")}
             </a>
           </nav>
 
@@ -103,7 +100,7 @@ export default function LandingNav({ isArabic }) {
                 </Button>
               </SheetTrigger>
               <SheetContent
-                side={isArabic ? "right" : "left"}
+                side={isRtl ? "right" : "left"}
                 className="w-[290px] sm:w-80 p-5 sm:p-6 flex flex-col justify-between"
               >
                 <div className="space-y-6">
@@ -122,42 +119,42 @@ export default function LandingNav({ isArabic }) {
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="p-2.5 rounded-lg hover:bg-muted hover:text-foreground transition-colors"
                     >
-                      {isArabic ? "نظام الورديات" : "Shift System"}
+                      {t("landing:nav.shifts")}
                     </a>
                     <a
                       href="#categories"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="p-2.5 rounded-lg hover:bg-muted hover:text-foreground transition-colors"
                     >
-                      {isArabic ? "التخصصات الخدمية" : "Specialties"}
+                      {t("landing:nav.categoriesMobile")}
                     </a>
                     <a
                       href="#why-alanis"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="p-2.5 rounded-lg hover:bg-muted hover:text-foreground transition-colors"
                     >
-                      {isArabic ? "لماذا الأنيس" : "Why Alanis"}
+                      {t("landing:nav.whyAlanis")}
                     </a>
                     <a
                       href="#how-it-works"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="p-2.5 rounded-lg hover:bg-muted hover:text-foreground transition-colors"
                     >
-                      {isArabic ? "كيف تعمل المنصة" : "How It Works"}
+                      {t("landing:nav.howItWorksMobile")}
                     </a>
                     <a
                       href="#caregivers"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="p-2.5 rounded-lg hover:bg-muted hover:text-foreground transition-colors"
                     >
-                      {isArabic ? "أطقم الرعاية المعتمدة" : "Caregivers"}
+                      {t("landing:nav.caregiversMobile")}
                     </a>
                     <a
                       href="#faq"
                       onClick={() => setIsMobileMenuOpen(false)}
                       className="p-2.5 rounded-lg hover:bg-muted hover:text-foreground transition-colors"
                     >
-                      {isArabic ? "الأسئلة الشائعة" : "FAQ"}
+                      {t("landing:nav.faq")}
                     </a>
                   </nav>
                 </div>

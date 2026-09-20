@@ -1,6 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 
 import { getCategories } from "@/api/category";
@@ -19,8 +18,6 @@ import { FALLBACK_CATEGORIES } from "@/lib/constants";
 
 export default function LandingPage() {
   const navigate = useNavigate();
-  const { i18n } = useTranslation(["common", "auth", "client"]);
-  const isArabic = i18n.language?.startsWith("ar");
 
   // Search Console State
   const [selectedCategory, setSelectedCategory] = useState("all");
@@ -50,10 +47,9 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-primary/20 selection:text-primary">
-      <LandingNav isArabic={isArabic} />
+      <LandingNav />
       <main className="flex-1">
         <HeroSection
-          isArabic={isArabic}
           categories={categories}
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
@@ -63,16 +59,16 @@ export default function LandingPage() {
           setLocationQuery={setLocationQuery}
           handleConsoleSearch={handleConsoleSearch}
         />
-        <ShiftsSection isArabic={isArabic} />
-        <CategoriesSection isArabic={isArabic} categories={categories} />
-        <WhyAlanisSection isArabic={isArabic} />
-        <HowItWorksSection isArabic={isArabic} />
-        <CaregiversSection isArabic={isArabic} />
-        <TestimonialsSection isArabic={isArabic} />
-        <FAQSection isArabic={isArabic} />
-        <CTASection isArabic={isArabic} />
+        <ShiftsSection />
+        <CategoriesSection categories={categories} />
+        <WhyAlanisSection />
+        <HowItWorksSection />
+        <CaregiversSection />
+        <TestimonialsSection />
+        <FAQSection />
+        <CTASection />
       </main>
-      <LandingFooter isArabic={isArabic} />
+      <LandingFooter />
     </div>
   );
 }

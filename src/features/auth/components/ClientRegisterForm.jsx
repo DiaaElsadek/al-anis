@@ -7,9 +7,9 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-import DatePicker from "@/components/shared/DatePicker";
 import FileUploadField from "@/components/shared/FileUploadField";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
@@ -183,15 +183,26 @@ export default function ClientRegisterForm() {
           <Controller
             control={clientForm.control}
             name="dateOfBirth"
-            render={({ field }) => (
-              <DatePicker
-                id="clientDob"
-                value={field.value}
-                max={new Date().toISOString().split("T")[0]}
-                onChange={(val) => field.onChange(val)}
-                placeholder={t("auth:register.dateOfBirth")}
-              />
-            )}
+            render={({ field }) => {
+              const today = new Date();
+              const maxDob = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+                .toISOString()
+                .split("T")[0];
+              const minDob = new Date(today.getFullYear() - 65, today.getMonth(), today.getDate())
+                .toISOString()
+                .split("T")[0];
+
+              return (
+                <DatePicker
+                  id="clientDob"
+                  value={field.value}
+                  min={minDob}
+                  max={maxDob}
+                  onChange={(val) => field.onChange(val)}
+                  placeholder={t("auth:register.dateOfBirth")}
+                />
+              );
+            }}
           />
           {clientForm.formState.errors.dateOfBirth && (
             <p className="text-xs text-destructive">
@@ -216,14 +227,16 @@ export default function ClientRegisterForm() {
               className="ps-9 pe-9 h-10"
               {...clientForm.register("password")}
             />
-            <button
+            <Button
               type="button"
+              variant="ghost"
+              size="icon"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute end-3 top-3 text-muted-foreground hover:text-foreground"
+              className="absolute end-1 top-1 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-transparent"
               tabIndex={-1}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-            </button>
+            </Button>
           </div>
           {clientForm.formState.errors.password && (
             <p className="text-xs text-destructive">
@@ -277,16 +290,10 @@ export default function ClientRegisterForm() {
       <Button
         type="submit"
         className="w-full h-11 text-sm font-semibold shadow-sm mt-4"
-        disabled={clientMutation.isPending}
+        loading={clientMutation.isPending}
+        loadingText={t("auth:register.creatingAccount")}
       >
-        {clientMutation.isPending ? (
-          <div className="flex items-center gap-2">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>{t("auth:register.creatingAccount")}</span>
-          </div>
-        ) : (
-          <span>{t("auth:register.submitClient")}</span>
-        )}
+        {t("auth:register.submitClient")}
       </Button>
     </form>
   );

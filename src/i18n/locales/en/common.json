@@ -105,6 +105,16 @@
     "noResults": "No results found",
     "tryAdjusting": "Try adjusting your search or filters."
   },
+  "greetings": {
+    "morning": "Good morning,",
+    "afternoon": "Good afternoon,",
+    "evening": "Good evening,"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "reload": "Reload Page",
+    "home": "Home Page"
+  },
   "footer": {
     "copyright": "© {{year}} Alanis. All rights reserved.",
     "escrowBadge": "100% Escrow Protected"

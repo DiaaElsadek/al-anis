@@ -15,18 +15,53 @@ export const passwordSchema = z
   .regex(/[A-Z]/, "Must contain at least one uppercase letter")
   .regex(/[a-z]/, "Must contain at least one lowercase letter")
   .regex(/[0-9]/, "Must contain at least one number")
-  .regex(/[^A-Za-z0-9]/, "Must contain at least one special character (!@#$%^&*)");
+  .regex(/[!@#$%^&*]/, "Password must contain at least one special character (!@#$%^&*)");
 
 export const phoneSchema = z
   .string()
   .min(1, "Phone number is required")
   .regex(/^01[0125][0-9]{8}$/, "Enter a valid Egyptian phone number (e.g. 01012345678)");
 
-export const nameSchema = z
+export const firstNameSchema = z
   .string()
-  .min(2, "Name must be at least 2 characters")
-  .max(50, "Name cannot exceed 50 characters")
-  .regex(/^[\p{L}\s'-]+$/u, "Name contains invalid characters");
+  .min(2, "First name is required")
+  .max(50, "First name cannot exceed 50 characters")
+  .regex(/^[\p{L}\s]+$/u, "First name can only contain letters and spaces");
+
+export const lastNameSchema = z
+  .string()
+  .min(2, "Last name is required")
+  .max(50, "Last name cannot exceed 50 characters")
+  .regex(/^[\p{L}]+$/u, "Last name can only contain letters");
+
+export const nameSchema = firstNameSchema;
+
+export const dateOfBirthSchema = z
+  .string()
+  .min(1, "Date of birth is required")
+  .refine((val) => {
+    const dob = new Date(val);
+    if (isNaN(dob.getTime())) return false;
+    const today = new Date();
+    let age = today.getFullYear() - dob.getFullYear();
+    const m = today.getMonth() - dob.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+      age--;
+    }
+    return age >= 18 && age <= 65;
+  }, "Age must be between 18 and 65 years");
+
+const validDocExtensions = [".pdf", ".jpg", ".jpeg", ".png"];
+const validDocMimeTypes = ["application/pdf", "image/jpeg", "image/jpg", "image/png"];
+
+const documentFileSchema = (label) =>
+  z.any().refine((file) => {
+    if (!(file instanceof File)) return false;
+    const fileName = file.name?.toLowerCase() || "";
+    const hasValidExt = validDocExtensions.some((ext) => fileName.endsWith(ext));
+    const hasValidMime = validDocMimeTypes.includes(file.type);
+    return hasValidExt || hasValidMime;
+  }, `${label} must be PDF, JPG, or PNG.`);
 
 // ============================================================
 // Auth Form Schemas (matching Swagger specification)
@@ -47,14 +82,14 @@ export const loginSchema = z.object({
  */
 export const registerUserSchema = z
   .object({
-    firstName: nameSchema,
-    lastName: nameSchema,
+    firstName: firstNameSchema,
+    lastName: lastNameSchema,
     email: emailSchema,
     phoneNumber: phoneSchema,
     password: passwordSchema,
     confirmPassword: z.string().min(1, "Please confirm your password"),
     address: z.string().min(5, "Address must be at least 5 characters"),
-    dateOfBirth: z.string().min(1, "Date of birth is required"),
+    dateOfBirth: dateOfBirthSchema,
     profilePicture: z
       .any()
       .optional()
@@ -70,33 +105,36 @@ export const registerUserSchema = z
  */
 export const registerProviderSchema = z
   .object({
-    firstName: nameSchema,
-    lastName: nameSchema,
+    firstName: firstNameSchema,
+    lastName: lastNameSchema,
     email: emailSchema,
     phoneNumber: phoneSchema,
     password: passwordSchema,
     confirmPassword: z.string().min(1, "Please confirm your password"),
     address: z.string().min(5, "Address must be at least 5 characters"),
-    dateOfBirth: z.string().min(1, "Date of birth is required"),
+    dateOfBirth: dateOfBirthSchema,
     bio: z
       .string()
-      .min(20, "Bio must be at least 20 characters")
+      .min(50, "Bio must be at least 50 characters")
       .max(600, "Bio cannot exceed 600 characters"),
     nationalId: z
       .string()
-      .min(14, "National ID must be 14 digits")
-      .max(14, "National ID must be 14 digits")
+      .min(14, "National ID must be exactly 14 digits")
+      .max(14, "National ID must be exactly 14 digits")
       .regex(/^[0-9]{14}$/, "National ID must contain only digits"),
-    experience: z.string().min(1, "Please describe your experience"),
+    experience: z
+      .string()
+      .min(20, "Experience must be at least 20 characters")
+      .max(500, "Experience cannot exceed 500 characters"),
     hourlyRate: z.coerce
       .number({ invalid_type_error: "Rate must be a number" })
       .positive("Hourly rate must be greater than 0"),
-    selectedCategoryIds: z.array(z.string()).min(1, "Please select at least one service category"),
-    idDocument: z
-      .any()
-      .refine((file) => file instanceof File, "National ID document photo/PDF is required"),
-    certificate: z.any().optional(),
-    cv: z.any().optional(),
+    selectedCategoryIds: z
+      .array(z.string().uuid("Invalid category ID"))
+      .min(1, "At least one category must be selected"),
+    idDocument: documentFileSchema("ID document"),
+    certificate: documentFileSchema("Certificate"),
+    cv: documentFileSchema("CV"),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match",
@@ -165,8 +203,8 @@ export const changePasswordSchema = z
  */
 export const createAdminSchema = z
   .object({
-    firstName: nameSchema,
-    lastName: nameSchema,
+    firstName: firstNameSchema,
+    lastName: lastNameSchema,
     email: emailSchema,
     phoneNumber: phoneSchema,
     password: passwordSchema,
@@ -223,15 +261,15 @@ export const rejectReasonSchema = z.object({
 // ============================================================
 
 export const updateProfileSchema = z.object({
-  firstName: nameSchema,
-  lastName: nameSchema,
+  firstName: firstNameSchema,
+  lastName: lastNameSchema,
   phoneNumber: phoneSchema,
   address: z.string().optional(),
 });
 
 export const updateProviderProfileSchema = z.object({
-  bio: z.string().min(10).max(500),
-  experience: z.string().min(1),
+  bio: z.string().min(50, "Bio must be at least 50 characters").max(500),
+  experience: z.string().min(20, "Experience must be at least 20 characters"),
   hourlyRate: z.coerce.number().positive().optional(),
   profilePicture: z.any().optional(),
 });

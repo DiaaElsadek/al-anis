@@ -1,11 +1,12 @@
 import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
+import { Loader2 } from "lucide-react";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 disabled:active:scale-100 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
@@ -31,10 +32,89 @@ const buttonVariants = cva(
   }
 );
 
-const Button = React.forwardRef(({ className, variant, size, asChild = false, ...props }, ref) => {
-  const Comp = asChild ? Slot : "button";
-  return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
-});
+/**
+ * Enhanced Button component with built-in loading state.
+ *
+ * Supports:
+ * - `loading` / `isLoading`: Boolean to toggle the loading spinner and disable the button.
+ * - `loadingText`: Optional text to display while loading.
+ * - Automatic loading for async `onClick` handlers that return a Promise.
+ */
+const Button = React.forwardRef(
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      loading = false,
+      isLoading = false,
+      loadingText,
+      disabled,
+      onClick,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    const [asyncLoading, setAsyncLoading] = React.useState(false);
+    const isButtonLoading = loading || isLoading || asyncLoading;
+
+    const handleClick = React.useCallback(
+      async (e) => {
+        if (disabled || isButtonLoading) {
+          e.preventDefault();
+          return;
+        }
+
+        if (onClick) {
+          try {
+            const result = onClick(e);
+            if (result && typeof result.then === "function") {
+              setAsyncLoading(true);
+              await result;
+            }
+          } finally {
+            setAsyncLoading(false);
+          }
+        }
+      },
+      [disabled, isButtonLoading, onClick]
+    );
+
+    if (asChild) {
+      return (
+        <Slot
+          className={cn(buttonVariants({ variant, size, className }))}
+          ref={ref}
+          disabled={disabled || isButtonLoading}
+          onClick={handleClick}
+          {...props}
+        >
+          {children}
+        </Slot>
+      );
+    }
+
+    return (
+      <button
+        className={cn(
+          buttonVariants({ variant, size, className }),
+          isButtonLoading && "opacity-80 cursor-wait pointer-events-none"
+        )}
+        ref={ref}
+        disabled={disabled || isButtonLoading}
+        aria-busy={isButtonLoading}
+        data-loading={isButtonLoading}
+        onClick={handleClick}
+        {...props}
+      >
+        {isButtonLoading && <Loader2 className="h-4 w-4 animate-spin shrink-0" />}
+        {isButtonLoading && loadingText ? <span>{loadingText}</span> : children}
+      </button>
+    );
+  }
+);
 Button.displayName = "Button";
 
 export { Button, buttonVariants };

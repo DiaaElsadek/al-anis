@@ -6,8 +6,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 export default function ClientWelcomeBanner({ user, profile }) {
-  const { t, i18n } = useTranslation(["client", "common"]);
-  const isArabic = i18n.language === "ar";
+  const { t } = useTranslation(["client", "common"]);
 
   const activeUser = profile || user;
 
@@ -20,12 +19,13 @@ export default function ClientWelcomeBanner({ user, profile }) {
 
   // Dynamic time greeting
   const hour = new Date().getHours();
-  let timeGreeting = isArabic ? "صباح الخير،" : "Good morning,";
+  let greetingKey = "common:greetings.morning";
   if (hour >= 12 && hour < 18) {
-    timeGreeting = isArabic ? "مساء الخير،" : "Good afternoon,";
+    greetingKey = "common:greetings.afternoon";
   } else if (hour >= 18 || hour < 5) {
-    timeGreeting = isArabic ? "مساء الخير،" : "Good evening,";
+    greetingKey = "common:greetings.evening";
   }
+  const timeGreeting = t(greetingKey);
 
   return (
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-1">

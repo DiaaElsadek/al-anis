@@ -139,16 +139,10 @@ export default function ForgotPasswordPage() {
           <Button
             type="submit"
             className="w-full h-11 text-sm font-semibold shadow-sm mt-2"
-            disabled={forgotMutation.isPending}
+            loading={forgotMutation.isPending}
+            loadingText={t("auth:forgotPassword.sending")}
           >
-            {forgotMutation.isPending ? (
-              <div className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>{t("auth:forgotPassword.sending")}</span>
-              </div>
-            ) : (
-              <span>{t("auth:forgotPassword.sendOtpButton")}</span>
-            )}
+            {t("auth:forgotPassword.sendOtpButton")}
           </Button>
         </form>
       </CardContent>

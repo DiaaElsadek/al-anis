@@ -47,7 +47,10 @@ export default function CategoryFormDialog({
           <div className="grid grid-cols-3 gap-3">
             <div className="space-y-1.5 col-span-2">
               <Label className="text-xs font-semibold">{t("admin:categories.nameAr")} *</Label>
-              <Input placeholder="e.g. تمريض منزلي" {...register("name", { required: true })} />
+              <Input
+                placeholder={t("admin:categories.nameArPlaceholder")}
+                {...register("name", { required: true })}
+              />
             </div>
 
             <div className="space-y-1.5">
@@ -63,14 +66,14 @@ export default function CategoryFormDialog({
 
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold">{t("admin:categories.nameEn")}</Label>
-            <Input placeholder="e.g. Home Nursing" {...register("nameEn")} />
+            <Input placeholder={t("admin:categories.nameEnPlaceholder")} {...register("nameEn")} />
           </div>
 
           <div className="space-y-1.5">
             <Label className="text-xs font-semibold">{t("admin:categories.description")}</Label>
             <Textarea
               rows={3}
-              placeholder="Brief description..."
+              placeholder={t("admin:categories.descriptionPlaceholder")}
               className="text-xs resize-none"
               {...register("description")}
             />

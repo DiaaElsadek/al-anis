@@ -35,6 +35,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Textarea } from "@/components/ui/textarea";
 import { cn, getInitials, getMediaUrl } from "@/lib/utils";
 
 const COMMON_EMOJIS = ["👍", "👋", "🙏", "❤️", "😊", "🚗", "⏱️", "📍", "✅", "🤝", "🩺", "⭐"];
@@ -825,7 +826,7 @@ export default function MessagePanel({
             </Popover>
 
             {/* Auto-expanding Textarea */}
-            <textarea
+            <Textarea
               ref={textareaRef}
               rows={1}
               placeholder={t("chat.typeMessage", "Type your message here...")}
@@ -841,7 +842,7 @@ export default function MessagePanel({
                   onSend();
                 }
               }}
-              className="flex-1 bg-transparent border-0 text-sm focus:outline-none placeholder:text-muted-foreground text-foreground resize-none py-1 min-h-[36px] max-h-[130px] leading-relaxed scrollbar-thin"
+              className="flex-1 bg-transparent border-0 text-sm focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:text-muted-foreground text-foreground resize-none py-1 min-h-[36px] max-h-[130px] leading-relaxed scrollbar-thin shadow-none"
             />
 
             {/* Mic / Voice Note button */}

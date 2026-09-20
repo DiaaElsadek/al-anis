@@ -116,14 +116,16 @@ export default function ChangePasswordDialog({ trigger }) {
                 className="pe-9"
                 {...register("newPassword")}
               />
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowPass(!showPass)}
-                className="absolute end-3 top-2.5 text-muted-foreground hover:text-foreground"
+                className="absolute end-1 top-1 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-transparent"
                 tabIndex={-1}
               >
                 {showPass ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+              </Button>
             </div>
             {errors.newPassword && (
               <p className="text-xs text-destructive">{errors.newPassword.message}</p>

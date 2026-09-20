@@ -6,8 +6,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 
-export default function CTASection({ isArabic }) {
-  const { t } = useTranslation(["common"]);
+export default function CTASection() {
+  const { t } = useTranslation(["landing", "common"]);
 
   return (
     <section className="py-16 md:py-24 relative overflow-hidden">
@@ -44,9 +44,7 @@ export default function CTASection({ isArabic }) {
             {/* Headline with Clear Typography */}
             <motion.div variants={fadeInUp}>
               <h2 className="text-2xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white leading-[1.2] text-balance">
-                {isArabic
-                  ? "جاهز لحجز وردية رعاية موثوقة لأحبائك؟"
-                  : "Ready to book trusted shift-based care for your family?"}
+                {t("landing:cta.title")}
               </h2>
             </motion.div>
 
@@ -55,9 +53,7 @@ export default function CTASection({ isArabic }) {
               variants={fadeInUp}
               className="text-white/90 text-sm sm:text-base md:text-lg max-w-2xl mx-auto leading-relaxed text-balance"
             >
-              {isArabic
-                ? "سجل حسابك في دقيقتين. تصفح أطقم التمريض والرعاية المعتمدة، وحدد الوردية المناسبة، ودعنا نتكفل بحماية أموالك بالدفع الضامن وضمان الاستبدال الفوري."
-                : "Sign up in 2 minutes. Browse vetted healthcare aides, select your 8-hour shift, and enjoy 100% escrow protection with guaranteed caregiver replacement."}
+              {t("landing:cta.subtitle")}
             </motion.p>
 
             {/* Primary & Secondary Action Buttons */}
@@ -71,7 +67,7 @@ export default function CTASection({ isArabic }) {
                 className="w-full sm:w-auto h-12 px-8 rounded-xl bg-white text-primary hover:bg-white/95 font-bold shadow-md transition-colors text-sm sm:text-base"
               >
                 <Link to="/register">
-                  <span>{isArabic ? "احجز وردية الآن" : "Book a Caregiver Shift"}</span>
+                  <span>{t("landing:cta.bookShift")}</span>
                 </Link>
               </Button>
               <Button
@@ -94,12 +90,8 @@ export default function CTASection({ isArabic }) {
                   <Lock className="h-3.5 w-3.5" />
                 </div>
                 <div className="text-start">
-                  <div className="font-semibold text-white">
-                    {isArabic ? "دفع ضامن 100%" : "100% Escrow Protection"}
-                  </div>
-                  <div className="text-[11px] text-white/70">
-                    {isArabic ? "لا يُصرف المال إلا بعد رضاك" : "Released only upon satisfaction"}
-                  </div>
+                  <div className="font-semibold text-white">{t("landing:cta.escrowTitle")}</div>
+                  <div className="text-[11px] text-white/70">{t("landing:cta.escrowSubtitle")}</div>
                 </div>
               </div>
 
@@ -108,11 +100,9 @@ export default function CTASection({ isArabic }) {
                   <CheckCircle2 className="h-4 w-4" />
                 </div>
                 <div className="text-start">
-                  <div className="font-semibold text-white">
-                    {isArabic ? "فحص جنائي وتراخيص" : "Vetted National ID"}
-                  </div>
+                  <div className="font-semibold text-white">{t("landing:cta.vettingTitle")}</div>
                   <div className="text-[11px] text-white/70">
-                    {isArabic ? "مراجعة شاملة للأوراق" : "Criminal & license audits"}
+                    {t("landing:cta.vettingSubtitle")}
                   </div>
                 </div>
               </div>
@@ -122,11 +112,9 @@ export default function CTASection({ isArabic }) {
                   <PhoneCall className="h-3.5 w-3.5" />
                 </div>
                 <div className="text-start">
-                  <div className="font-semibold text-white">
-                    {isArabic ? "الخط الساخن: 19824" : "Helpline: 19824"}
-                  </div>
+                  <div className="font-semibold text-white">{t("landing:cta.helplineTitle")}</div>
                   <div className="text-[11px] text-white/70">
-                    {isArabic ? "دعم وتنسيق على مدار الساعة" : "24/7 Coordinator support"}
+                    {t("landing:cta.helplineSubtitle")}
                   </div>
                 </div>
               </div>

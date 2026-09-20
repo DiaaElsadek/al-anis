@@ -19,15 +19,37 @@ import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-import DatePicker from "@/components/shared/DatePicker";
 import FileUploadField from "@/components/shared/FileUploadField";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { DatePicker } from "@/components/ui/date-picker";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { getLocalizedCategoryName, handleMutationError } from "@/lib/utils";
 import { registerProviderSchema } from "@/lib/validators";
+
+const DOCUMENT_FIELDS = [
+  {
+    name: "idDocument",
+    labelKey: "auth:register.documents.idDocument",
+    required: true,
+    accept: ".pdf,.jpg,.jpeg,.png",
+  },
+  {
+    name: "certificate",
+    labelKey: "auth:register.documents.certificate",
+    required: true,
+    accept: ".pdf,.jpg,.jpeg,.png",
+  },
+  {
+    name: "cv",
+    labelKey: "auth:register.documents.cv",
+    required: true,
+    accept: ".pdf,.jpg,.jpeg,.png",
+  },
+];
 
 export default function ProviderRegisterForm({ categories, onApplicationSubmitted }) {
   const { t, i18n } = useTranslation(["auth", "common"]);
@@ -224,15 +246,26 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
             <Controller
               control={providerForm.control}
               name="dateOfBirth"
-              render={({ field }) => (
-                <DatePicker
-                  id="pDob"
-                  value={field.value}
-                  max={new Date().toISOString().split("T")[0]}
-                  onChange={(val) => field.onChange(val)}
-                  placeholder={t("auth:register.dateOfBirth")}
-                />
-              )}
+              render={({ field }) => {
+                const today = new Date();
+                const maxDob = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+                  .toISOString()
+                  .split("T")[0];
+                const minDob = new Date(today.getFullYear() - 65, today.getMonth(), today.getDate())
+                  .toISOString()
+                  .split("T")[0];
+
+                return (
+                  <DatePicker
+                    id="pDob"
+                    value={field.value}
+                    min={minDob}
+                    max={maxDob}
+                    onChange={(val) => field.onChange(val)}
+                    placeholder={t("auth:register.dateOfBirth")}
+                  />
+                );
+              }}
             />
             {providerForm.formState.errors.dateOfBirth && (
               <p className="text-xs text-destructive">
@@ -256,14 +289,16 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
                 className="ps-9 pe-9 h-10"
                 {...providerForm.register("password")}
               />
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute end-3 top-3 text-muted-foreground hover:text-foreground"
+                className="absolute end-1 top-1 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-transparent"
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+              </Button>
             </div>
             {providerForm.formState.errors.password && (
               <p className="text-xs text-destructive">
@@ -370,29 +405,27 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
                   {categories.map((cat) => {
                     const isChecked = selected.includes(cat.id);
                     return (
-                      <button
+                      <div
                         key={cat.id}
-                        type="button"
                         onClick={() => toggleCategory(cat.id)}
-                        className={`flex items-start gap-2.5 p-2 rounded-md text-start text-xs transition-colors border ${
+                        className={`flex items-center gap-2.5 p-2.5 rounded-md text-start text-xs cursor-pointer transition-colors border ${
                           isChecked
                             ? "bg-primary/10 border-primary text-primary font-semibold"
                             : "border-border/60 hover:bg-muted text-muted-foreground"
                         }`}
                       >
-                        <div
-                          className={`h-4 w-4 rounded mt-0.5 flex items-center justify-center border transition-colors ${
-                            isChecked
-                              ? "bg-primary border-primary text-primary-foreground"
-                              : "border-muted-foreground/40 bg-background"
-                          }`}
+                        <Checkbox
+                          id={`cat-${cat.id}`}
+                          checked={isChecked}
+                          onCheckedChange={() => toggleCategory(cat.id)}
+                        />
+                        <Label
+                          htmlFor={`cat-${cat.id}`}
+                          className="flex-1 cursor-pointer select-none text-xs font-normal"
                         >
-                          {isChecked && <Check className="h-3 w-3" />}
-                        </div>
-                        <span className="flex-1">
                           {getLocalizedCategoryName(cat, i18n.language)}
-                        </span>
-                      </button>
+                        </Label>
+                      </div>
                     );
                   })}
                 </div>
@@ -408,9 +441,14 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
 
         {/* Experience */}
         <div className="space-y-1.5">
-          <Label htmlFor="pExperience" className="text-xs font-semibold">
-            {t("auth:register.experienceYears")} <span className="text-destructive">*</span>
-          </Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="pExperience" className="text-xs font-semibold">
+              {t("auth:register.experienceYears")} <span className="text-destructive">*</span>
+            </Label>
+            <span className="text-[11px] text-muted-foreground">
+              {providerForm.watch("experience")?.length || 0}/20
+            </span>
+          </div>
           <Input
             id="pExperience"
             placeholder="e.g. 5 years in intensive care and elderly home nursing"
@@ -426,9 +464,14 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
 
         {/* Bio */}
         <div className="space-y-1.5">
-          <Label htmlFor="pBio" className="text-xs font-semibold">
-            {t("auth:register.bio")} <span className="text-destructive">*</span>
-          </Label>
+          <div className="flex items-center justify-between">
+            <Label htmlFor="pBio" className="text-xs font-semibold">
+              {t("auth:register.bio")} <span className="text-destructive">*</span>
+            </Label>
+            <span className="text-[11px] text-muted-foreground">
+              {providerForm.watch("bio")?.length || 0}/50
+            </span>
+          </div>
           <Textarea
             id="pBio"
             rows={3}
@@ -450,54 +493,24 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          {/* ID Document (Required) */}
-          <Controller
-            control={providerForm.control}
-            name="idDocument"
-            render={({ field, fieldState }) => (
-              <FileUploadField
-                name="idDocument"
-                label={t("auth:register.documents.idDocument")}
-                required
-                accept=".pdf,.jpg,.jpeg,.png"
-                value={field.value}
-                onChange={field.onChange}
-                error={fieldState.error?.message}
-              />
-            )}
-          />
-
-          {/* Certificate (Optional) */}
-          <Controller
-            control={providerForm.control}
-            name="certificate"
-            render={({ field, fieldState }) => (
-              <FileUploadField
-                name="certificate"
-                label={t("auth:register.documents.certificate")}
-                accept=".pdf,.jpg,.jpeg,.png"
-                value={field.value}
-                onChange={field.onChange}
-                error={fieldState.error?.message}
-              />
-            )}
-          />
-
-          {/* CV / Resume (Optional) */}
-          <Controller
-            control={providerForm.control}
-            name="cv"
-            render={({ field, fieldState }) => (
-              <FileUploadField
-                name="cv"
-                label={t("auth:register.documents.cv")}
-                accept=".pdf,.doc,.docx"
-                value={field.value}
-                onChange={field.onChange}
-                error={fieldState.error?.message}
-              />
-            )}
-          />
+          {DOCUMENT_FIELDS.map((doc) => (
+            <Controller
+              key={doc.name}
+              control={providerForm.control}
+              name={doc.name}
+              render={({ field, fieldState }) => (
+                <FileUploadField
+                  name={doc.name}
+                  label={t(doc.labelKey)}
+                  required={doc.required}
+                  accept={doc.accept}
+                  value={field.value}
+                  onChange={field.onChange}
+                  error={fieldState.error?.message}
+                />
+              )}
+            />
+          ))}
         </div>
       </div>
 
@@ -505,16 +518,10 @@ export default function ProviderRegisterForm({ categories, onApplicationSubmitte
       <Button
         type="submit"
         className="w-full h-11 text-sm font-semibold shadow-sm bg-emerald-600 hover:bg-emerald-700 text-white mt-4"
-        disabled={providerMutation.isPending}
+        loading={providerMutation.isPending}
+        loadingText={t("auth:register.submitting")}
       >
-        {providerMutation.isPending ? (
-          <div className="flex items-center gap-2">
-            <Loader2 className="h-4 w-4 animate-spin" />
-            <span>{t("auth:register.submitting")}</span>
-          </div>
-        ) : (
-          <span>{t("auth:register.submitProvider")}</span>
-        )}
+        {t("auth:register.submitProvider")}
       </Button>
     </form>
   );

@@ -1,61 +1,17 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 
-export default function HowItWorksSection({ isArabic }) {
+export default function HowItWorksSection() {
+  const { t } = useTranslation(["landing", "common"]);
   const [activeTab, setActiveTab] = useState("clients");
 
-  const clientSteps = [
-    {
-      num: 1,
-      title: isArabic ? "ابحث واختر الوردية" : "Select Shift & Caregiver",
-      desc: isArabic
-        ? "تصفح أطقم التمريض والرعاية المعتمدة، واطلع على تقييمات العملاء وجدول الورديات المتاح، وحدد موعدك."
-        : "Filter audited caregivers by specialty, read verified client reviews, and choose your preferred 8-hour shift.",
-    },
-    {
-      num: 2,
-      title: isArabic ? "سداد إلكتروني بحساب الضمان" : "Secure Escrow Checkout",
-      desc: isArabic
-        ? "ادفع بأمان عبر بطاقتك. يحتفظ حساب الضمان بالمبلغ كاملاً، ولا يُحوّل للمزود إلا بعد إتمام الوردية ورضاك."
-        : "Pay safely online. Your funds remain 100% safeguarded in platform escrow until the shift is completed satisfactorily.",
-    },
-    {
-      num: 3,
-      title: isArabic ? "تنفيذ الوردية والتقييم" : "Care Delivered & Review",
-      desc: isArabic
-        ? "نسق التعليمات عبر المحادثة الفورية. بعد اكتمال الوردية، أكد الاستلام وانشر تقييمك لمساعدة باقي الأسر."
-        : "Coordinate instructions via real-time chat. Once care is delivered, confirm completion and leave your review.",
-    },
-  ];
-
-  const providerSteps = [
-    {
-      num: 1,
-      title: isArabic ? "سجل وارفع شهاداتك" : "Apply & Submit Credentials",
-      desc: isArabic
-        ? "سجل حسابك مجاناً وارفع صورة الرقم القومي وتراخيص مزاولة المهنة لمراجعتها من فريق الامتثال."
-        : "Create your free provider account and upload your National ID and healthcare certificates for audit.",
-    },
-    {
-      num: 2,
-      title: isArabic ? "حدد جدول وردياتك ومناطقك" : "Set Availability & Areas",
-      desc: isArabic
-        ? "اختر الأيام والورديات (صباحية، مسائية، ليلية) والمناطق الجغرافية التي ترغب في العمل بها بكل حرية."
-        : "Choose open shift slots (Morning, Evening, Night) and geographical neighborhoods that match your schedule.",
-    },
-    {
-      num: 3,
-      title: isArabic ? "نفذ الوردية واستلم أرباحك" : "Fulfill Shifts & Instant Payout",
-      desc: isArabic
-        ? "استقبل طلبات الحجز المباشرة، ونفذ الرعاية باحترافية، واستلم مستحقاتك فوراً من حساب الضمان دون تأخير."
-        : "Receive direct booking alerts, deliver compassionate care, and receive guaranteed instant escrow payouts.",
-    },
-  ];
-
+  const clientSteps = t("landing:howItWorks.clients", { returnObjects: true }) || [];
+  const providerSteps = t("landing:howItWorks.providers", { returnObjects: true }) || [];
   const currentSteps = activeTab === "clients" ? clientSteps : providerSteps;
 
   return (
@@ -63,12 +19,10 @@ export default function HowItWorksSection({ isArabic }) {
       <div className="container max-w-5xl mx-auto space-y-12">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
-            {isArabic ? "كيف تعمل المنصة في 3 خطوات" : "How Alanis Works in 3 Clear Steps"}
+            {t("landing:howItWorks.title")}
           </h2>
           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-            {isArabic
-              ? "تجربة مصممة لتوفير أعلى درجات السلاسة والاطمئنان سواء كنت تطلب الرعاية أو تقدمها."
-              : "Designed for absolute transparency whether you are booking care for family or offering your skills."}
+            {t("landing:howItWorks.subtitle")}
           </p>
         </div>
 
@@ -79,13 +33,13 @@ export default function HowItWorksSection({ isArabic }) {
                 value="clients"
                 className="rounded-lg text-xs sm:text-sm font-medium px-2 sm:px-6 truncate"
               >
-                {isArabic ? "للعملاء والأسر" : "For Families & Clients"}
+                {t("landing:howItWorks.clientTab")}
               </TabsTrigger>
               <TabsTrigger
                 value="providers"
                 className="rounded-lg text-xs sm:text-sm font-medium px-2 sm:px-6 truncate"
               >
-                {isArabic ? "لمزودي الخدمة" : "For Healthcare Aides"}
+                {t("landing:howItWorks.providerTab")}
               </TabsTrigger>
             </TabsList>
           </div>

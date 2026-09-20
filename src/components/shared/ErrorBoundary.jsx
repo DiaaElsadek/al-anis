@@ -3,6 +3,7 @@ import React from "react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import i18n from "@/i18n";
 
 export default class ErrorBoundary extends React.Component {
   constructor(props) {
@@ -38,7 +39,7 @@ export default class ErrorBoundary extends React.Component {
 
               <div className="space-y-1.5">
                 <h2 className="text-xl font-bold tracking-tight text-foreground">
-                  حدث خطأ غير متوقع / Something went wrong
+                  {i18n.t("common:error.title")}
                 </h2>
                 <p className="text-xs text-muted-foreground">
                   {this.state.error?.message || "An unexpected rendering error occurred."}
@@ -51,7 +52,7 @@ export default class ErrorBoundary extends React.Component {
                   className="w-full sm:w-auto text-xs font-semibold gap-2"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
-                  <span>إعادة تحميل الصفحة / Reload</span>
+                  <span>{i18n.t("common:error.reload")}</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -59,7 +60,7 @@ export default class ErrorBoundary extends React.Component {
                   className="w-full sm:w-auto text-xs font-semibold gap-2"
                 >
                   <Home className="h-3.5 w-3.5" />
-                  <span>الصفحة الرئيسية / Home</span>
+                  <span>{i18n.t("common:error.home")}</span>
                 </Button>
               </div>
             </CardContent>

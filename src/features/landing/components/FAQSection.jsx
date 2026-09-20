@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+
 import {
   Accordion,
   AccordionContent,
@@ -7,21 +9,18 @@ import {
 import { Card } from "@/components/ui/card";
 import { getFaqs } from "@/features/landing/data";
 
-export default function FAQSection({ isArabic }) {
-  const faqs = getFaqs(isArabic);
+export default function FAQSection() {
+  const { t } = useTranslation(["landing", "common"]);
+  const faqs = getFaqs(t);
 
   return (
     <section id="faq" className="py-20 bg-muted/30 border-t border-border/70">
       <div className="container max-w-4xl mx-auto space-y-10">
         <div className="text-center space-y-3 max-w-2xl mx-auto">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-foreground">
-            {isArabic ? "الأسئلة الأكثر شيوعاً" : "Frequently Asked Questions"}
+            {t("landing:faq.title")}
           </h2>
-          <p className="text-sm text-muted-foreground">
-            {isArabic
-              ? "كل ما تود معرفته عن الدفع الضامن، وتدقيق المستندات، وتنسيق الورديات."
-              : "Everything you need to know about escrow protection, provider audits, and shifts."}
-          </p>
+          <p className="text-sm text-muted-foreground">{t("landing:faq.subtitle")}</p>
         </div>
 
         <Card className="border border-border/80 shadow-md bg-card p-4 sm:p-6 md:p-8 rounded-2xl">

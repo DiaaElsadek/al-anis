@@ -173,7 +173,7 @@ export default function VerifyOtpPage() {
           <div className="space-y-2">
             <div className="flex justify-center gap-2 sm:gap-3" dir="ltr">
               {digits.map((digit, index) => (
-                <input
+                <Input
                   key={index}
                   ref={(el) => (inputRefs.current[index] = el)}
                   type="text"
@@ -191,16 +191,11 @@ export default function VerifyOtpPage() {
           <Button
             type="submit"
             className="w-full h-11 text-sm font-semibold shadow-sm"
-            disabled={verifyMutation.isPending || otpCode.length < 4}
+            disabled={otpCode.length < 4}
+            loading={verifyMutation.isPending}
+            loadingText={t("auth:otp.verifying")}
           >
-            {verifyMutation.isPending ? (
-              <div className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>{t("auth:otp.verifying")}</span>
-              </div>
-            ) : (
-              <span>{t("auth:otp.verifyButton")}</span>
-            )}
+            {t("auth:otp.verifyButton")}
           </Button>
         </form>
 

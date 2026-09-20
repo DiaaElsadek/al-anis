@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { BadgeCheck, MapPin, Star } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -10,8 +11,9 @@ import { getSpotlightProviders } from "@/features/landing/data";
 import { fadeInUp, staggerContainer } from "@/lib/motion";
 import { formatPrice, getInitials } from "@/lib/utils";
 
-export default function CaregiversSection({ isArabic }) {
-  const providers = getSpotlightProviders(isArabic);
+export default function CaregiversSection() {
+  const { t } = useTranslation(["landing", "common"]);
+  const providers = getSpotlightProviders(t);
   const [featured, ...supporting] = providers;
 
   return (
@@ -20,14 +22,10 @@ export default function CaregiversSection({ isArabic }) {
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
           <div className="space-y-2">
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground">
-              {isArabic
-                ? "تعرف على نماذج من أطقم الرعاية المعتمدة"
-                : "Meet Top Verified Care Providers"}
+              {t("landing:caregivers.title")}
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground max-w-2xl leading-relaxed">
-              {isArabic
-                ? "كل ممرض ومساعد رعاية يمر بمطابقة الهوية الجنائية ومراجعة التراخيص المهنية قبل اعتماد حسابه."
-                : "Every nurse and companion passes National ID verification and syndical license audits."}
+              {t("landing:caregivers.subtitle")}
             </p>
           </div>
 
@@ -38,7 +36,7 @@ export default function CaregiversSection({ isArabic }) {
             className="self-start sm:self-auto font-medium"
           >
             <Link to="/register">
-              <span>{isArabic ? "انضم كأخصائي رعاية" : "Join as Caregiver"}</span>
+              <span>{t("landing:caregivers.joinCta")}</span>
             </Link>
           </Button>
         </div>
@@ -59,7 +57,7 @@ export default function CaregiversSection({ isArabic }) {
                   <div className="space-y-6">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <Badge className="bg-primary/10 text-primary border-primary/25 text-xs font-medium">
-                        {isArabic ? "أخصائي الأسبوع المميز" : "Spotlight Caregiver"}
+                        {t("landing:caregivers.spotlightBadge")}
                       </Badge>
                       <span className="text-xs text-muted-foreground flex items-center gap-1">
                         <MapPin className="h-3.5 w-3.5 text-muted-foreground" />
@@ -99,7 +97,7 @@ export default function CaregiversSection({ isArabic }) {
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 border-t border-border/60">
                       <div>
                         <span className="text-xs text-muted-foreground font-medium block">
-                          {isArabic ? "التقييم العام" : "Rating"}
+                          {t("landing:caregivers.ratingLabel")}
                         </span>
                         <div className="flex items-center gap-1 mt-1">
                           <Star className="h-4 w-4 fill-warm-accent text-warm-accent" />
@@ -114,16 +112,16 @@ export default function CaregiversSection({ isArabic }) {
 
                       <div>
                         <span className="text-xs text-muted-foreground font-medium block">
-                          {isArabic ? "الورديات المنفذة" : "Completed"}
+                          {t("landing:caregivers.completedLabel")}
                         </span>
                         <span className="text-sm font-bold text-foreground mt-1 block">
-                          {featured.shiftsCompleted} {isArabic ? "وردية" : "shifts"}
+                          {featured.shiftsCompleted} {t("landing:caregivers.shiftsCount")}
                         </span>
                       </div>
 
                       <div>
                         <span className="text-xs text-muted-foreground font-medium block">
-                          {isArabic ? "الورديات المتاحة" : "Available"}
+                          {t("landing:caregivers.availableLabel")}
                         </span>
                         <span className="text-xs font-semibold text-primary mt-1 block">
                           {featured.shiftsAvailable}
@@ -135,7 +133,7 @@ export default function CaregiversSection({ isArabic }) {
                   <div className="pt-4 border-t border-border/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                     <div>
                       <span className="text-xs text-muted-foreground font-medium block">
-                        {isArabic ? "سعر الوردية (8 ساعات)" : "Shift Rate (8 Hours)"}
+                        {t("landing:caregivers.rateLabel")}
                       </span>
                       <span className="text-xl font-bold text-primary">
                         {formatPrice(featured.rate)}
@@ -147,7 +145,7 @@ export default function CaregiversSection({ isArabic }) {
                       className="w-full sm:w-auto text-sm font-semibold px-6 shadow-sm"
                     >
                       <Link to="/register">
-                        <span>{isArabic ? "طلب حجز وردية" : "Book Shift with Provider"}</span>
+                        <span>{t("landing:caregivers.bookShift")}</span>
                       </Link>
                     </Button>
                   </div>
@@ -195,7 +193,7 @@ export default function CaregiversSection({ isArabic }) {
 
                       <div className="text-muted-foreground">
                         <span>
-                          {prov.shiftsCompleted} {isArabic ? "وردية" : "shifts"}
+                          {prov.shiftsCompleted} {t("landing:caregivers.shiftsCount")}
                         </span>
                       </div>
 
@@ -209,7 +207,7 @@ export default function CaregiversSection({ isArabic }) {
                       className="w-full text-xs font-medium"
                     >
                       <Link to="/register">
-                        <span>{isArabic ? "عرض الملف وحجز الوردية" : "View Profile & Book"}</span>
+                        <span>{t("landing:caregivers.viewProfileAndBook")}</span>
                       </Link>
                     </Button>
                   </CardContent>

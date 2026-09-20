@@ -7,8 +7,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 import { createRequest } from "@/api/requests";
-import DatePicker from "@/components/shared/DatePicker";
 import { Button } from "@/components/ui/button";
+import { DatePicker } from "@/components/ui/date-picker";
 import {
   Dialog,
   DialogContent,

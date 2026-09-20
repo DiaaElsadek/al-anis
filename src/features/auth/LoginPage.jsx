@@ -198,14 +198,16 @@ export default function LoginPage() {
                 className="ps-10 pe-10 h-10 transition-colors focus-visible:ring-primary"
                 {...register("password")}
               />
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute inset-y-0 end-0 flex items-center pe-3 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute end-1 top-1 h-8 w-8 text-muted-foreground hover:text-foreground hover:bg-transparent"
                 tabIndex={-1}
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-              </button>
+              </Button>
             </div>
             {errors.password && (
               <p className="text-xs text-destructive font-medium">{errors.password.message}</p>
@@ -215,28 +217,22 @@ export default function LoginPage() {
           {/* Remember me option */}
           <div className="flex items-center gap-2 pt-1">
             <Checkbox id="remember" defaultChecked />
-            <label
+            <Label
               htmlFor="remember"
               className="text-xs text-muted-foreground font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
             >
               {t("auth:login.rememberMe")}
-            </label>
+            </Label>
           </div>
 
           {/* Submit Button */}
           <Button
             type="submit"
-            className="w-full h-11 text-sm font-semibold shadow-sm mt-2"
-            disabled={loginMutation.isPending}
+            className="w-full h-11 text-sm font-semibold shadow-sm"
+            loading={loginMutation.isPending}
+            loadingText={t("auth:login.signingIn")}
           >
-            {loginMutation.isPending ? (
-              <div className="flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
-                <span>{t("auth:login.signingIn")}</span>
-              </div>
-            ) : (
-              <span>{t("auth:login.signInButton")}</span>
-            )}
+            {t("auth:login.signInButton")}
           </Button>
         </form>
 

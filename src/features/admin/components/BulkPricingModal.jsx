@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { getLocalizedCategoryName } from "@/lib/utils";
 
 export default function BulkPricingModal({
   open,
@@ -71,7 +72,7 @@ export default function BulkPricingModal({
               <SelectContent>
                 {categories.map((c) => (
                   <SelectItem key={c.id} value={c.id} className="text-xs">
-                    {i18n.language === "ar" ? c.name || c.nameEn : c.nameEn || c.name}
+                    {getLocalizedCategoryName(c, i18n.language)}
                   </SelectItem>
                 ))}
               </SelectContent>

@@ -14,8 +14,8 @@ import LanguageSwitcher from "@/components/shared/LanguageSwitcher";
 import ThemeToggle from "@/components/shared/ThemeToggle";
 import { Separator } from "@/components/ui/separator";
 
-export default function LandingFooter({ isArabic }) {
-  const { t } = useTranslation(["common"]);
+export default function LandingFooter() {
+  const { t } = useTranslation(["landing", "common"]);
 
   return (
     <footer className="border-t border-border/80 bg-card/80 dark:bg-card relative overflow-hidden">
@@ -34,12 +34,10 @@ export default function LandingFooter({ isArabic }) {
             </div>
             <div>
               <h5 className="font-semibold text-xs text-foreground">
-                {isArabic ? "حماية الضمان 100%" : "100% Escrow Safeguard"}
+                {t("landing:footer.escrowSafeguard")}
               </h5>
               <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
-                {isArabic
-                  ? "أموالك محفوظة حتى رضاك التام"
-                  : "Payment released after shift completion"}
+                {t("landing:footer.escrowSubtitle")}
               </p>
             </div>
           </div>
@@ -50,12 +48,10 @@ export default function LandingFooter({ isArabic }) {
             </div>
             <div>
               <h5 className="font-semibold text-xs text-foreground">
-                {isArabic ? "تدقيق أمني ونقابي" : "Vetted Healthcare Aides"}
+                {t("landing:footer.vettedAides")}
               </h5>
               <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
-                {isArabic
-                  ? "فحص الرقم القومي وتراخيص المزاولة"
-                  : "14-digit National ID & syndicate licenses"}
+                {t("landing:footer.vettedSubtitle")}
               </p>
             </div>
           </div>
@@ -66,12 +62,10 @@ export default function LandingFooter({ isArabic }) {
             </div>
             <div>
               <h5 className="font-semibold text-xs text-foreground">
-                {isArabic ? "ضمان الاستبدال الفوري" : "Replacement Guarantee"}
+                {t("landing:footer.replacementGuarantee")}
               </h5>
               <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
-                {isArabic
-                  ? "توفير بديل معتمد فوراً دون تعطل"
-                  : "Instant backup provider upon cancellation"}
+                {t("landing:footer.replacementSubtitle")}
               </p>
             </div>
           </div>
@@ -82,10 +76,10 @@ export default function LandingFooter({ isArabic }) {
             </div>
             <div>
               <h5 className="font-semibold text-xs text-foreground">
-                {isArabic ? "رعاية بمعايير مؤسسية" : "Institutional Dignity"}
+                {t("landing:footer.institutionalDignity")}
               </h5>
               <p className="text-[11px] text-muted-foreground mt-0.5 leading-snug">
-                {isArabic ? "ميثاق أخلاقي ورقابة دورية" : "Ethical healthcare code of conduct"}
+                {t("landing:footer.institutionalSubtitle")}
               </p>
             </div>
           </div>
@@ -110,15 +104,13 @@ export default function LandingFooter({ isArabic }) {
             </Link>
 
             <p className="text-sm text-muted-foreground leading-relaxed">
-              {isArabic
-                ? "المنصة الأولى المعتمدة في مصر لحجز خدمات التمريض والرعاية المنزلية بنظام الوردية المعياري (8 ساعات) مع الحماية الكاملة بالدفع الضامن وضمان الكفاءة الطبية."
-                : "Egypt's premier shift-based marketplace connecting verified nurses and companions with families under 100% escrow protection and standardized 8-hour blocks."}
+              {t("landing:footer.aboutText")}
             </p>
 
             <div className="pt-2 flex items-center gap-2 text-xs text-muted-foreground">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-muted/60 border border-border/60">
                 <Lock className="h-3.5 w-3.5 text-success" />
-                <span>{isArabic ? "تشفير بيانات آمن 256-بت" : "256-bit Encrypted Escrow"}</span>
+                <span>{t("landing:footer.encryptionBadge")}</span>
               </span>
             </div>
           </div>
@@ -126,7 +118,7 @@ export default function LandingFooter({ isArabic }) {
           {/* Quick Links For Families (3 cols) */}
           <div className="space-y-3.5 lg:col-span-3">
             <h4 className="text-sm font-semibold text-foreground">
-              {isArabic ? "للأسر والعملاء" : "For Families"}
+              {t("landing:footer.forFamilies")}
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
@@ -134,27 +126,27 @@ export default function LandingFooter({ isArabic }) {
                   to="/login?redirect=/app/providers"
                   className="hover:text-primary transition-colors"
                 >
-                  {isArabic ? "البحث عن ممرض أو مساعد" : "Find Verified Providers"}
+                  {t("landing:footer.findProviders")}
                 </Link>
               </li>
               <li>
                 <a href="#shifts" className="hover:text-primary transition-colors">
-                  {isArabic ? "مفهوم الورديات والأسعار المعتمدة" : "Shift System & Pricing"}
+                  {t("landing:footer.shiftsAndPricing")}
                 </a>
               </li>
               <li>
                 <a href="#categories" className="hover:text-primary transition-colors">
-                  {isArabic ? "التخصصات الطبية والمنزلية" : "Available Specialties"}
+                  {t("landing:footer.specialties")}
                 </a>
               </li>
               <li>
                 <a href="#how-it-works" className="hover:text-primary transition-colors">
-                  {isArabic ? "كيفية الحجز خطوة بخطوة" : "How Booking Works"}
+                  {t("landing:footer.howBookingWorks")}
                 </a>
               </li>
               <li>
                 <Link to="/register" className="hover:text-primary transition-colors">
-                  {isArabic ? "إنشاء حساب عائلة جديد" : "Create Family Account"}
+                  {t("landing:footer.createFamilyAccount")}
                 </Link>
               </li>
             </ul>
@@ -163,27 +155,27 @@ export default function LandingFooter({ isArabic }) {
           {/* For Healthcare Professionals (2 cols) */}
           <div className="space-y-3.5 lg:col-span-2">
             <h4 className="text-sm font-semibold text-foreground">
-              {isArabic ? "لمزودي الرعاية" : "For Caregivers"}
+              {t("landing:footer.forCaregivers")}
             </h4>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li>
                 <Link to="/register" className="hover:text-primary transition-colors">
-                  {isArabic ? "الانضمام كأخصائي رعاية" : "Join as Caregiver"}
+                  {t("landing:footer.joinAsCaregiver")}
                 </Link>
               </li>
               <li>
                 <a href="#why-alanis" className="hover:text-primary transition-colors">
-                  {isArabic ? "مزايا الدفع الضامن للأطقم" : "Guaranteed Escrow Payouts"}
+                  {t("landing:footer.escrowPayouts")}
                 </a>
               </li>
               <li>
                 <a href="#how-it-works" className="hover:text-primary transition-colors">
-                  {isArabic ? "شروط التدقيق والاعتماد" : "Vetting Requirements"}
+                  {t("landing:footer.vettingRequirements")}
                 </a>
               </li>
               <li>
                 <Link to="/login" className="hover:text-primary transition-colors">
-                  {isArabic ? "دخول بوابة الكوادر الطبية" : "Provider Portal Login"}
+                  {t("landing:footer.providerLogin")}
                 </Link>
               </li>
             </ul>
@@ -192,7 +184,7 @@ export default function LandingFooter({ isArabic }) {
           {/* Contact & Hotline Card (3 cols) */}
           <div className="space-y-3.5 lg:col-span-3">
             <h4 className="text-sm font-semibold text-foreground">
-              {isArabic ? "المساعدة والتنسيق الفوري" : "Helpline & Coordination"}
+              {t("landing:footer.helplineTitle")}
             </h4>
 
             {/* Elevated Hotline Card */}
@@ -203,7 +195,7 @@ export default function LandingFooter({ isArabic }) {
                 </div>
                 <div>
                   <span className="text-[11px] font-medium text-muted-foreground block">
-                    {isArabic ? "الخط الساخن المركزي" : "Central Care Hotline"}
+                    {t("landing:footer.centralHotline")}
                   </span>
                   <a
                     href="tel:19824"
@@ -215,16 +207,12 @@ export default function LandingFooter({ isArabic }) {
               </div>
 
               <p className="text-xs text-muted-foreground leading-relaxed">
-                {isArabic
-                  ? "تنسيق فوري للورديات ومتابعة الحالات الطبية على مدار الساعة."
-                  : "Immediate shift coordination & case monitoring 24/7."}
+                {t("landing:footer.coordinationDesc")}
               </p>
 
               <div className="pt-2.5 border-t border-border/50 flex items-center gap-1.5 text-xs text-muted-foreground">
                 <MapPin className="h-3.5 w-3.5 text-primary shrink-0" />
-                <span>
-                  {isArabic ? "القاهرة • الجيزة • الإسكندرية" : "Cairo • Giza • Alexandria"}
-                </span>
+                <span>{t("landing:footer.cities")}</span>
               </div>
             </div>
           </div>
