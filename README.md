@@ -2,7 +2,7 @@
 
 <div align="center">
 
-![Al-Anis Banner](https://img.shields.io/badge/Al--Anis-منصة%20الرعاية%20والرفقة%20الموثوقة-059669?style=for-the-badge&logoColor=white)
+<!-- ![Al-Anis Banner](https://img.shields.io/badge/Al--Anis-منصة%20الرعاية%20والرفقة%20الموثوقة-059669?style=for-the-badge&logoColor=white) -->
 
 **Verified In-Home Healthcare & Companionship Marketplace**  
 _Connecting Egyptian families with audited nurses, elderly companions, child caregivers, and clinical specialists._
@@ -209,45 +209,6 @@ src/
 ├── services/               # SignalR WebSocket connection manager
 └── styles/                 # Tailwind custom variables and global stylesheet
 ```
-
----
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- [Node.js](https://nodejs.org/) (v18.0.0 or higher recommended)
-- `npm` (v9 or higher)
-
-### Installation
-
-1. **Clone the repository**:
-
-   ```bash
-   git clone https://github.com/DiaaElsadek/al-anis.git
-   cd al-anis
-   ```
-
-2. **Install dependencies**:
-
-   ```bash
-   npm install
-   ```
-
-3. **Configure Environment Variables**:
-   Create a `.env` file in the root directory based on `.env.example`:
-
-   ```env
-   VITE_BASE_URL=https://elanis.runasp.net
-   VITE_API_BASE_URL=https://elanis.runasp.net/api
-   VITE_GOOGLE_CLIENT_ID=your-google-client-id.apps.googleusercontent.com
-   ```
-
-4. **Start the Development Server**:
-   ```bash
-   npm run dev
-   ```
-   The application will be running at `http://localhost:5173`.
 
 ---
 
